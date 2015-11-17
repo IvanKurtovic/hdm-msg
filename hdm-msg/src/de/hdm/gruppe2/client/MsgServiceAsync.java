@@ -15,6 +15,6 @@ public interface MsgServiceAsync {
 	void saveUser(User user, AsyncCallback<Void> callback);
 	void deleteUser(User user, AsyncCallback<Void> callback);
 	void getAllUser(AsyncCallback<Vector<User>> callback);
-	void getUserByGoogleId(int googleId, AsyncCallback<User> callback);
+	void getUserByGoogleId(String googleId, AsyncCallback<User> callback);
 	
 }

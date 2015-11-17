@@ -17,6 +17,6 @@ public interface MsgService extends RemoteService {
 	void saveUser(User user) throws IllegalArgumentException;
 	void deleteUser(User user) throws IllegalArgumentException;
 	Vector<User> getAllUser() throws IllegalArgumentException;
-	User getUserByGoogleId(int googleId) throws IllegalArgumentException;
+	User getUserByGoogleId(String googleId) throws IllegalArgumentException;
 	
 }

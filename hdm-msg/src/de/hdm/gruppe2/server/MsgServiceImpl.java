@@ -1,10 +1,10 @@
 package de.hdm.gruppe2.server;
 
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Vector;
 
 import de.hdm.gruppe2.client.MsgService;
+import de.hdm.gruppe2.server.db.*;
 import de.hdm.gruppe2.shared.*;
 import de.hdm.gruppe2.shared.bo.User;
 
@@ -92,8 +92,7 @@ public class MsgServiceImpl extends RemoteServiceServlet implements
 	/**
 	 * DatenbankMapper.
 	 */
-	//TODO Mapper anlegen und dann hier den Kommentar entfernen
-	// private UserMapper userMapper = null;
+	private UserMapper userMapper = null;
 	
 	/**
 	 * Da diese Klasse ein gewisse Größe besitzt - dies ist eigentlich ein
@@ -149,8 +148,7 @@ public class MsgServiceImpl extends RemoteServiceServlet implements
 		 * kommunizieren kann.
 		 */
 		
-		//TODO Mapper anlegen und dann hier den Kommentar entfernen
-		//this.userMapper = UserMapper.userMapper();
+		this.userMapper = UserMapper.userMapper();
 	}
 	/*
 	 * ***************************************************************************
@@ -196,10 +194,8 @@ public class MsgServiceImpl extends RemoteServiceServlet implements
 		Date creationDate = new Date();
 		u.setCreationDate(creationDate);
 
-		//TODO Mapper anlegen und dann hier den Kommentar entfernen + return entfernen
 		// Objekt in der DB speichern.
-		//return this.userMapper.insert(u);
-		return u;
+		return this.userMapper.insertUser(u);
 	}
 	/**
 	 * Speichern eines Nutzers.
@@ -218,9 +214,8 @@ public class MsgServiceImpl extends RemoteServiceServlet implements
 		u.setLastName(user.getLastName());
 		u.setEmail(user.getEmail());
 		
-		//TODO Mapper anlegen und dann hier den Kommentar entfernen + return entfernen
 		// Objekt in der DB speichern.
-		//this.userMapper.update(u);
+		this.userMapper.updateUser(u);
 	}
 
 	/**
@@ -230,9 +225,8 @@ public class MsgServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public void deleteUser(User user) throws IllegalArgumentException {
 		
-		//TODO Mapper anlegen und dann hier den Kommentar entfernen + return entfernen
 		// Objekt in der DB speichern.
-		//this.userMapper.delete(user);
+		this.userMapper.deleteUser(user);
 	}
 	
 	/**
@@ -242,11 +236,9 @@ public class MsgServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public Vector<User> getAllUser() throws IllegalArgumentException {
 		
-		//TODO Mapper anlegen und dann hier den Kommentar entfernen + return entfernen
 		// Objekte aus der Datenbank holen und im Vektor zurückgeben.
-		//return this.UserMapper.findAll();
-		Vector<User> alleUser = new Vector<User>();
-		return alleUser;
+		return this.userMapper.findAll();
+		
 	}
 	
 	/**
@@ -254,13 +246,12 @@ public class MsgServiceImpl extends RemoteServiceServlet implements
 	 * @see #getUserByGoogleId(int googleId)
 	 */
 	@Override
-	public User getUserByGoogleId(int googleId) throws IllegalArgumentException {
+	public User getUserByGoogleId(String googleId) throws IllegalArgumentException {
 		
 		//TODO Mapper anlegen und dann hier den Kommentar entfernen + return entfernen
 		// Objekt aus der DB holen.
-		//return this.userMapper.findByGoogleId(googleId);
-		User u = new User();
-		return u;
+		return this.userMapper.findByGoogleID(googleId);
+		
 	}
 	
 	
