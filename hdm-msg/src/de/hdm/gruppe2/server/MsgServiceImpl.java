@@ -1,15 +1,274 @@
 package de.hdm.gruppe2.server;
 
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.Vector;
+
 import de.hdm.gruppe2.client.MsgService;
-import de.hdm.gruppe2.shared.FieldVerifier;
+import de.hdm.gruppe2.shared.*;
+import de.hdm.gruppe2.shared.bo.User;
+
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 /**
- * The server-side implementation of the RPC service.
+ * <p>
+ * Implementierungsklasse des Interface <code>Sms</code>. Diese Klasse ist
+ * <em>die</em> Klasse, die neben {@link SmsReportImpl} sämtliche
+ * Applikationslogik (oder engl. Business Logic) aggregiert. Sie ist wie eine
+ * Spinne, die sämtliche Zusammenhänge in ihrem Netz (in unserem Fall die Daten
+ * der Applikation) überblickt und für einen geordneten Ablauf und dauerhafte
+ * Konsistenz der Daten und Abläufe sorgt.
+ * </p>
+ * <p>
+ * Die Applikationslogik findet sich in den Methoden dieser Klasse. Jede dieser
+ * Methoden kann als <em>Transaction Script</em> bezeichnet werden. Dieser Name
+ * lässt schon vermuten, dass hier analog zu Datenbanktransaktion pro
+ * Transaktion gleiche mehrere Teilaktionen durchgeführt werden, die das System
+ * von einem konsistenten Zustand in einen anderen, auch wieder konsistenten
+ * Zustand überführen. Wenn dies zwischenzeitig scheitern sollte, dann ist das
+ * jeweilige Transaction Script dafür verantwortlich, eine Fehlerbehandlung
+ * durchzuführen.
+ * </p>
+ * <p>
+ * Diese Klasse steht mit einer Reihe weiterer Datentypen in Verbindung. Dies
+ * sind:
+ * <ol>
+ * <li>{@link Sms}: Dies ist das <em>lokale</em> - also Server-seitige -
+ * Interface, das die im System zur Verfügung gestellten Funktionen deklariert.</li>
+ * <li>{@link SmsAsync}: <code>SmsImpl</code> und<code>Sms</code> bilden nur die
+ * Server-seitige Sicht der Applikationslogik ab. Diese basiert vollständig auf
+ * synchronen Funktionsaufrufen. Wir müssen jedoch in der Lage sein,
+ * Client-seitige asynchrone Aufrufe zu bedienen. Dies bedingt ein weiteres
+ * Interface, das in der Regel genauso benannt wird, wie das synchrone
+ * Interface, jedoch mit dem zusätzlichen Suffix "Async". Es steht nur mittelbar
+ * mit dieser Klasse in Verbindung. Die Erstellung und Pflege der Async
+ * Interfaces wird durch das Google Plugin semiautomatisch unterstützt. Weitere
+ * Informationen unter {@link SmsAsync}.</li>
+ * <li> {@link RemoteServiceServlet}: Jede Server-seitig instantiierbare und
+ * Client-seitig über GWT RPC nutzbare Klasse muss die Klasse
+ * <code>RemoteServiceServlet</code> implementieren. Sie legt die funktionale
+ * Basis für die Anbindung von <code>SmsImpl</code> an die Runtime des GWT
+ * RPC-Mechanismus.</li>
+ * </ol>
+ * </p>
+ * <p>
+ * <b>Wichtiger Hinweis:</b> Diese Klasse bedient sich sogenannter
+ * Mapper-Klassen. Sie gehören der Datenbank-Schicht an und bilden die
+ * objektorientierte Sicht der Applikationslogik auf die relationale
+ * organisierte Datenbank ab. Zuweilen kommen "kreative" Zeitgenossen auf die
+ * Idee, in diesen Mappern auch Applikationslogik zu realisieren. Einzig
+ * nachvollziehbares Argument für einen solchen Ansatz ist die Steigerung der
+ * Performance umfangreicher Datenbankoperationen. Doch auch dieses Argument
+ * zieht nur dann, wenn wirklich große Datenmengen zu handhaben sind. In einem
+ * solchen Fall würde man jedoch eine entsprechend erweiterte Architektur
+ * realisieren, die wiederum sämtliche Applikationslogik in der
+ * Applikationsschicht isolieren würde. Also, keine Applikationslogik in die
+ * Mapper-Klassen "stecken" sondern dies auf die Applikationsschicht
+ * konzentrieren!
+ * </p>
+ * <p>
+ * Beachten Sie, dass sämtliche Methoden, die mittels GWT RPC aufgerufen werden
+ * können ein <code>throws IllegalArgumentException</code> in der
+ * Methodendeklaration aufweisen. Diese Methoden dürfen also Instanzen von
+ * {@link IllegalArgumentException} auswerfen. Mit diesen Exceptions können z.B.
+ * Probleme auf der Server-Seite in einfacher Weise auf die Client-Seite
+ * transportiert und dort systematisch in einem Catch-Block abgearbeitet werden.
+ * </p>
+ * <p>
+ * Es gibt sicherlich noch viel mehr über diese Klasse zu schreiben. Weitere
+ * Infos erhalten Sie in der Lehrveranstaltung.
+ * </p>
+ * 
+ * @see Sms
+ * @see SmsAsync
+ * @see RemoteServiceServlet
+ * @author Thies, Ioannidou
  */
 @SuppressWarnings("serial")
 public class MsgServiceImpl extends RemoteServiceServlet implements
 		MsgService {
 
+	
+	/**
+	 * DatenbankMapper.
+	 */
+	//TODO Mapper anlegen und dann hier den Kommentar entfernen
+	// private UserMapper userMapper = null;
+	
+	/**
+	 * Da diese Klasse ein gewisse Größe besitzt - dies ist eigentlich ein
+	 * Hinweise, dass hier eine weitere Gliederung sinnvoll ist - haben wir zur
+	 * besseren Übersicht Abschnittskomentare eingefügt. Sie leiten ein Cluster
+	 * in irgeneinerweise zusammengehöriger Methoden ein. Ein entsprechender
+	 * Kommentar steht am Ende eines solchen Clusters.
+	 */
+
+	/*
+	 * ***************************************************************************
+	 * ABSCHNITT, Beginn: Initialisierung
+	 * ***************************************************************************
+	 */
+	
+	/**
+	 * Initialsierungsmethode. Siehe dazu Anmerkungen zum
+	 * No-Argument-Konstruktor {@link #ReportGeneratorImpl()}. Diese Methode
+	 * muss für jede Instanz von <code>BankVerwaltungImpl</code> aufgerufen
+	 * werden.
+	 * 
+	 * @see #ReportGeneratorImpl()
+	 */
+	public MsgServiceImpl() throws IllegalArgumentException {
+		/*
+		 * Eine weitergehende Funktion muss der No-Argument-Constructor nicht
+		 * haben. Er muss einfach vorhanden sein.
+		 */
+	}
+	
+	/**
+	 * <p>
+	 * Ein <code>RemoteServiceServlet</code> wird unter GWT mittels
+	 * <code>GWT.create(Klassenname.class)</code> Client-seitig erzeugt. Hierzu
+	 * ist ein solcher No-Argument-Konstruktor anzulegen. Ein Aufruf eines
+	 * anderen Konstruktors ist durch die Client-seitige Instantiierung durch
+	 * <code>GWT.create(Klassenname.class)</code> nach derzeitigem Stand nicht
+	 * möglich.
+	 * </p>
+	 * <p>
+	 * Es bietet sich also an, eine separate Instanzenmethode zu erstellen, die
+	 * Client-seitig direkt nach <code>GWT.create(Klassenname.class)</code>
+	 * aufgerufen wird, um eine Initialisierung der Instanz vorzunehmen.
+	 * </p>
+	 * 
+	 * @see #init()
+	 */
+	@Override
+	public void init() throws IllegalArgumentException {
+		/*
+		 * Ganz wesentlich ist, dass die BankAdministration einen vollständigen
+		 * Satz von Mappern besitzt, mit deren Hilfe sie dann mit der Datenbank
+		 * kommunizieren kann.
+		 */
+		
+		//TODO Mapper anlegen und dann hier den Kommentar entfernen
+		//this.userMapper = UserMapper.userMapper();
+	}
+	/*
+	 * ***************************************************************************
+	 * ABSCHNITT, Ende: Initialisierung
+	 * ***************************************************************************
+	 */
+	
+	
+	/*
+	 * ***************************************************************************
+	 * ABSCHNITT, Beginn: Methoden für die User Verwaltung
+	 * ***************************************************************************
+	 */
+	/**
+	 * <p>
+	 * Anlegen eines neuen Users. Dies führt implizit zu einem Speichern des
+	 * neuen User in der Datenbank.
+	 * </p>
+	 * 
+	 * <p>
+	 * <b>HINWEIS:</b> Änderungen an User-Objekten müssen stets durch Aufruf
+	 * von {@link #save(User b)} in die Datenbank transferiert werden.
+	 * </p>
+	 * 
+	 * @see createUser(User user)
+	 */
+	@Override
+	public User createUser(User user)
+			throws IllegalArgumentException {
+		
+		//TODO Login einbauen und Kommentar entfernen 
+		// Setzen des Users
+		//b.setEditUser(logInfo.getUser());
+		
+		User u = new User();
+		u.setGoogleId(user.getGoogleId());
+		u.setFirstName(user.getFirstName());
+		u.setLastName(user.getLastName());
+		u.setEmail(user.getEmail());
+		
+		// Erstellungsdatum wird generiert und dem Objekt angehängt
+		// Das Datum wird zum Zeitpunkt des RPC Aufrufs erstellt
+		Date creationDate = new Date();
+		u.setCreationDate(creationDate);
+
+		//TODO Mapper anlegen und dann hier den Kommentar entfernen + return entfernen
+		// Objekt in der DB speichern.
+		//return this.userMapper.insert(u);
+		return u;
+	}
+	/**
+	 * Speichern eines Nutzers.
+	 * @see #saveUser(User user)
+	 */
+	@Override
+	public void saveUser(User user) throws IllegalArgumentException{
+
+		//TODO Login einbauen und Kommentar entfernen 
+		// Setzen des Users
+		//b.setEditUser(logInfo.getUser());
+		
+		User u = new User();
+		u.setGoogleId(user.getGoogleId());
+		u.setFirstName(user.getFirstName());
+		u.setLastName(user.getLastName());
+		u.setEmail(user.getEmail());
+		
+		//TODO Mapper anlegen und dann hier den Kommentar entfernen + return entfernen
+		// Objekt in der DB speichern.
+		//this.userMapper.update(u);
+	}
+
+	/**
+	 * Löschen eines Nutzers. 
+	 * @see #deleteUser(User user)
+	 */
+	@Override
+	public void deleteUser(User user) throws IllegalArgumentException {
+		
+		//TODO Mapper anlegen und dann hier den Kommentar entfernen + return entfernen
+		// Objekt in der DB speichern.
+		//this.userMapper.delete(user);
+	}
+	
+	/**
+	 * Auslesen aller Nutzer.
+	 * @see #getAllBauteile()
+	 */
+	@Override
+	public Vector<User> getAllUser() throws IllegalArgumentException {
+		
+		//TODO Mapper anlegen und dann hier den Kommentar entfernen + return entfernen
+		// Objekte aus der Datenbank holen und im Vektor zurückgeben.
+		//return this.UserMapper.findAll();
+		Vector<User> alleUser = new Vector<User>();
+		return alleUser;
+	}
+	
+	/**
+	 * Auslesen eines Users anhand seiner GoogleId.
+	 * @see #getUserByGoogleId(int googleId)
+	 */
+	@Override
+	public User getUserByGoogleId(int googleId) throws IllegalArgumentException {
+		
+		//TODO Mapper anlegen und dann hier den Kommentar entfernen + return entfernen
+		// Objekt aus der DB holen.
+		//return this.userMapper.findByGoogleId(googleId);
+		User u = new User();
+		return u;
+	}
+	
+	
+	/*
+	 * ***************************************************************************
+	 * ABSCHNITT, Ende: Methoden für die User Verwaltung
+	 * ***************************************************************************
+	 */
+	
 	
 }

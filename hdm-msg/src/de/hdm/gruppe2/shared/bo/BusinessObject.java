@@ -1,7 +1,7 @@
 package de.hdm.gruppe2.shared.bo;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
+import java.util.Date;
 /**
  * <p>
  * Die Klasse <code>BusinessObject</code> stellt die Basisklasse aller in diesem
@@ -28,13 +28,14 @@ public abstract class BusinessObject implements Serializable {
 	 * Eindeutige ID für alle Businessobjekte.
 	 */
 	private int id;
-	private Timestamp creationDate;
+	private Date creationDate;
 
-	public Timestamp getCreationDate() {
+
+	public Date getCreationDate() {
 		return creationDate;
 	}
 
-	public void setCreationDate(Timestamp creationDate) {
+	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
 	}
 
