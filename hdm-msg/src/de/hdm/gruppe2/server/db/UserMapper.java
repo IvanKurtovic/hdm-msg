@@ -81,7 +81,7 @@ public class UserMapper {
 		       * Primärschlüsselwert ist.
 		       */
 		      //TODO: Statement anpassen sobald DB steht
-		      ResultSet rs = stmt.executeQuery("SELECT MAX(userID) AS maxid "
+		      ResultSet rs = stmt.executeQuery("SELECT MAX(userId) AS maxid "
 		          + "FROM User ");
 
 		      if (rs.next()) {
@@ -185,7 +185,7 @@ public class UserMapper {
 			    //Da es nur einen User mit dieser ID geben kann ist davon auszugehen, dass das ResultSet nur eine Zeile enthält
 			    if(rs.next()){
 			    	user = new User();
-			    	user.setId(rs.getInt("userID"));
+			    	user.setId(rs.getInt("userId"));
 			    	user.setFirstName(rs.getString("firstName"));
 			    	user.setLastName(rs.getString("lastName"));
 			    	user.setEmail(rs.getString("email"));
@@ -220,7 +220,7 @@ public class UserMapper {
 	      
 	      while (rs.next()) {
 	        User user = new User();
-	        user.setId(rs.getInt("userID"));
+	        user.setId(rs.getInt("userId"));
 	        user.setFirstName(rs.getString("firstName"));
 	        user.setLastName(rs.getString("lastName"));
 	        user.setEmail(rs.getString("email"));

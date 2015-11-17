@@ -1,4 +1,4 @@
-package de.hdm.gruppe2.client;
+package de.hdm.gruppe2.shared;
 
 import java.util.Vector;
 
@@ -18,5 +18,8 @@ public interface MsgService extends RemoteService {
 	void deleteUser(User user) throws IllegalArgumentException;
 	Vector<User> getAllUser() throws IllegalArgumentException;
 	User getUserByGoogleId(String googleId) throws IllegalArgumentException;
+	
+	public LoginInfo getUserInfo(String uri) throws IllegalArgumentException;
+	void setLoginInfo (LoginInfo loginInfo) throws IllegalArgumentException;
 	
 }

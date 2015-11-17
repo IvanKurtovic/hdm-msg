@@ -3,12 +3,16 @@ package de.hdm.gruppe2.server;
 import java.util.Date;
 import java.util.Vector;
 
-import de.hdm.gruppe2.client.MsgService;
 import de.hdm.gruppe2.server.db.*;
 import de.hdm.gruppe2.shared.*;
 import de.hdm.gruppe2.shared.bo.User;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+
+import de.hdm.gruppe2.shared.LoginInfo;
+
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 
 /**
  * <p>
@@ -93,6 +97,8 @@ public class MsgServiceImpl extends RemoteServiceServlet implements
 	 * DatenbankMapper.
 	 */
 	private UserMapper userMapper = null;
+	
+	private LoginInfo logInfo = null;
 	
 	/**
 	 * Da diese Klasse ein gewisse Größe besitzt - dies ist eigentlich ein
@@ -258,6 +264,49 @@ public class MsgServiceImpl extends RemoteServiceServlet implements
 	/*
 	 * ***************************************************************************
 	 * ABSCHNITT, Ende: Methoden für die User Verwaltung
+	 * ***************************************************************************
+	 */
+	
+	/*
+	 * ***************************************************************************
+	 * ABSCHNITT, Beginn: Methoden für Login
+	 * ***************************************************************************
+	 */
+	public LoginInfo getUserInfo(String requestUri)
+			throws IllegalArgumentException{
+		
+		UserService userService = UserServiceFactory.getUserService();
+		com.google.appengine.api.users.User user = userService.getCurrentUser();
+		LoginInfo loginInfo = new LoginInfo();
+
+		if (user != null) {
+			de.hdm.gruppe2.shared.bo.User currentUser = new de.hdm.gruppe2.shared.bo.User();
+			currentUser = userMapper.findByGoogleID(user.getUserId());
+			if (currentUser == null) {
+				currentUser = new de.hdm.gruppe2.shared.bo.User();
+				currentUser.setGoogleId(user.getUserId());
+				currentUser.setEmail(user.getEmail());
+				currentUser = userMapper.insertUser(currentUser);
+			}
+			loginInfo.setLoggedIn(true);
+			loginInfo.setEmailAddress(user.getEmail());
+			loginInfo.setLogoutUrl(userService.createLogoutURL(requestUri));
+			loginInfo.setUser(currentUser);
+
+		} else {
+			loginInfo.setLoggedIn(false);
+			loginInfo.setLoginUrl(userService.createLoginURL(requestUri));
+		}
+		return loginInfo;
+	}
+	
+	 public void setLoginInfo(LoginInfo loginInfo){
+		 logInfo=loginInfo;
+	 }
+	
+	/*
+	 * ***************************************************************************
+	 * ABSCHNITT, Ende: Methoden für Login
 	 * ***************************************************************************
 	 */
 	
