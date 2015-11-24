@@ -1,6 +1,9 @@
 package de.hdm.gruppe2.client;
 
 import de.hdm.gruppe2.shared.FieldVerifier;
+import de.hdm.gruppe2.shared.MsgService;
+import de.hdm.gruppe2.shared.MsgServiceAsync;
+
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -31,7 +34,7 @@ public class Hdm_msg implements EntryPoint {
 	/**
 	 * Create a remote service proxy to talk to the server-side Greeting service.
 	 */
-	private final GreetingServiceAsync greetingService = GWT.create(GreetingService.class);
+	private final MsgServiceAsync greetingService = GWT.create(MsgService.class);
 
 	/**
 	 * This is the entry point method.

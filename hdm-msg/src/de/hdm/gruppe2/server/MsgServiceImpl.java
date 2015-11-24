@@ -1,14 +1,15 @@
 package de.hdm.gruppe2.server;
 
-import de.hdm.gruppe2.client.GreetingService;
 import de.hdm.gruppe2.shared.FieldVerifier;
+import de.hdm.gruppe2.shared.MsgService;
+
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 /**
  * The server-side implementation of the RPC service.
  */
 @SuppressWarnings("serial")
-public class GreetingServiceImpl extends RemoteServiceServlet implements GreetingService {
+public class MsgServiceImpl extends RemoteServiceServlet implements MsgService {
 
 	public String greetServer(String input) throws IllegalArgumentException {
 		// Verify that the input is valid. 
