@@ -9,7 +9,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
-public class Hdm_msg extends VerticalPanel implements EntryPoint {
+public class HdmMsg extends VerticalPanel implements EntryPoint {
 	
 	public void onModuleLoad() {
 		

@@ -20,6 +20,8 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 	    	Button impressumBtn = new Button("Impressum");
 	    	impressumBtn.setStylePrimaryName("impressumBtn");
 	    	
+	    	
+	    	
 	        final HTML html = new HTML("");
 	        html.setHTML("<h2>Impressum</h2>"+
 	        		"<h2>Angaben gemae Paragraph 5 TMG:</h2>"+
@@ -45,7 +47,10 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 	        	}
 	        });
 	        
+	       
+	        
 	        RootPanel.get("Impressum").add(impressumBtn);
+
 	        
 		}
 	    

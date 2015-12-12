@@ -13,12 +13,12 @@
   
   <servlet-mapping>
     <servlet-name>msgServlet</servlet-name>
-    <url-pattern>/hdm_msg/msgServlet</url-pattern>
+    <url-pattern>/hdmMsg/msgServlet</url-pattern>
   </servlet-mapping>
   
   <!-- Default page to serve -->
   <welcome-file-list>
-    <welcome-file>Hdm_msg.html</welcome-file>
+    <welcome-file>HdmMsg.html</welcome-file>
   </welcome-file-list>
 
 </web-app>
