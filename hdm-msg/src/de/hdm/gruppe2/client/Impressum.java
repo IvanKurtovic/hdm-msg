@@ -24,7 +24,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 	    	
 	        final HTML html = new HTML("");
 	        html.setHTML("<h2>Impressum</h2>"+
-	        		"<h2>Angaben gemae Paragraph 5 TMG:</h2>"+
+	        		"<h2>Angaben: Paragraph 5 Telemediengesaetz:</h2>"+
 	        		"<p>Kerim Sari, Serkan Yilmaz, Ivan Kurtovic, Cem Korkmaz, Marina <br />"+
 	        		"Nobelstrasse 10<br />"+
 	        		"70569 Stuttgart"+
