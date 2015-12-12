@@ -15,7 +15,7 @@ public class HdmMsg extends VerticalPanel implements EntryPoint {
 		
 	
 		Image welcomeImage = new Image();
-		HTML welcomeText = new HTML("<h1>Wilkommen im Editor!</h1>");
+		HTML welcomeText = new HTML("<h1>Willkommen im Editor!</h1>");
 		
 		
 		
