@@ -17,8 +17,8 @@ import de.hdm.gruppe2.shared.bo.User;
  * gelöscht werden können. Das Mapping ist bidirektional. D.h., Objekte können
  * in DB-Strukturen und DB-Strukturen in Objekte umgewandelt werden.
  * 
- * @see CustomerMapper, TransactionMapper
- * @author Thies
+ * @see UserMapper
+ * @author Thies & Ioannidou
  */
 public class UserMapper {
 
@@ -43,16 +43,16 @@ public class UserMapper {
 	
 	 /**
 	   * Diese statische Methode kann aufgrufen werden durch
-	   * <code>UserMapper.bauteilMapper()</code>. Sie stellt die
+	   * <code>UserMapper.userMapper()</code>. Sie stellt die
 	   * Singleton-Eigenschaft sicher, indem Sie dafür sorgt, dass nur eine einzige
-	   * Instanz von <code>BauteilMapper</code> existiert.
+	   * Instanz von <code>UserMapper</code> existiert.
 	   * <p>
 	   * 
-	   * <b>Fazit:</b> BauteilMapper sollte nicht mittels <code>new</code>
+	   * <b>Fazit:</b> UserMapper sollte nicht mittels <code>new</code>
 	   * instantiiert werden, sondern stets durch Aufruf dieser statischen Methode.
 	   * 
-	   * @return DAS <code>BauteilMapper</code>-Objekt.
-	   * @see bauteilMapper
+	   * @return DAS <code>UserMapper</code>-Objekt.
+	   * @see userMapper()
 	   */
 	  public static UserMapper userMapper() {
 	    if (userMapper == null) {
@@ -139,11 +139,11 @@ public class UserMapper {
 	      
 	      
 	    //TODO: Statement anpassen sobald DB steht
-	      stmt.executeUpdate("UPDATE Bauteile SET "
+	      stmt.executeUpdate("UPDATE User SET "
 	      		+"firstName='"+ user.getFirstName() 
 	      		+"',lastName='"+ user.getLastName() 
 	      		+"',email='"+ user.getEmail() 
-	      		+"' WHERE teilnummer='"+userId.toString()+"';");
+	      		+"' WHERE userID='"+userId.toString()+"';");
 
 	    }
 	    catch (SQLException e2) {
@@ -161,7 +161,7 @@ public class UserMapper {
 
 	    try {
 	      Statement stmt = con.createStatement();
-	      stmt.executeUpdate("DELETE FROM Bauteile WHERE teilnummer ='"+ user.getId()+"'");
+	      stmt.executeUpdate("DELETE FROM User WHERE userID ='"+ user.getId()+"'");
 	    }
 	    
 	    catch (SQLException e2) {
