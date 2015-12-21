@@ -3,7 +3,7 @@ package de.hdm.gruppe2.shared.bo;
 public class Message extends BusinessObject {
 	
 	
-	private static long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 	
 	private String text; 
 	
