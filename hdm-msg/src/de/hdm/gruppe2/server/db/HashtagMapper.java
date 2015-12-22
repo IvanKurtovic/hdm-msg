@@ -70,8 +70,18 @@ public class HashtagMapper {
 	    return hashtag;
 	}
 	
-	public Hashtag delete(Hashtag hashtag) {
-		return null;
+	public void delete(Hashtag hashtag) {
+
+		Connection con = DBConnection.connection();
+
+	    try {
+	      Statement stmt = con.createStatement();
+	      // TODO Query einfügen sobald die Datenbankstruktur steht.
+	      stmt.executeUpdate("");
+	    }
+	    catch (SQLException e) {
+	      e.printStackTrace();
+	    }
 	}
 	
 	public Hashtag findById(int id) {
