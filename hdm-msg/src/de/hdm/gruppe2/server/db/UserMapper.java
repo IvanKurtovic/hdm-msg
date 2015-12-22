@@ -136,4 +136,45 @@ public class UserMapper {
 		}
 	}
 
+
+
+
+/**
+ * Diese Methode ermöglicht es alle Nutzer aus der Datenbank in einer Liste
+ * zu finden und anzuzeigen.
+ * 
+ * @return allUser
+ *	@Autor Thies
+ *
+ */
+public ArrayList<User> findAllUser() throws IllegalArgumentException {
+	Connection con = DBConnection.connection();
+	ArrayList<User> allUser = new ArrayList<User>();
+	try {
+		Statement stmt = con.createStatement();
+		ResultSet rs = stmt
+				.executeQuery("SELECT userID, firstName, LastName, email, date "
+						+ "FROM user ORDER BY userID");
+
+		while (rs.next()) {
+			User user = new User();
+			user.setId(rs.getInt("userID"));
+			user.setFirstName(rs.getString("firstName"));
+			user.setLastName(rs.getString("lastName"));
+			user.setEmail(rs.getString("email"));
+			//user.setCreationDate(rs.getString("date"));
+
+			allUser.add(user);
+		}
+		stmt.close();
+		rs.close();
+		
+	} catch (SQLException e) {
+		e.printStackTrace();
+		throw new IllegalArgumentException("Datenbank fehler!"
+				+ e.toString());
+	}
+	return allUser;
+}
+
 }
