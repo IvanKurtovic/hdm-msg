@@ -82,7 +82,7 @@ public class UserMapper {
 		} catch (SQLException e) {
 
 			e.printStackTrace();
-			throw new IllegalArgumentException("Datenbank fehler!"
+			throw new IllegalArgumentException("Error with Database or Connection failed"
 					+ e.toString());
 		}
 		return user;
@@ -106,7 +106,7 @@ public class UserMapper {
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new IllegalArgumentException("Datenbank fehler!"
+			throw new IllegalArgumentException("Error with Database or Connection failed"
 					+ e.toString());
 		}
 		return user;
@@ -131,7 +131,7 @@ public class UserMapper {
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new IllegalArgumentException("Datenbank fehler!"
+			throw new IllegalArgumentException("Error with Database or Connection failed"
 					+ e.toString());
 		}
 	}
@@ -171,10 +171,123 @@ public ArrayList<User> findAllUser() throws IllegalArgumentException {
 		
 	} catch (SQLException e) {
 		e.printStackTrace();
-		throw new IllegalArgumentException("Datenbank fehler!"
+		throw new IllegalArgumentException("Error with Database or Connection failed"
 				+ e.toString());
 	}
 	return allUser;
 }
 
+
+/**
+ * Diese Methode ermöglicht einen Nutzer anhand seines Nachnamens zu finden
+ * und anzuzeigen.
+ * 
+ * @return uebergebener Paramater
+ * @author Thies
+ * @author Serkan
+ */
+public User findUserByLastName(String lastName)
+		throws IllegalArgumentException {
+	Connection con = DBConnection.connection();
+
+	try {
+		Statement stmt = con.createStatement();
+		ResultSet rs = stmt
+				.executeQuery("SELECT * FROM user WHERE lastname='"
+						 + "'");
+
+		if (rs.next()) {
+			User user = new User();
+			user.setId(rs.getInt("userID"));
+
+			user.setFirstName(rs.getString("firstName"));
+			user.setLastName(rs.getString("lastName"));
+			user.setEmail(rs.getString("email"));
+			//user.setCreationDate(rs.getString("date"));
+
+			return user;
+		}
+	} catch (SQLException e) {
+		e.printStackTrace();
+		throw new IllegalArgumentException("Error with Database or Connection failed"
+				+ e.toString());
+	}
+	return null;
+}
+
+
+/**
+ * Diese Methode ermöglicht einen Nutzer anhand seiner Email zu finden
+ * und anzuzeigen.
+ * 
+ * @return uebergebener Paramater
+ * @author Thies
+ * @author Serkan
+ * 
+ */
+public User findUserByEmail(String email)
+		throws IllegalArgumentException {
+	Connection con = DBConnection.connection();
+
+	try {
+		Statement stmt = con.createStatement();
+		ResultSet rs = stmt
+				.executeQuery("SELECT * FROM user WHERE email='"
+						+ email + "'");
+
+		if (rs.next()) {
+			User user = new User();
+			user.setId(rs.getInt("userID"));
+
+			user.setFirstName(rs.getString("firstName"));
+			user.setLastName(rs.getString("lastName"));
+			user.setEmail(rs.getString("email"));
+			//user.setCreationDate(creationDate);
+
+			return user;
+		}
+	} catch (SQLException e) {
+		e.printStackTrace();
+		throw new IllegalArgumentException("Error with Database or Connection failed"
+				+ e.toString());
+	}
+	return null;
+}
+
+/**
+ * Diese Methode ermöglicht einen Nutzer anhand des Prim�rschl�ssels zu
+ * finden und anzuzeigen.
+ * 
+ * @return uebergebener Paramater
+ * @author Thies
+ * @author Serkan 
+ * 
+ */
+
+public User findUserById(int userID) throws IllegalArgumentException {
+	Connection con = DBConnection.connection();
+	try {
+		Statement stmt = con.createStatement();
+
+		ResultSet rs = stmt.executeQuery("SELECT * FROM user WHERE userID= "+userID+" ORDER BY userID");
+		
+		if(rs.next()){
+			User user=new User();
+			user.setId(rs.getInt("userID"));
+
+
+			user.setFirstName(rs.getString("firstName"));
+			user.setLastName(rs.getString("LastName"));
+			user.setEmail(rs.getString("email"));
+			//nutzer.setErstellungsZeitpunkt(rs.getString("datum"));
+
+			return user;
+		}
+	} catch (SQLException e) {
+		e.printStackTrace();
+		throw new IllegalArgumentException("Error with Database or Connection failed"
+				+ e.toString());
+	}
+	return null;
+}
 }
