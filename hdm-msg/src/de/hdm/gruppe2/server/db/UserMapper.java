@@ -277,8 +277,7 @@ public User findUserById(int userID) throws IllegalArgumentException {
 			user.setFirstName(rs.getString("firstName"));
 			user.setLastName(rs.getString("LastName"));
 			user.setEmail(rs.getString("email"));
-			//nutzer.setErstellungsZeitpunkt(rs.getString("datum"));
-
+			//user.setCreationDate(creationDate);
 			return user;
 		}
 	} catch (SQLException e) {
