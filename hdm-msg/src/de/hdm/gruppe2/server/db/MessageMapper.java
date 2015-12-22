@@ -49,11 +49,24 @@ public class MessageMapper {
 		      e.printStackTrace();
 		    }
 		
-		return null;
+		return message;
 	}
 	
 	public Message update(Message message) {
-		return null;
+		Connection con = DBConnection.connection();
+
+	    try {
+	      Statement stmt = con.createStatement();
+	      //TODO Query einfügen sobald die Datenbankstruktur steht.
+	      stmt.executeUpdate("");
+
+	    }
+	    catch (SQLException e) {
+	      e.printStackTrace();
+	    }
+
+	    // Um Analogie zu insert(Message message) zu wahren, geben wir message zurück
+	    return message;
 	}
 	
 	public Message delete(Message message) {
