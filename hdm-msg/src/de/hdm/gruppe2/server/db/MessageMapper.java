@@ -53,6 +53,7 @@ public class MessageMapper {
 	}
 	
 	public Message update(Message message) {
+		
 		Connection con = DBConnection.connection();
 
 	    try {
@@ -69,19 +70,32 @@ public class MessageMapper {
 	    return message;
 	}
 	
-	public Message delete(Message message) {
-		return null;
+	public void delete(Message message) {
+		
+		Connection con = DBConnection.connection();
+
+	    try {
+	      Statement stmt = con.createStatement();
+	      // TODO Query einfügen sobald die Datenbankstruktur steht.
+	      stmt.executeUpdate("");
+	    }
+	    catch (SQLException e) {
+	      e.printStackTrace();
+	    }
 	}
 	
 	public Vector<Message> findByUser(User user) {
+		// TODO Abfrage implementieren sobald die Datenbankstruktur steht.
 		return null;
 	}
 	
 	public Vector<Message> findById(int id) {
+		// TODO Abfrage implementieren sobald die Datenbankstruktur steht.
 		return null;
 	}
 	
 	public Vector<Message> findByChat(int chatId) {
+		// TODO Abfrage implementieren sobald die Datenbankstruktur steht.
 		return null;
 	}
 }
