@@ -8,9 +8,7 @@ public class MessageMapper {
 
 	private static MessageMapper messageMapper = null;
 	
-	protected MessageMapper() {
-		
-	}
+	protected MessageMapper() {}
 	
 	public static MessageMapper messageMapper() {
 		if(messageMapper == null) {
@@ -21,6 +19,36 @@ public class MessageMapper {
 	}
 	
 	public Message insert(Message message) {
+		
+		Connection con = DBConnection.connection();
+		
+		try {
+			Statement stmt = con.createStatement();
+			
+			/*
+		     * Zunächst schauen wir nach, welches der momentan höchste
+		     * Primärschlüsselwert ist.
+		     * TODO: Queries definieren sobald die Datenbankstruktur steht.
+		     */
+			ResultSet rs = stmt.executeQuery("");
+			// Wenn wir etwas zurückerhalten, kann dies nur einzeilig sein
+		      if (rs.next()) {
+		        /*
+		         * message erhält den bisher maximalen, nun um 1 inkrementierten
+		         * Primärschlüssel.
+		         */
+		        message.setId(rs.getInt("") + 1);
+
+		        stmt = con.createStatement();
+
+		        // Jetzt erst erfolgt die tatsächliche Einfügeoperation
+		        stmt.executeUpdate("");
+		      }
+		    }
+		    catch (SQLException e) {
+		      e.printStackTrace();
+		    }
+		
 		return null;
 	}
 	
