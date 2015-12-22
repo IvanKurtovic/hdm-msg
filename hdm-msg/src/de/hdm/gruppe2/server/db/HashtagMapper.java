@@ -85,10 +85,12 @@ public class HashtagMapper {
 	}
 	
 	public Hashtag findById(int id) {
+		// TODO Abfrage implementieren sobald die Datenbankstruktur steht.
 		return null;
 	}
 	
 	public Vector<Hashtag> getAllHashtags() {
+		// TODO Abfrage implementieren sobald die Datenbankstruktur steht.
 		return null;
 	}
 }
