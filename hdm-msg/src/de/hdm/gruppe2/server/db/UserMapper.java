@@ -214,5 +214,43 @@ public User findUserByLastName(String lastName)
 	}
 	return null;
 }
+
+/**
+ * Diese Methode ermöglicht einen Nutzer anhand seiner Email zu finden
+ * und anzuzeigen.
+ * 
+ * @return uebergebener Paramater
+ * @author Thies
+ * @author Serkan
+ * 
+ */
+public User findUserByEmail(String email)
+		throws IllegalArgumentException {
+	Connection con = DBConnection.connection();
+
+	try {
+		Statement stmt = con.createStatement();
+		ResultSet rs = stmt
+				.executeQuery("SELECT * FROM user WHERE email='"
+						+ email + "'");
+
+		if (rs.next()) {
+			User user = new User();
+			user.setId(rs.getInt("userID"));
+
+			user.setFirstName(rs.getString("firstName"));
+			user.setLastName(rs.getString("lastName"));
+			user.setEmail(rs.getString("email"));
+			//user.setCreationDate(creationDate);
+
+			return user;
+		}
+	} catch (SQLException e) {
+		e.printStackTrace();
+		throw new IllegalArgumentException("Error with Database or Connection failed"
+				+ e.toString());
+	}
+	return null;
 }
 
+}
