@@ -53,7 +53,21 @@ public class HashtagMapper {
 	}
 	
 	public Hashtag update(Hashtag hashtag) {
-		return null;
+
+		Connection con = DBConnection.connection();
+
+	    try {
+	      Statement stmt = con.createStatement();
+	      //TODO Query einfügen sobald die Datenbankstruktur steht.
+	      stmt.executeUpdate("");
+
+	    }
+	    catch (SQLException e) {
+	      e.printStackTrace();
+	    }
+
+	    // Um Analogie zu insert(Hashtag hashtag) zu wahren, geben wir hashtag zurück
+	    return hashtag;
 	}
 	
 	public Hashtag delete(Hashtag hashtag) {
