@@ -1,6 +1,7 @@
 package de.hdm.gruppe2.server.db;
 
 import java.util.Vector;
+import java.sql.*;
 import de.hdm.gruppe2.shared.bo.*;
 
 public class HashtagMapper {
@@ -18,7 +19,37 @@ public class HashtagMapper {
 	}
 	
 	public Hashtag insert(Hashtag hashtag) {
-		return null;
+		
+		Connection con = DBConnection.connection();
+		
+		try {
+			Statement stmt = con.createStatement();
+			
+			/*
+		     * Zunächst schauen wir nach, welches der momentan höchste
+		     * Primärschlüsselwert ist.
+		     * TODO: Queries definieren sobald die Datenbankstruktur steht.
+		     */
+			ResultSet rs = stmt.executeQuery("");
+			// Wenn wir etwas zurückerhalten, kann dies nur einzeilig sein
+		      if (rs.next()) {
+		        /*
+		         * hashtag erhält den bisher maximalen, nun um 1 inkrementierten
+		         * Primärschlüssel.
+		         */
+		    	 hashtag.setId(rs.getInt("") + 1);
+
+		        stmt = con.createStatement();
+
+		        // Jetzt erst erfolgt die tatsächliche Einfügeoperation
+		        stmt.executeUpdate("");
+		      }
+		    }
+		    catch (SQLException e) {
+		      e.printStackTrace();
+		    }
+		
+		return hashtag;
 	}
 	
 	public Hashtag update(Hashtag hashtag) {
