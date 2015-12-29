@@ -1,11 +1,12 @@
 package de.hdm.gruppe2.server;
 
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Vector;
 
 import de.hdm.gruppe2.server.db.*;
 import de.hdm.gruppe2.shared.*;
-import de.hdm.gruppe2.shared.bo.User;
+import de.hdm.gruppe2.shared.bo.*;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
@@ -97,6 +98,10 @@ public class MsgServiceImpl extends RemoteServiceServlet implements
 	 * DatenbankMapper.
 	 */
 	private UserMapper userMapper = null;
+	private MessageMapper messageMapper = null;
+	private ChatMapper chatMapper = null;
+	private HashtagMapper hashtagMapper = null;
+	private AboMapper aboMapper = null;
 	
 	private LoginInfo logInfo = null;
 	
@@ -155,6 +160,10 @@ public class MsgServiceImpl extends RemoteServiceServlet implements
 		 */
 		
 		this.userMapper = UserMapper.userMapper();
+		this.messageMapper = MessageMapper.messageMapper();
+		this.chatMapper = ChatMapper.chatMapper();
+		this.hashtagMapper = HashtagMapper.hashtagMapper();
+		this.aboMapper = AboMapper.aboMapper();
 	}
 	/*
 	 * ***************************************************************************
@@ -203,6 +212,7 @@ public class MsgServiceImpl extends RemoteServiceServlet implements
 		// Objekt in der DB speichern.
 		return this.userMapper.insertUser(u);
 	}
+	
 	/**
 	 * Speichern eines Nutzers.
 	 * @see #saveUser(User user)
@@ -231,13 +241,13 @@ public class MsgServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public void deleteUser(User user) throws IllegalArgumentException {
 		
-		// Objekt in der DB speichern.
+		// Objekt in der DB löschen.
 		this.userMapper.deleteUser(user);
 	}
 	
 	/**
 	 * Auslesen aller Nutzer.
-	 * @see #getAllBauteile()
+	 * @see #getAllUsers()
 	 */
 	@Override
 	public Vector<User> getAllUser() throws IllegalArgumentException {
@@ -254,18 +264,444 @@ public class MsgServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public User getUserByGoogleId(String googleId) throws IllegalArgumentException {
 		
-		//TODO Mapper anlegen und dann hier den Kommentar entfernen + return entfernen
 		// Objekt aus der DB holen.
 		return this.userMapper.findByGoogleID(googleId);
 		
 	}
-	
-	
 	/*
 	 * ***************************************************************************
 	 * ABSCHNITT, Ende: Methoden für die User Verwaltung
 	 * ***************************************************************************
 	 */
+	
+	
+	
+	/*
+	 * ***************************************************************************
+	 * ABSCHNITT, Beginn: Methoden für die Message Verwaltung
+	 * ***************************************************************************
+	 */
+	/**
+	 * <p>
+	 * Anlegen eines neuen Messages. Dies führt implizit zu einem Speichern der
+	 * neuen Message in der Datenbank.
+	 * </p>
+	 * 
+	 * <p>
+	 * <b>HINWEIS:</b> Änderungen an Message-Objekten müssen stets durch Aufruf
+	 * von {@link #save(Message m)} in die Datenbank transferiert werden.
+	 * </p>
+	 * 
+	 * @see createMessage(Message message)
+	 */
+	@Override
+	public Message createMessage(Message message)
+			throws IllegalArgumentException {
+		
+		Message m = new Message();
+		m.setId(message.getId());
+		m.setText(message.getText());
+		m.setSender(message.getSender());
+		m.setChat(message.getChat());
+		m.setHashtagList(message.getHashtagList());
+		
+		// Erstellungsdatum wird generiert und dem Objekt angehängt
+		// Das Datum wird zum Zeitpunkt des RPC Aufrufs erstellt
+		Date creationDate = new Date();
+		m.setCreationDate(creationDate);
+
+		// Objekt in der DB speichern.
+		return this.messageMapper.insertMessage(m);
+	}
+	
+	/**
+	 * Speichern einer Message.
+	 * @see #saveMessage(Message message)
+	 */
+	@Override
+	public void saveMessage(Message message) 
+			throws IllegalArgumentException{
+		
+		// Objekt in der DB speichern.
+		this.messageMapper.updateMessage(message);
+	}
+
+	/**
+	 * Löschen einer Message. 
+	 * @see #deleteMessage(Message message)
+	 */
+	@Override
+	public void deleteMessage(Message message) 
+			throws IllegalArgumentException {
+		
+		// Objekt in der DB löschen.
+		this.messageMapper.deleteMessage(message);
+	}
+	
+	/**
+	 * Auslesen einer Message anhand der Id.
+	 * @see #getMessageById(int id)
+	 */
+	@Override
+	public Message getMessageById(int id)
+			throws IllegalArgumentException {
+		
+		// Objekt aus der DB holen.
+		return this.messageMapper.findByID(id);
+	}
+	
+	/**
+	 * Auslesen einer Message anhand eines Nutzers 
+	 * und eines Zeitraumes.
+	 * @see #getMessageByUserAndTime(User user, Timestamp startTime, Timestamp endTime )
+	 */
+	@Override
+	public Message getMessageByUserAndTime(User user, Timestamp startTime, Timestamp endTime )
+			throws IllegalArgumentException {
+		
+		// Objekt aus der DB holen.
+		return this.messageMapper.findByUserAndTime(user,startTime,endTime);
+	}
+	/*
+	 * ***************************************************************************
+	 * ABSCHNITT, Ende: Methoden für die Message Verwaltung
+	 * ***************************************************************************
+	 */
+	
+	
+	
+	
+	/*
+	 * ***************************************************************************
+	 * ABSCHNITT, Beginn: Methoden für die Chat Verwaltung
+	 * ***************************************************************************
+	 */
+	/**
+	 * <p>
+	 * Anlegen eines neuen Chats. Dies führt implizit zu einem Speichern der
+	 * neuen Chats in der Datenbank.
+	 * </p>
+	 * <p>
+	 * <b>HINWEIS:</b> Änderungen an Chats-Objekten müssen stets durch Aufruf
+	 * von {@link #save(Chat c)} in die Datenbank transferiert werden.
+	 * </p>
+	 * 
+	 * @see createChat(Chat chat)
+	 */
+	@Override
+	public Chat createChat(Chat chat)
+			throws IllegalArgumentException {
+		
+		Chat c = new Chat();
+		c.setId(chat.getId());
+		c.setMemberList(chat.getMemberList());
+		c.setMessageList(chat.getMessageList());
+		
+		// Erstellungsdatum wird generiert und dem Objekt angehängt
+		// Das Datum wird zum Zeitpunkt des RPC Aufrufs erstellt
+		Date creationDate = new Date();
+		c.setCreationDate(creationDate);
+
+		// Objekt in der DB speichern.
+		return this.chatMapper.insertChat(c);
+	}
+	
+	/**
+	 * Speichern eines Chats.
+	 * @see #saveChat(Chat chat)
+	 */
+	@Override
+	public void saveChat(Chat chat) 
+			throws IllegalArgumentException{
+		
+		// Objekt in der DB speichern.
+		this.chatMapper.updateChat(chat);
+	}
+
+	/**
+	 * Löschen eines Chats. 
+	 * @see #deleteChat(Chat chat)
+	 */
+	@Override
+	public void deleteChat(Chat chat) 
+			throws IllegalArgumentException {
+		
+		// Objekt in der DB löschen.
+		this.chatMapper.deleteChat(chat);
+	}
+	
+	/**
+	 * Auslesen eines Chats anhand der Id.
+	 * @see #getChatById(int id)
+	 */
+	@Override
+	public Chat getChatById(int id)
+			throws IllegalArgumentException {
+		
+		// Objekt aus der DB holen.
+		return this.chatMapper.findByID(id);
+	}
+	
+	/**
+	 * Auslesen eines Chats anhand eines Nutzers 
+	 * @see #getChatByUser(User user)
+	 */
+	@Override
+	public Chat getChatByUser(User user)
+			throws IllegalArgumentException {
+		
+		// Objekt aus der DB holen.
+		return this.chatMapper.findByUser(user);
+	}
+	/*
+	 * ***************************************************************************
+	 * ABSCHNITT, Ende: Methoden für die Chat Verwaltung
+	 * ***************************************************************************
+	 */
+	
+	
+	/*
+	 * ***************************************************************************
+	 * ABSCHNITT, Beginn: Methoden für Hashtag
+	 * ***************************************************************************
+	 */
+	/**
+	 * <p>
+	 * Anlegen eines neuen Hashtag. Dies führt implizit zu einem Speichern des
+	 * neuen Hashtag in der Datenbank.
+	 * </p>
+	 * 
+	 * <p>
+	 * <b>HINWEIS:</b> Änderungen an User-Objekten müssen stets durch Aufruf
+	 * von {@link #save(Hashtag h)} in die Datenbank transferiert werden.
+	 * </p>
+	 * 
+	 * @see createHashtag(Hashtag hashtag)
+	 */
+	@Override
+	public Hashtag createHashtag(Hashtag hashtag)
+			throws IllegalArgumentException {
+		
+		//TODO Login einbauen und Kommentar entfernen 
+		// Setzen des Users
+		//b.setEditUser(logInfo.getUser());
+		
+		Hashtag h = new Hashtag();
+		h.setId(hashtag.getId());
+		h.setKeyword(hashtag.getKeyword());
+		
+		// Erstellungsdatum wird generiert und dem Objekt angehängt
+		// Das Datum wird zum Zeitpunkt des RPC Aufrufs erstellt
+		Date creationDate = new Date();
+		h.setCreationDate(creationDate);
+
+		// Objekt in der DB speichern.
+		return this.hashtagMapper.insertHashtag(h);
+	}
+	
+	/**
+	 * Speichern eines Hashtags.
+	 * @see #saveHashtag(Hashtag hashtag)
+	 */
+	@Override
+	public void saveHashtag(Hashtag hashtag) 
+			throws IllegalArgumentException{
+		
+		// Objekt in der DB speichern.
+		this.hashtagMapper.updateHashtag(hashtag);
+	}
+
+	/**
+	 * Löschen eines Hashtag. 
+	 * @see #deleteUser(User user)
+	 */
+	@Override
+	public void deleteHashtag(Hashtag hashtag) 
+			throws IllegalArgumentException {
+		
+		// Objekt in der DB löschen.
+		this.hashtagMapper.deleteHashtag(hashtag);
+	}
+	
+	/**
+	 * Auslesen aller Hashtags.
+	 * @see #getAllHashtags()
+	 */
+	@Override
+	public Vector<Hashtag> getAllHashtags() 
+			throws IllegalArgumentException {
+		
+		// Objekte aus der Datenbank holen und im Vektor zurückgeben.
+		return this.hashtagMapper.findAll();
+		
+	}
+	
+	/**
+	 * Auslesen eines Hashtags anhand seiner Id.
+	 * @see #getHashtagById(int id)
+	 */
+	@Override
+	public Hashtag getHashtagById(int id) 
+			throws IllegalArgumentException {
+		
+		// Objekt aus der DB holen.
+		return this.hashtagMapper.findByID(id);
+		
+	}
+	/*
+	 * ***************************************************************************
+	 * ABSCHNITT, Ende: Methoden für Hashtag
+	 * ***************************************************************************
+	 */
+	
+	
+	
+	/*
+	 * ***************************************************************************
+	 * ABSCHNITT, Beginn: Methoden für Abo
+	 * ***************************************************************************
+	 */
+	/**
+	 * <p>
+	 * Anlegen eines neuen Abos. Dies führt implizit zu einem Speichern des
+	 * neuen Abos in der Datenbank.
+	 * </p>
+	 * 
+	 * <p>
+	 * <b>HINWEIS:</b> Änderungen an User-Objekten müssen stets durch Aufruf
+	 * von {@link #save(Abo a)} in die Datenbank transferiert werden.
+	 * </p>
+	 * 
+	 * @see createHashtagAbo(HashtagAbo hashAbo)
+	 */
+	
+	/**
+	 * Hashtag-Abo anlegen
+	 */
+	@Override
+	public HashtagAbo createHashtagAbo(HashtagAbo hashtagAbo)
+			throws IllegalArgumentException {
+		
+		//TODO Login einbauen und Kommentar entfernen 
+		// Setzen des Users
+		//b.setEditUser(logInfo.getUser());
+		
+		HashtagAbo hA = new HashtagAbo();
+		hA.setId(hashtagAbo.getId());
+		hA.setAboHashtag(hashtagAbo.getAboHashtag());
+		hA.setSuscriber(hashtagAbo.getSuscriber());
+		
+		// Erstellungsdatum wird generiert und dem Objekt angehängt
+		// Das Datum wird zum Zeitpunkt des RPC Aufrufs erstellt
+		Date creationDate = new Date();
+		hA.setCreationDate(creationDate);
+
+		// Objekt in der DB speichern.
+		return this.aboMapper.insertHashtagAbo(hA);
+	}
+	
+	/**
+	 * User-Abo anlegen
+	 */
+	@Override
+	public UserAbo createUserAbo(UserAbo userAbo)
+			throws IllegalArgumentException {
+		
+		//TODO Login einbauen und Kommentar entfernen 
+		// Setzen des Users
+		//b.setEditUser(logInfo.getUser());
+		
+		UserAbo uA = new UserAbo();
+		uA.setId(userAbo.getId());
+		uA.setAboUser(userAbo.getAboUser());
+		uA.setSuscriber(userAbo.getSuscriber());
+		
+		// Erstellungsdatum wird generiert und dem Objekt angehängt
+		// Das Datum wird zum Zeitpunkt des RPC Aufrufs erstellt
+		Date creationDate = new Date();
+		uA.setCreationDate(creationDate);
+
+		// Objekt in der DB speichern.
+		return this.aboMapper.insertUserAbo(uA);
+	}
+	
+	/**
+	 * Speichern eines Hashtag-Abos.
+	 * @see #saveHashtagAbo(HashtagAbo hashtagAbo)
+	 */
+	@Override
+	public void saveHashtagAbo(HashtagAbo hashtagAbo) 
+			throws IllegalArgumentException{
+		
+		// Objekt in der DB speichern.
+		this.aboMapper.updateHashtagAbo(hashtagAbo);
+	}
+	
+	/**
+	 * Speichern eines User-Abos.
+	 * @see #saveUserAbo(UserAbo userAbo)
+	 */
+	@Override
+	public void saveUserAbo(UserAbo userAbo) 
+			throws IllegalArgumentException{
+		
+		// Objekt in der DB speichern.
+		this.aboMapper.updateUserAbo(userAbo);
+	}
+	
+	/**
+	 * Löschen eines Hashtag Abos. 
+	 * @see #deleteHashtagAbo(HashtagAbo hashtagAbo)
+	 */
+	@Override
+	public void deleteHashtagAbo(HashtagAbo hashtagAbo) 
+			throws IllegalArgumentException {
+		
+		// Objekt in der DB löschen.
+		this.aboMapper.deleteHashtagAbo(hashtagAbo);
+	}
+	/**
+	 * Löschen eines User Abos. 
+	 * @see #deleteUserAbo(User user)
+	 */
+	@Override
+	public void deleteUserAbo(UserAbo userAbo) 
+			throws IllegalArgumentException {
+		
+		// Objekt in der DB löschen.
+		this.aboMapper.deleteUserAbo(userAbo);
+	}
+	
+	/**
+	 * Auslesen eines Abos anhand eines Nutzers.
+	 * @see #getAboByUser(User user)
+	 */
+	@Override
+	public UserAbo getAboByUser(User user)
+			throws IllegalArgumentException {
+		
+		// Objekt aus der DB holen.
+		return this.aboMapper.findAboByUser(user);
+	}
+	
+	/**
+	 * Auslesen eines Abos anhand eines Hashtags.
+	 * @see #getAboByUser(User user)
+	 */
+	@Override
+	public HashtagAbo getAboByHashtag(Hashtag hashtag)
+			throws IllegalArgumentException {
+		
+		// Objekt aus der DB holen.
+		return this.aboMapper.findAboByHashtag(hashtag);
+	}
+
+	/*
+	 * ***************************************************************************
+	 * ABSCHNITT, Ende: Methoden für Abo
+	 * ***************************************************************************
+	 */
+	
 	
 	/*
 	 * ***************************************************************************

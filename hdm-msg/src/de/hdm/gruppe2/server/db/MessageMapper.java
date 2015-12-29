@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -182,7 +183,7 @@ public class MessageMapper {
 	   * Eine Message in der Datenbank anhand seiner 
 	   * ID finden
 	   */
-	  public Message findByID (String id){
+	  public Message findByID (int id){
 			Connection con = DBConnection.connection();
 			Message message = null;
 			try{
@@ -213,7 +214,40 @@ public class MessageMapper {
 			return message;
 		}
 	  
-	  
-	  //TODO Die Methode find by User and Time fehlt noch 
+	  /**
+	   * Eine Message in der Datenbank anhand eines 
+	   * Users und einer bestimmten Zeit finden 
+	   */
+	  public Message findByUserAndTime(User user, Timestamp startTime, Timestamp endTime){
+			Connection con = DBConnection.connection();
+			Message message = null;
+			try{
+				Statement stmt = con.createStatement();
+			    
+				//TODO: Statement anpassen sobald DB steht
+			    ResultSet rs = stmt.executeQuery("SELECT * FROM Message WHERE messageID ='"
+			    		+user+"';");
+			   
+			    //Da es nur einen Message mit dieser ID geben kann ist davon auszugehen, dass das ResultSet nur eine Zeile enthält
+			    if(rs.next()){
+			    	message = new Message();
+			    	message.setId(rs.getInt("messageID"));
+			    	message.setText(rs.getString("text"));
+			    	
+			    	//TODO Eintrag aus Zwischentabelle für die Hashtags
+				    //TODO Eintrag aus Zwischentabelle für die Sender
+				    //TODO Eintrag aus Zwischentabelle für die Chat
+			    	
+			    	// Java Util Date wird umgewandelt in SQL Date um das Änderungsdatum in
+			        // die Datenbank zu speichern 
+			        java.sql.Timestamp sqlDate = rs.getTimestamp("creationDate");
+		     	 	message.setCreationDate(sqlDate);
+			    }
+			}
+			catch(SQLException e){
+				e.printStackTrace();
+			}
+			return message;
+		}	  
 
 }

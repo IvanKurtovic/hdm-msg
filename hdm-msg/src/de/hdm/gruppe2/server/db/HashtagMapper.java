@@ -171,7 +171,7 @@ public class HashtagMapper {
 	   * Eine Hashtag in der Datenbank anhand seiner 
 	   * ID finden
 	   */
-	  public Hashtag findByID (String id){
+	  public Hashtag findByID (int id){
 			Connection con = DBConnection.connection();
 			Hashtag hashtag = null;
 			try{
