@@ -5,11 +5,9 @@ package de.hdm.gruppe2.shared.bo;
  * @author Ioannidou
  */
 public class User extends BusinessObject {
-
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Die Nutzer haben im System die Attribute
 	 * Vorname, Nachname & Emailadresse 

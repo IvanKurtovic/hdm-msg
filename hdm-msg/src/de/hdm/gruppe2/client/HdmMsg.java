@@ -6,6 +6,8 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
+import de.hdm.gruppe2.client.gui.Impressum;
+
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */

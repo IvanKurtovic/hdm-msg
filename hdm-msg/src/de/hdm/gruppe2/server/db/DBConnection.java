@@ -18,7 +18,7 @@ import java.sql.DriverManager;
  * allerdings den Rahmen dieses Projekts sprengen bzw. die Software unnötig
  * verkomplizieren, da dies für diesen Anwendungsfall nicht erforderlich ist.
  * 
- * 
+ * @author Thies
  */
 public class DBConnection {
 	

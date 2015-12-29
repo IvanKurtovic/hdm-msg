@@ -1,4 +1,4 @@
-package de.hdm.gruppe2.client;
+package de.hdm.gruppe2.client.gui;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;

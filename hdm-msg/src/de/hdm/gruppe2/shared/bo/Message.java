@@ -1,47 +1,53 @@
-
 package de.hdm.gruppe2.shared.bo;
 
-import java.util.ArrayList;
+import java.util.Vector;
 
-public class Message extends BusinessObject {	
-	
+/**
+ * Nutzer-Klasse zur Verwaltung von Nachrichten
+ * @author Ioannidou
+ */
+public class Message extends BusinessObject {
+
 	private static final long serialVersionUID = 1L;
-	
-	private String text; 
-	
-	private User sender; 
-	
-	private ArrayList<Hashtag> hashtagList;	
-	
-	private ArrayList<User> receiver;   
-	
+
+	private String text;
+	private User sender;
+	private Chat chat;
+	private Vector<Hashtag> hashtagList;
+
+	//Setzen und auslesen des Nachrichtentextes
 	public String getText() {
 		return text;
 	}
-
-	public void setText (String text) {
-		this.text = text; 
+	public void setText(String text) {
+		this.text = text;
 	}
-	public User getUser() {
+	
+	// Setzen und auslesen des Senders einer Nachricht
+	public User getSender() {
 		return sender;
 	}
-
-	public void setUser (User sender) {
-		this.sender = sender; 
+	public void setSender(User sender) {
+		this.sender = sender;
 	}
 
-	public ArrayList<User> getReceiver() {
-		return this.receiver;
+	
+	//Setzen und auslesen des dazugehörigen Chats
+	public Chat getChat() {
+		return chat;
+	}
+	public void setChat(Chat chat) {
+		this.chat = chat;
 	}
 	
-	public void setReciver (ArrayList<User> receiver) {
-		this.receiver = receiver; 
+	//Setzen und auslesen von Hashtags zu einer Nachricht
+	public Vector<Hashtag> getHashtagList() {
+		return hashtagList;
+	}
+	public void setHashtagList(Vector<Hashtag> hashtagList) {
+		this.hashtagList = hashtagList;
 	}
 	
-	public ArrayList<Hashtag> getHashtagList() {
-		return hashtagList; 
-	}
-	public void setHashtagList (ArrayList<Hashtag> hashtagList) {
-		this.hashtagList = hashtagList; 
-	}
+	
+	
 }

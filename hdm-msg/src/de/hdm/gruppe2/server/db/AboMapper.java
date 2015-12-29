@@ -9,63 +9,62 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Vector;
 
-import de.hdm.gruppe2.shared.bo.Message;
-import de.hdm.gruppe2.shared.bo.User;
+import de.hdm.gruppe2.shared.bo.Abo;
 
 /**
- * Mapper-Klasse, die <code>Message</code>-Objekte auf eine relationale
+ * Mapper-Klasse, die <code>Abo</code>-Objekte auf eine relationale
  * Datenbank abbildet. Hierzu wird eine Reihe von Methoden zur Verfügung
  * gestellt, mit deren Hilfe z.B. Objekte gesucht, erzeugt, modifiziert und
  * gelöscht werden können. Das Mapping ist bidirektional. D.h., Objekte können
  * in DB-Strukturen und DB-Strukturen in Objekte umgewandelt werden.
  * 
- * @see MessageMapper
+ * @see AboMapper
  * @author Thies & Ioannidou
  */
-public class MessageMapper {
+public class AboMapper {
 	
 	/**
-	 * Die Klasse MessageMapper wird nur einmal instantiiert. Man spricht
+	 * Die Klasse AboMapper wird nur einmal instantiiert. Man spricht
 	 * hierbei von einem sogenannten <b>Singleton</b>.
 	 * <p>
 	 * Diese Variable ist durch den Bezeichner <code>static</code> nur einmal
 	 * für sämtliche eventuellen Instanzen dieser Klasse vorhanden. Sie
 	 * speichert die einzige Instanz dieser Klasse.
 	 * 
-	 * @see MessageMapper()
+	 * @see AboMapper()
 	 */
-	private static MessageMapper messageMapper = null;
+	private static AboMapper aboMapper = null;
 	
 	/**
 	 * Geschützter Konstruktor - verhindert die Möglichkeit, mit
 	 * <code>new</code> neue Instanzen dieser Klasse zu erzeugen.
 	 */
-	protected MessageMapper() {
+	protected AboMapper() {
 	}
 	
 	/**
 	   * Diese statische Methode kann aufgrufen werden durch
-	   * <code>MessageMapper.messageMapper()</code>. Sie stellt die
+	   * <code>AboMapper.aboMapper()</code>. Sie stellt die
 	   * Singleton-Eigenschaft sicher, indem Sie dafür sorgt, dass nur eine einzige
-	   * Instanz von <code>MessageMapper</code> existiert.
+	   * Instanz von <code>AboMapper</code> existiert.
 	   * <p>
 	   * 
-	   * <b>Fazit:</b> MessageMapper sollte nicht mittels <code>new</code>
+	   * <b>Fazit:</b> AboMapper sollte nicht mittels <code>new</code>
 	   * instantiiert werden, sondern stets durch Aufruf dieser statischen Methode.
 	   * 
-	   * @return DAS <code>MessageMapper</code>-Objekt.
-	   * @see messageMapper()
+	   * @return DAS <code>AboMapper</code>-Objekt.
+	   * @see aboMapper()
 	   */
-	  public static MessageMapper messageMapper() {
-	    if (messageMapper == null) {
-	    	messageMapper = new MessageMapper();
+	  public static AboMapper aboMapper() {
+	    if (aboMapper == null) {
+	    	aboMapper = new AboMapper();
 	    }
 
-	    return messageMapper;
+	    return aboMapper;
 	  }
 	  
 	  /**
-	   * Einfügen eines <code>Message</code>-Objekts in die Datenbank. Dabei wird
+	   * Einfügen eines <code>Abo</code>-Objekts in die Datenbank. Dabei wird
 	   * auch der Primärschlüssel des übergebenen Objekts geprüft und ggf.
 	   * berichtigt.
 	   * @param a das zu speichernde Objekt
@@ -74,8 +73,10 @@ public class MessageMapper {
 	   */
 	  
 	  
-	  public Message insertMessage(Message message) {
+	  public Abo insertAbo(Abo abo) {
 		  Connection con = DBConnection.connection();
+		  
+		  // TODO IF Schleife einbauen, die Nutzer & Hashtags Abo verwaltet
 		  
 		  try {
 		      Statement stmt = con.createStatement();
@@ -85,25 +86,25 @@ public class MessageMapper {
 		       * Primärschlüsselwert ist.
 		       */
 		      //TODO: Statement anpassen sobald DB steht
-		      ResultSet rs = stmt.executeQuery("SELECT MAX(messageID) AS maxid "
-		          + "FROM Message ");
+		      ResultSet rs = stmt.executeQuery("SELECT MAX(aboID) AS maxid "
+		          + "FROM Abo ");
 
 		      if (rs.next()) {
 		        /*
 		         * Man erhält den bisher maximalen, nun um 1 inkrementierten
 		         * Primärschlüssel.
 		         */
-		    	  message.setId(rs.getInt("maxid") + 1);
+		    	  abo.setId(rs.getInt("maxid") + 1);
 	    	 
 		    	  
 		    	  // Java Util Date wird umgewandelt in SQL Date um das Änderungsdatum in
 		    	  // die Datenbank zu speichern 
-		     	  Date utilDate = message.getCreationDate();
+		     	  Date utilDate = abo.getCreationDate();
 		     	  java.sql.Timestamp sqlDate = new java.sql.Timestamp(utilDate.getTime());  
 		     	  DateFormat df = new SimpleDateFormat("dd/MM/YYYY HH:mm:ss");
 		     	  df.format(sqlDate);
 		     	  
-		     	  message.setCreationDate(sqlDate);
+		     	 abo.setCreationDate(sqlDate);
 		     	  
 	    	  /*
 		       * Das Objekt wird nun in die Datenbank geschrieben 
@@ -112,15 +113,12 @@ public class MessageMapper {
 		     	  stmt = con.createStatement();
 		        
 		      //TODO: Statement anpassen sobald DB steht
-		        stmt.executeUpdate("INSERT INTO Message VALUES ('"
-		        + message.getId() +"','"
-		        + message.getText() +"','"
-		        + message.getCreationDate() +"');");
+		        stmt.executeUpdate("INSERT INTO Abo VALUES ('"
+		        + abo.getId() +"','"
+		        + abo.getCreationDate() +"');");
 		        
 		      //TODO Eintrag in Zwischentabelle für die Hashtags
-		      //TODO Eintrag in Zwischentabelle für die Sender
-		      //TODO Eintrag in Zwischentabelle für die Chat
-		        
+		      //TODO Eintrag in Zwischentabelle für die User
 		      }
 		      
 		    }
@@ -128,49 +126,43 @@ public class MessageMapper {
 		      e2.printStackTrace();
 		    }
 
-		  return message;
+		  return abo;
 	  }
 	  
 	  /**
 	   * Wiederholtes Schreiben eines Objekts in die Datenbank.
 	   */
-	  public Message updateMessage(Message message) {
+	  public Abo updateAbo(Abo abo) {
 	    Connection con = DBConnection.connection();
 	    
 	    // Für Statement ID in Integer umwandeln
-	    Integer messageId = new Integer(message.getId());
+	    Integer aboId = new Integer(abo.getId());
 
 	    try {
 	      Statement stmt = con.createStatement();
 	      
 	      
-	    //TODO: Statement anpassen sobald DB steht
-	      stmt.executeUpdate("UPDATE Message SET "
-	      		+"text='"+ message.getText() 
-	      		+"' WHERE messageID='"+messageId.toString()+"';");
-	      
 	      //TODO Eintrag in Zwischentabelle für die Hashtags
 	      //TODO Eintrag in Zwischentabelle für die Sender
-	      //TODO Eintrag in Zwischentabelle für die Chat
 
 	    }
 	    catch (SQLException e2) {
 	      e2.printStackTrace();
 	    }
 
-	    return message;
+	    return abo;
 	  }
 	  
 	  
 	  /**
-	   * Löschen des Message-Objektes aus der Datenbank 
+	   * Löschen des Abo-Objektes aus der Datenbank 
 	   */
-	  public void deleteMessage(Message message) {
+	  public void deleteAbo(Abo abo) {
 	    Connection con = DBConnection.connection();
 
 	    try {
 	      Statement stmt = con.createStatement();
-	      stmt.executeUpdate("DELETE FROM Message WHERE messageID ='"+ message.getId()+"'");
+	      stmt.executeUpdate("DELETE FROM Abo WHERE aboID ='"+ abo.getId()+"'");
 	    }
 	    
 	    catch (SQLException e2) {
@@ -178,42 +170,8 @@ public class MessageMapper {
 	    }
 	  }
 	  
-	  /**
-	   * Eine Message in der Datenbank anhand seiner 
-	   * ID finden
-	   */
-	  public Message findByID (String id){
-			Connection con = DBConnection.connection();
-			Message message = null;
-			try{
-				Statement stmt = con.createStatement();
-			    
-				//TODO: Statement anpassen sobald DB steht
-			    ResultSet rs = stmt.executeQuery("SELECT * FROM Message WHERE messageID ='"
-			    		+id+"';");
-			    //Da es nur einen Message mit dieser ID geben kann ist davon auszugehen, dass das ResultSet nur eine Zeile enthält
-			    if(rs.next()){
-			    	message = new Message();
-			    	message.setId(rs.getInt("messageID"));
-			    	message.setText(rs.getString("text"));
-			    	
-			    	//TODO Eintrag aus Zwischentabelle für die Hashtags
-				    //TODO Eintrag aus Zwischentabelle für die Sender
-				    //TODO Eintrag aus Zwischentabelle für die Chat
-			    	
-			    	// Java Util Date wird umgewandelt in SQL Date um das Änderungsdatum in
-			        // die Datenbank zu speichern 
-			        java.sql.Timestamp sqlDate = rs.getTimestamp("creationDate");
-		     	 	message.setCreationDate(sqlDate);
-			    }
-			}
-			catch(SQLException e){
-				e.printStackTrace();
-			}
-			return message;
-		}
 	  
-	  
-	  //TODO Die Methode find by User and Time fehlt noch 
+	  //TODO getAboByHashtag Methode
+	  //TODO getAboByUser Methode
 
 }

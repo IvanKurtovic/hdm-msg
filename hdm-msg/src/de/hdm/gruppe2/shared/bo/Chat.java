@@ -5,11 +5,11 @@ import java.util.Vector;
 public class Chat extends BusinessObject {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private Vector<User> memberList;
-	
 	private Vector<Message> messageList;
 
+	// Setzen und auslesen der User in einem Chat
 	public Vector<User> getMemberList() {
 		return memberList;
 	}
@@ -18,6 +18,7 @@ public class Chat extends BusinessObject {
 		this.memberList = memberList;
 	}
 
+	// Setzen und auslesen der Nachrichten in einem Chat
 	public Vector<Message> getMessageList() {
 		return messageList;
 	}
@@ -25,5 +26,5 @@ public class Chat extends BusinessObject {
 	public void setMessageList(Vector<Message> messageList) {
 		this.messageList = messageList;
 	}
-	
+
 }
