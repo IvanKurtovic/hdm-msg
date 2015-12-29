@@ -32,3 +32,19 @@ h1 {
 #closeButton {
   margin: 15px 6px 6px;
 }
+
+#header_wrap {
+	border-style: solid;
+}
+
+#navigation_wrap {
+	border-style: solid;
+}
+
+#content_wrap {
+	border-style: solid;
+}
+
+#footer_wrap {
+	border-style: solid;
+}
