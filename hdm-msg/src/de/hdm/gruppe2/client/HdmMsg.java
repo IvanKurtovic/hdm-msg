@@ -2,9 +2,7 @@ package de.hdm.gruppe2.client;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -28,10 +26,8 @@ public class HdmMsg extends VerticalPanel implements EntryPoint {
 	public void onModuleLoad() {
 		
 		
-		
 			HTML welcomeText = new HTML("<h1>Wilkommen im Messenger Editor!</h1>");
 		
-			
 			
 			//Neu: MenuBar mit Commands (~ClickHandler)
 			Command messageview = new Command() {
@@ -64,19 +60,19 @@ public class HdmMsg extends VerticalPanel implements EntryPoint {
 			
 			
 			
-			Command loginTest = new Command() {
-			      public void execute() {
-			    	  RootPanel.get("content_wrap").clear();
-			    	  RootPanel.get("content_wrap").add(new Login());
-			      }
-			};
+	//		Command loginTest = new Command() {
+   //			      public void execute() {
+	//		    	  RootPanel.get("content_wrap").clear();
+	//		    	  RootPanel.get("content_wrap").add(new Login());
+	//		      }
+	//		};
 			
-			Command loginRegistration = new Command() {
-			      public void execute() {
-			    	  RootPanel.get("content_wrap").clear();
-			    	  RootPanel.get("content_wrap").add(new Registration());
-			      }
-			};
+	//		Command loginRegistration = new Command() {
+	//		      public void execute() {
+	//		    	  RootPanel.get("content_wrap").clear();
+	//		    	  RootPanel.get("content_wrap").add(new Registration());
+	//		      }
+	//		};
 			
 			
 			
@@ -89,22 +85,18 @@ public class HdmMsg extends VerticalPanel implements EntryPoint {
 			//Das Menü von Nachrichten erhält folgende Mouse-Over Untermenüs
 		    MenuBar messageMenue = new MenuBar(true);
 		    messageMenue.addItem(" Nachrichten Anzeigen",messageview);
-		    messageMenue.addItem(" Chats ", chatview);
 
 		    //Das Menü von Chats erhält folgende Mouse-Over Untermenüs
 		    MenuBar chatMenu = new MenuBar(true);
 		    chatMenu.addItem(" Chats Anzeigen ", chatview);
-		    chatMenu.addItem(" Nachrichten ",messageview );
 
 		    //Das Menü von Hashtags erhält folgende Mouse-Over Untermenüs
 		    MenuBar hashtagMenu = new MenuBar(true);
 		    hashtagMenu.addItem(" Hashtags Anzeigen ", hashtagview);
-		    hashtagMenu.addItem(" Nachrichten ", messageview);
 		    
 		    //Das Menü von Abos erhält folgende Mouse-Over Untermenüs
 		    MenuBar aboMenu = new MenuBar(true);
 		    aboMenu.addItem(" Abos Anzeigen ", aboview);
-		    aboMenu.addItem("Nachrichten", messageview);
 		    
 
 		    // TODO Login am Ende Auskommentierung entfernen
@@ -130,6 +122,7 @@ public class HdmMsg extends VerticalPanel implements EntryPoint {
 			    
 		    //Hautpmenü schließlich dem RootPanel in den Menü-div Container zuordnen
 		    RootPanel.get("head_wrap_right").add(mainMenu);
+			RootPanel.get("content_wrap").add(welcomeText);
 			RootPanel.get("Impressum").add(new Impressum());
 
 		
