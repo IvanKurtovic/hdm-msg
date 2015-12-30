@@ -32,3 +32,50 @@ h1 {
 #closeButton {
   margin: 15px 6px 6px;
 }
+
+div#wrap {
+	margin-left: 20em;
+	min-height: 510px;
+	max-height: 510px;
+	padding: 1em 1em;
+	border-top: 1px dashed silver;
+	border-left: 1px dashed silver;
+	overflow:scroll;
+	
+	background-color: #777777;	
+	
+}
+
+
+
+
+
+
+div#content_wrap {
+	margin-left: 20em;
+	min-height: 350px;
+	max-height: 500px;
+	padding: 1em 1em;
+	border-top: 1px dashed silver;
+	border-left: 1px dashed silver;
+	overflow:scroll;
+	
+	background-color: #e0ffff;	
+	
+}
+
+
+div#footer_wrap {
+    min-height: 50px;   
+    clear: both;
+	padding: 10px 0;
+	margin: 0 auto;      /* standardkonforme horizontale Zentrierung */
+	border-top: 1px dashed silver;
+	font-size: 80%;
+	text-align: center;
+	background-color: #b0c4de;
+	}
+
+
+
+

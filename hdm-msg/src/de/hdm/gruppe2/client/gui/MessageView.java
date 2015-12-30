@@ -21,7 +21,10 @@ public class MessageView extends VerticalPanel {
 	private VerticalPanel panelLinks = new VerticalPanel();
 	private VerticalPanel panelRechts = new VerticalPanel();
 	private final FlexTable tableInput = new FlexTable();
+	private final FlexTable tableInput1 = new FlexTable();
+
 	private  Label InputLabel = new Label("Inputbox");
+
 	
 	
 	public MessageView() {
@@ -105,14 +108,47 @@ public class MessageView extends VerticalPanel {
 
 			
 		}
+		
+		
+		
+		
+		tableInput1.setText(0, 0, "Sender");
+		tableInput1.setText(0, 1, "Nachricht");
+		tableInput1.setText(0, 2, "Datum");
+		
+		
+		for (int row = 1; row <= messageList.size(); row++) {
+			
+			/**
+			 * Da die flexTable in Reihen-Index 0 bereits mit den
+			 * Tabellen-Überschriften belegt ist (Begründung siehe
+			 * weiter oben im Code), wird eine "Hilfs-Variable"
+			 * benötigt, die den Tabellen-Index für den Vektor-Index
+			 * simuliert.
+			 */
+			final int i = row - 1;
+		
+		
+			
+			tableInput1.setText(row, 0, "" + messageList.get(i).getSender().getFirstName());
+			tableInput1.setText(row, 1, messageList.get(i).getText());
+			tableInput1.setText(row, 2, messageList.get(i).getCreationDate().toString().substring(0, 19));
+			
+			
+		}
 			
 		this.add(welcomeText);
+		
 		panelLinks.add(InputLabel);
 		panelLinks.add(tableInput);
 		this.add(panelLinks);
+		
+		
+		panelRechts.add(InputLabel);
+		panelRechts.add(tableInput1);
 		this.add(panelRechts);
-
-
+		
+		
 		/**
 		 * Abschließend wird die Klasse dem RootPanel zugeordnet.
 		 */

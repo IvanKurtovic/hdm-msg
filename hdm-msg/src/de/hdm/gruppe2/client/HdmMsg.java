@@ -27,7 +27,7 @@ public class HdmMsg extends VerticalPanel implements EntryPoint {
 		
 		
 			HTML welcomeText = new HTML("<h1>Wilkommen im Messenger Editor!</h1>");
-		
+			this.setBorderWidth(2);
 			
 			//Neu: MenuBar mit Commands (~ClickHandler)
 			Command messageview = new Command() {
