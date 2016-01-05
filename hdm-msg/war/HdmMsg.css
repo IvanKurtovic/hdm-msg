@@ -34,17 +34,24 @@ h1 {
 }
 
 #header_wrap {
-	border-style: solid;
-}
-
-#navigation_wrap {
-	border-style: solid;
+	position: absolute;
+	top: 1em;
+	left: 1em;
+	width: 43em;
+	height: 4em;
+	border: solid;
 }
 
 #content_wrap {
-	border-style: solid;
+	position: absolute;
+	top: 8em;
+	left: 1em;
+	width: 43em;
+	height: 20em;
+	border: solid;
 }
 
-#footer_wrap {
-	border-style: solid;
+.userNames {
+	width: 16em;
+	height: 100%;
 }

@@ -13,10 +13,17 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class HdmMsg extends VerticalPanel implements EntryPoint {
 	
 	public void onModuleLoad() {
-		
+	
 		Command test = new Command() {
 			public void execute() {
 				Window.alert("BANANAAAAA!!!");
+			}
+		};
+		
+		Command userOverview = new Command() {
+			public void execute() {
+				RootPanel.get("content_wrap").clear();
+				RootPanel.get("content_wrap").add(new UserOverview());
 			}
 		};
 		
@@ -24,7 +31,7 @@ public class HdmMsg extends VerticalPanel implements EntryPoint {
 		messageMenu.addItem("Neue Nachricht", test);
 		
 		MenuBar userMenu = new MenuBar(true);
-		userMenu.addItem("Alle User anzeigen", test);
+		userMenu.addItem("Alle User anzeigen", userOverview);
 		
 		MenuBar aboMenu = new MenuBar(true);
 		aboMenu.addItem("User Abos", test);
