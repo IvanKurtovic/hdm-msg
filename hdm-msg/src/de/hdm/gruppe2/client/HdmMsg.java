@@ -27,6 +27,15 @@ public class HdmMsg extends VerticalPanel implements EntryPoint {
 			}
 		};
 		
+		Command chatOverview = new Command() {
+
+			@Override
+			public void execute() {
+				RootPanel.get("content_wrap").clear();
+				RootPanel.get("content_wrap").add(new ChatOverview());			
+			}	
+		};
+		
 		MenuBar messageMenu = new MenuBar(true);
 		messageMenu.addItem("Neue Nachricht", test);
 		
@@ -38,7 +47,7 @@ public class HdmMsg extends VerticalPanel implements EntryPoint {
 		aboMenu.addItem("Hashtag Abos", test);
 		
 		MenuBar chatMenu = new MenuBar(true);
-		chatMenu.addItem("Chats anzeigen", test);
+		chatMenu.addItem("Chats anzeigen", chatOverview);
 		
 		MenuBar mainMenu = new MenuBar();
 		mainMenu.setWidth("100%");
