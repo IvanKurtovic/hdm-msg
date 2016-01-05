@@ -6,6 +6,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -51,6 +52,16 @@ public class UserOverview extends VerticalPanel{
 		
 		//final HorizontalPanel pnlFunctions = new HorizontalPanel();		
 		final Button btnCreateUser = new Button("Neuer User");
+		btnCreateUser.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				DialogBox dialogBox = createUserDialog();
+				dialogBox.show();
+				dialogBox.center();
+			}
+		});
+		
 		final Button btnSaveUser = new Button("Speichern");
 		btnSaveUser.addClickHandler(new ClickHandler() {
 
@@ -89,6 +100,8 @@ public class UserOverview extends VerticalPanel{
 			}
 		});
 		
+		// Damit die Buttons zusammen an einer Stelle des Grids angezeigt werden,
+		// legen wir sie in einem Horizontal Panel zusammen.
 		HorizontalPanel pnlSaveAndDeleteButton = new HorizontalPanel();
 		pnlSaveAndDeleteButton.add(btnCreateUser);
 		pnlSaveAndDeleteButton.add(btnDeleteUser);
@@ -106,6 +119,54 @@ public class UserOverview extends VerticalPanel{
 		mainGrid.setWidget(1, 0, pnlSaveAndDeleteButton);
 
 		this.add(mainGrid);
+	}
+	
+	private DialogBox createUserDialog() {
+		
+		final DialogBox dialogBox = new DialogBox();
+		dialogBox.setGlassEnabled(true);
+		dialogBox.setAnimationEnabled(true);
+		
+		Grid mainGrid = new Grid(6,2);
+		
+		Label lblTitle = new Label("Neuer User");
+		lblTitle.setStyleName("create-user-title");
+		Label lblId = new Label("ID: ");
+		Label lblFirstName = new Label("Vorname: ");
+		Label lblLastName = new Label("Nachname: ");
+		Label lblEmail = new Label("Email: ");
+		
+		TextBox tbId = new TextBox();
+		tbId.setEnabled(false);
+		TextBox tbFirstName = new TextBox();
+		TextBox tbLastName = new TextBox();
+		TextBox tbEmail = new TextBox();
+		
+		Button btnCreate = new Button("Anlegen");
+		Button btnCancel = new Button("Abbrechen");
+		btnCancel.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				dialogBox.hide();
+			}	
+		});
+		
+		mainGrid.setWidget(0, 0, lblTitle);
+		mainGrid.setWidget(1, 0, lblId);
+		mainGrid.setWidget(2, 0, lblFirstName);
+		mainGrid.setWidget(3, 0, lblLastName);
+		mainGrid.setWidget(4, 0, lblEmail);
+		mainGrid.setWidget(5, 0, btnCancel);
+		mainGrid.setWidget(1, 1, tbId);
+		mainGrid.setWidget(2, 1, tbFirstName);
+		mainGrid.setWidget(3, 1, tbLastName);
+		mainGrid.setWidget(4, 1, tbEmail);
+		mainGrid.setWidget(5, 1, btnCreate);
+		
+		dialogBox.add(mainGrid);
+		
+		return dialogBox;
 	}
 
 }
