@@ -11,21 +11,21 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-public class HashtagSubscriptionOverview extends VerticalPanel {
+public class UserSubscriptionOverview extends VerticalPanel {
 	
-	private String[] hashtags = {"thies", "itprojekt", "ibne2015", "banane", "up0rn"};
+private String[] users = {"cem", "ivan", "serkan", "marina", "kerim", "thies"};
 	
 	@Override
 	public void onLoad() {
 		
 		final Grid mainGrid = new Grid(2, 2);
 		
-		final ListBox hashtagList = new ListBox();
-		hashtagList.setStyleName("listbox");
-		hashtagList.setVisibleItemCount(11);
+		final ListBox userList = new ListBox();
+		userList.setStyleName("listbox");
+		userList.setVisibleItemCount(11);
 		
-		for(String s : hashtags) {
-			hashtagList.addItem("#" + s);
+		for(String s : users) {
+			userList.addItem(s);
 		}
 		
 		final Button btnNewSubscription = new Button("Neues Abonnement");
@@ -44,7 +44,7 @@ public class HashtagSubscriptionOverview extends VerticalPanel {
 		pnlSubscribeAndUnsubscribe.add(btnNewSubscription);
 		pnlSubscribeAndUnsubscribe.add(btnUnsubscribe);
 		
-		mainGrid.setWidget(0, 0, hashtagList);
+		mainGrid.setWidget(0, 0, userList);
 		mainGrid.setWidget(1, 0, pnlSubscribeAndUnsubscribe);
 		
 		this.add(mainGrid);		
@@ -58,7 +58,7 @@ public class HashtagSubscriptionOverview extends VerticalPanel {
 		
 		final Grid mainGrid = new Grid(4,1);
 		
-		final Label lblTitle = new Label("Neues Hashtag-Abo");
+		final Label lblTitle = new Label("Neues User-Abo");
 		lblTitle.addStyleName("popup-title");
 		final TextBox tbSearch = new TextBox();
 		final Button btnSearch = new Button("Suchen");
@@ -67,9 +67,9 @@ public class HashtagSubscriptionOverview extends VerticalPanel {
 		pnlSearchControls.add(tbSearch);
 		pnlSearchControls.add(btnSearch);
 		
-		final ListBox hashtagList = new ListBox();
-		hashtagList.setStyleName("listbox");
-		hashtagList.setVisibleItemCount(5);
+		final ListBox userList = new ListBox();
+		userList.setStyleName("listbox");
+		userList.setVisibleItemCount(5);
 		
 		final Button btnSubscribe = new Button("Abonnieren");
 		final Button btnCancel = new Button("Abbrechen");
@@ -87,11 +87,12 @@ public class HashtagSubscriptionOverview extends VerticalPanel {
 		
 		mainGrid.setWidget(0, 0, lblTitle);
 		mainGrid.setWidget(1, 0, pnlSearchControls);
-		mainGrid.setWidget(2, 0, hashtagList);
+		mainGrid.setWidget(2, 0, userList);
 		mainGrid.setWidget(3, 0, pnlSubscriptionControls);
 		
 		dialogBox.add(mainGrid);
 		
 		return dialogBox;		
 	}
+
 }
