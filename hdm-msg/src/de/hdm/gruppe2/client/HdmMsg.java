@@ -36,6 +36,16 @@ public class HdmMsg extends VerticalPanel implements EntryPoint {
 			}	
 		};
 		
+		Command about = new Command() {
+
+			@Override
+			public void execute() {
+				RootPanel.get("content_wrap").clear();
+				RootPanel.get("content_wrap").add(new Impressum());	
+			}
+			
+		};
+
 		MenuBar messageMenu = new MenuBar(true);
 		messageMenu.addItem("Neue Nachricht", test);
 		
@@ -52,10 +62,12 @@ public class HdmMsg extends VerticalPanel implements EntryPoint {
 		MenuBar mainMenu = new MenuBar();
 		mainMenu.setWidth("100%");
 		mainMenu.setAutoOpen(true);
-		mainMenu.addItem("Nachrichten", messageMenu);
+		mainMenu.addItem("Home", test);
+		mainMenu.addItem("Neuer Post", messageMenu);
 		mainMenu.addItem("Chats", chatMenu);
 		mainMenu.addItem("Users", userMenu);
 		mainMenu.addItem("Abos", aboMenu);
+		mainMenu.addItem("About", about);
 		
 		//RootPanel.get("content_wrap").add(welcomeImage);
 	    RootPanel.get("header_wrap").add(mainMenu);
