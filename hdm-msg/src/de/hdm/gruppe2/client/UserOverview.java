@@ -36,7 +36,7 @@ public class UserOverview extends VerticalPanel{
 
 		// User List links
 		final ListBox userNames = new ListBox();
-		userNames.setStyleName("userNames");
+		userNames.setStyleName("listbox");
 		userNames.setVisibleItemCount(11);
 		userNames.addChangeHandler(new ChangeHandler() {
 
@@ -130,7 +130,7 @@ public class UserOverview extends VerticalPanel{
 		Grid mainGrid = new Grid(6,2);
 		
 		Label lblTitle = new Label("Neuer User");
-		lblTitle.setStyleName("create-user-title");
+		lblTitle.setStyleName("popup-title");
 		Label lblId = new Label("ID: ");
 		Label lblFirstName = new Label("Vorname: ");
 		Label lblLastName = new Label("Nachname: ");

@@ -6,6 +6,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -20,6 +21,7 @@ public class HashtagSubscriptionOverview extends VerticalPanel {
 		final Grid mainGrid = new Grid(2, 2);
 		
 		final ListBox hashtagList = new ListBox();
+		hashtagList.setStyleName("listbox");
 		hashtagList.setVisibleItemCount(11);
 		
 		for(String s : hashtags) {
@@ -54,8 +56,10 @@ public class HashtagSubscriptionOverview extends VerticalPanel {
 		dialogBox.setGlassEnabled(true);
 		dialogBox.setAnimationEnabled(true);
 		
-		final Grid mainGrid = new Grid(3,1);
+		final Grid mainGrid = new Grid(4,1);
 		
+		final Label lblTitle = new Label("Neues Abo");
+		lblTitle.addStyleName("popup-title");
 		final TextBox tbSearch = new TextBox();
 		final Button btnSearch = new Button("Suchen");
 		
@@ -64,6 +68,7 @@ public class HashtagSubscriptionOverview extends VerticalPanel {
 		pnlSearchControls.add(btnSearch);
 		
 		final ListBox hashtagList = new ListBox();
+		hashtagList.setStyleName("listbox");
 		hashtagList.setVisibleItemCount(5);
 		
 		final Button btnSubscribe = new Button("Abonnieren");
@@ -80,9 +85,10 @@ public class HashtagSubscriptionOverview extends VerticalPanel {
 		pnlSubscriptionControls.add(btnSubscribe);
 		pnlSubscriptionControls.add(btnCancel);
 		
-		mainGrid.setWidget(0, 0, pnlSearchControls);
-		mainGrid.setWidget(1, 0, hashtagList);
-		mainGrid.setWidget(2, 0, pnlSubscriptionControls);
+		mainGrid.setWidget(0, 0, lblTitle);
+		mainGrid.setWidget(1, 0, pnlSearchControls);
+		mainGrid.setWidget(2, 0, hashtagList);
+		mainGrid.setWidget(3, 0, pnlSubscriptionControls);
 		
 		dialogBox.add(mainGrid);
 		
