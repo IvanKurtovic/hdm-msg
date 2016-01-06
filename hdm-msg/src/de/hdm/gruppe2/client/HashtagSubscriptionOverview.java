@@ -1,9 +1,13 @@
 package de.hdm.gruppe2.client;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class HashtagSubscriptionOverview extends VerticalPanel {
@@ -23,6 +27,15 @@ public class HashtagSubscriptionOverview extends VerticalPanel {
 		}
 		
 		final Button btnNewSubscription = new Button("Neues Abonnement");
+		btnNewSubscription.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				DialogBox dialogBox = subscriptionDialog();
+				dialogBox.show();
+				dialogBox.center();
+			}
+		});
 		final Button btnUnsubscribe = new Button("Deabonnieren");
 		
 		final HorizontalPanel pnlSubscribeAndUnsubscribe = new HorizontalPanel();
@@ -33,5 +46,46 @@ public class HashtagSubscriptionOverview extends VerticalPanel {
 		mainGrid.setWidget(1, 0, pnlSubscribeAndUnsubscribe);
 		
 		this.add(mainGrid);		
+	}
+	
+	private DialogBox subscriptionDialog() {
+		
+		final DialogBox dialogBox = new DialogBox();
+		dialogBox.setGlassEnabled(true);
+		dialogBox.setAnimationEnabled(true);
+		
+		final Grid mainGrid = new Grid(3,1);
+		
+		final TextBox tbSearch = new TextBox();
+		final Button btnSearch = new Button("Suchen");
+		
+		final HorizontalPanel pnlSearchControls = new HorizontalPanel();
+		pnlSearchControls.add(tbSearch);
+		pnlSearchControls.add(btnSearch);
+		
+		final ListBox hashtagList = new ListBox();
+		hashtagList.setVisibleItemCount(5);
+		
+		final Button btnSubscribe = new Button("Abonnieren");
+		final Button btnCancel = new Button("Abbrechen");
+		btnCancel.addClickHandler(new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent event) {
+				dialogBox.hide();
+			}
+		});
+		
+		final HorizontalPanel pnlSubscriptionControls = new HorizontalPanel();
+		pnlSubscriptionControls.add(btnSubscribe);
+		pnlSubscriptionControls.add(btnCancel);
+		
+		mainGrid.setWidget(0, 0, pnlSearchControls);
+		mainGrid.setWidget(1, 0, hashtagList);
+		mainGrid.setWidget(2, 0, pnlSubscriptionControls);
+		
+		dialogBox.add(mainGrid);
+		
+		return dialogBox;		
 	}
 }
