@@ -157,12 +157,12 @@ public class UserOverview extends VerticalPanel{
 		mainGrid.setWidget(2, 0, lblFirstName);
 		mainGrid.setWidget(3, 0, lblLastName);
 		mainGrid.setWidget(4, 0, lblEmail);
-		mainGrid.setWidget(5, 0, btnCancel);
+		mainGrid.setWidget(5, 0, btnCreate);
 		mainGrid.setWidget(1, 1, tbId);
 		mainGrid.setWidget(2, 1, tbFirstName);
 		mainGrid.setWidget(3, 1, tbLastName);
 		mainGrid.setWidget(4, 1, tbEmail);
-		mainGrid.setWidget(5, 1, btnCreate);
+		mainGrid.setWidget(5, 1, btnCancel);
 		
 		dialogBox.add(mainGrid);
 		
