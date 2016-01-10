@@ -19,7 +19,6 @@ public class User extends BusinessObject {
 	 */
 	private String firstName;
 	private String lastName;
-	private String googleId;
 	private String email;
 	
 	public String getFirstName() {
@@ -33,12 +32,6 @@ public class User extends BusinessObject {
 	}
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
-	}
-	public String getGoogleId() {
-		return googleId;
-	}
-	public void setGoogleId(String googleId) {
-		this.googleId = googleId;
 	}
 	public String getEmail() {
 		return email;
