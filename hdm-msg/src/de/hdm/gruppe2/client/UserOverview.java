@@ -1,5 +1,7 @@
 package de.hdm.gruppe2.client;
 
+import java.util.ArrayList;
+
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -22,41 +24,50 @@ import de.hdm.gruppe2.shared.bo.User;
 
 public class UserOverview extends VerticalPanel{
 	
-	private String[] names = {"Kerim", "Serkan", "Cem", "Ivan", "Cemile", "Hatun",
-							  "Feridun", "Ibne", "Semsettin", "Bahtiyar", "Osman"};
-	
+	private ArrayList<User> users = new ArrayList<User>();	
 	private MsgServiceAsync msgSvc = GWT.create(MsgService.class);
 	private Label lblNotification = new Label();
-		
+	
 	@Override
 	public void onLoad() {
 		
 		// User Details
 		final Grid mainGrid = new Grid(5,3);
-		final Grid detailsGrid = new Grid(4,2);
+		final Grid detailsGrid = new Grid(5,2);
 		
 		final Label lblFirstName = new Label("Vorname: ");
-		final TextBox tbFirstName = new TextBox();
 		final Label lblLastName = new Label("Nachname: ");
-		final TextBox tbLastName = new TextBox();
 		final Label lblEmail = new Label("Email: ");
-		final TextBox tbEmail = new TextBox();		
-
+		final Label lblCreationDate = new Label("Angelegt am: ");
+		final TextBox tbFirstName = new TextBox();
+		final TextBox tbLastName = new TextBox();
+		final TextBox tbEmail = new TextBox();
+		final TextBox tbCreationDate = new TextBox();
+		tbCreationDate.setEnabled(false);
+		
 		// User List links
-		final ListBox userNames = new ListBox();
-		userNames.setStyleName("listbox");
-		userNames.setVisibleItemCount(11);
-		userNames.addChangeHandler(new ChangeHandler() {
-
+		final ListBox userList = new ListBox();
+		userList.setStyleName("listbox");
+		userList.setVisibleItemCount(11);
+		userList.addChangeHandler(new ChangeHandler() {
+			
 			@Override
 			public void onChange(ChangeEvent event) {
-				tbFirstName.setText(userNames.getValue(userNames.getSelectedIndex()));
+				if(userList.getSelectedIndex() == -1) {
+					return;
+				}
+				
+				User selectedUser = users.get(userList.getSelectedIndex());
+				
+				tbFirstName.setText(selectedUser.getFirstName());
+				tbLastName.setText(selectedUser.getLastName());
+				tbEmail.setText(selectedUser.getEmail());
+				tbCreationDate.setText(selectedUser.getCreationDate().toString());
 			}
 		});
 		
-		for (String s : names) {
-			userNames.addItem(s);
-		}
+		// Alle User aus der Datenbank laden und in die Liste speichern.
+		msgSvc.findAllUser(new FindAllUsersCallback(userList, lblNotification));
 		
 		//final HorizontalPanel pnlFunctions = new HorizontalPanel();		
 		final Button btnCreateUser = new Button("Neuer User");
@@ -76,18 +87,18 @@ public class UserOverview extends VerticalPanel{
 			@Override
 			public void onClick(ClickEvent event) {
 				
-				if(userNames.getSelectedIndex() == -1) {
+				if(userList.getSelectedIndex() == -1) {
 					lblNotification.setText("Kein User ausgewaehlt.");
 					return;
 				}
 				
-				if(userNames.getValue(userNames.getSelectedIndex()) == tbFirstName.getText()) {
+				if(userList.getValue(userList.getSelectedIndex()) == tbFirstName.getText()) {
 					lblNotification.setText("Keine Aenderung vorgenommen.");
 					return;	
-				} else if (userNames.getValue(userNames.getSelectedIndex()) != tbFirstName.getText()) {
-					int index = userNames.getSelectedIndex();
-					userNames.removeItem(index);
-					userNames.insertItem(tbFirstName.getText(), index);
+				} else if (userList.getValue(userList.getSelectedIndex()) != tbFirstName.getText()) {
+					int index = userList.getSelectedIndex();
+					userList.removeItem(index);
+					userList.insertItem(tbFirstName.getText(), index);
 				}
 			}
 			
@@ -99,12 +110,12 @@ public class UserOverview extends VerticalPanel{
 			@Override
 			public void onClick(ClickEvent event) {
 				
-				if(userNames.getSelectedIndex() == -1) {
+				if(userList.getSelectedIndex() == -1) {
 					lblNotification.setText("Kein User ausgewaehlt.");
 					return;
 				}
 				
-				userNames.removeItem(userNames.getSelectedIndex());
+				userList.removeItem(userList.getSelectedIndex());
 			}
 		});
 		
@@ -120,9 +131,12 @@ public class UserOverview extends VerticalPanel{
 		detailsGrid.setWidget(1, 1, tbLastName);
 		detailsGrid.setWidget(2, 0, lblEmail);
 		detailsGrid.setWidget(2, 1, tbEmail);
-		detailsGrid.setWidget(3, 0, btnSaveUser);
+		detailsGrid.setWidget(3, 0, lblCreationDate);
+		detailsGrid.setWidget(3, 1, tbCreationDate);
+		detailsGrid.setWidget(4, 0, btnSaveUser);
 		
-		mainGrid.setWidget(0, 0, userNames);
+		
+		mainGrid.setWidget(0, 0, userList);
 		mainGrid.setWidget(0, 1, detailsGrid);
 		mainGrid.setWidget(1, 0, pnlSaveAndDeleteButton);
 		mainGrid.setWidget(1, 1, lblNotification);
@@ -136,17 +150,13 @@ public class UserOverview extends VerticalPanel{
 		dialogBox.setGlassEnabled(true);
 		dialogBox.setAnimationEnabled(true);
 		
-		final Grid mainGrid = new Grid(6,2);
+		final Grid mainGrid = new Grid(5,2);
 		
 		final Label lblTitle = new Label("Neuer User");
 		lblTitle.setStyleName("popup-title");
-		final Label lblId = new Label("ID: ");
 		final Label lblFirstName = new Label("Vorname: ");
 		final Label lblLastName = new Label("Nachname: ");
 		final Label lblEmail = new Label("Email: ");
-		
-		final TextBox tbId = new TextBox();
-		tbId.setEnabled(false);
 		final TextBox tbFirstNameDialog = new TextBox();
 		final TextBox tbLastNameDialog = new TextBox();
 		final TextBox tbEmailDialog = new TextBox();
@@ -193,16 +203,14 @@ public class UserOverview extends VerticalPanel{
 		});
 		
 		mainGrid.setWidget(0, 0, lblTitle);
-		mainGrid.setWidget(1, 0, lblId);
-		mainGrid.setWidget(2, 0, lblFirstName);
-		mainGrid.setWidget(3, 0, lblLastName);
-		mainGrid.setWidget(4, 0, lblEmail);
-		mainGrid.setWidget(5, 0, btnCreate);
-		mainGrid.setWidget(1, 1, tbId);
-		mainGrid.setWidget(2, 1, tbFirstNameDialog);
-		mainGrid.setWidget(3, 1, tbLastNameDialog);
-		mainGrid.setWidget(4, 1, tbEmailDialog);
-		mainGrid.setWidget(5, 1, btnCancel);
+		mainGrid.setWidget(1, 0, lblFirstName);
+		mainGrid.setWidget(2, 0, lblLastName);
+		mainGrid.setWidget(3, 0, lblEmail);
+		mainGrid.setWidget(4, 0, btnCreate);
+		mainGrid.setWidget(1, 1, tbFirstNameDialog);
+		mainGrid.setWidget(2, 1, tbLastNameDialog);
+		mainGrid.setWidget(3, 1, tbEmailDialog);
+		mainGrid.setWidget(4, 1, btnCancel);
 		
 		dialogBox.add(mainGrid);
 		
@@ -225,6 +233,35 @@ public class UserOverview extends VerticalPanel{
 		@Override
 		public void onSuccess(User result) {
 			this.notification.setText("Der User wurde angelegt!");
+		}
+		
+	}
+	
+	private class FindAllUsersCallback implements AsyncCallback<ArrayList<User>> {
+
+		private Label notification = null;
+		private ListBox userList = null;
+		
+		public FindAllUsersCallback(ListBox userList, Label notificationLabel) {
+			this.notification = notificationLabel;
+			this.userList = userList;
+		}
+		
+		@Override
+		public void onFailure(Throwable caught) {
+			this.notification.setText("User konnten nicht geladen werden!");			
+		}
+
+		@Override
+		public void onSuccess(ArrayList<User> result) {
+			
+			users = result;
+			
+			for (User s : users) {
+				userList.addItem(s.getFirstName() + " " + s.getLastName());
+			}
+			
+			this.notification.setText("Alle User wurden geladen!");			
 		}
 		
 	}
