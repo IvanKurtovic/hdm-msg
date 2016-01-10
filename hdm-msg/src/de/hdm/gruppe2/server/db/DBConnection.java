@@ -2,6 +2,7 @@ package de.hdm.gruppe2.server.db;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import com.mysql.jdbc.*;
 
 import com.google.appengine.api.utils.SystemProperty;
 
@@ -43,8 +44,8 @@ public class DBConnection {
      * mitgegeben, um bei einer Veränderung dieser URL nicht die gesamte
      * Software neu komilieren zu müssen.
      */
-    private static String googleUrl = "jdbc:google:mysql://prof-thies.de:thies-bankproject:thies-bankproject/bankproject?user=demo&password=demo";
-    private static String localUrl = "jdbc:mysql://127.0.0.1:3306/bankproject?user=demo&password=demo";
+    private static String googleUrl = "jdbc:google:mysql://fair-scout-118511:hdmmsg-instanz?user=root";
+    private static String localUrl = "jdbc:mysql://127.0.0.1:3306/dbmessenger?user=root&password=123456";
 
     /**
      * Diese statische Methode kann aufgrufen werden durch
@@ -103,5 +104,5 @@ public class DBConnection {
         // Zurückgegeben der Verbindung
         return con;
     }
-
+    
 }

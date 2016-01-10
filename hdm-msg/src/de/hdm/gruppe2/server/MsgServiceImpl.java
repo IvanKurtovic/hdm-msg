@@ -1,7 +1,9 @@
 package de.hdm.gruppe2.server;
 
+import de.hdm.gruppe2.server.db.UserMapper;
 import de.hdm.gruppe2.shared.FieldVerifier;
 import de.hdm.gruppe2.shared.MsgService;
+import de.hdm.gruppe2.shared.bo.User;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
@@ -11,6 +13,9 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 @SuppressWarnings("serial")
 public class MsgServiceImpl extends RemoteServiceServlet implements MsgService {
 
+	private UserMapper usermapper = UserMapper.usermapper();
+	
+	
 	public String greetServer(String input) throws IllegalArgumentException {
 		// Verify that the input is valid. 
 		if (!FieldVerifier.isValidName(input)) {
@@ -42,5 +47,22 @@ public class MsgServiceImpl extends RemoteServiceServlet implements MsgService {
 			return null;
 		}
 		return html.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+	}
+
+	@Override
+	public User createUser(String email, String firstName, String lastName) {
+		
+		User u = new User();
+		u.setEmail(email);
+		u.setFirstName(firstName);
+		u.setLastName(lastName);
+		
+		/*
+	     * Setzen einer vorläufigen User-Id Der insert-Aufruf liefert dann ein
+	     * Objekt, dessen Nummer mit der Datenbank konsistent ist.
+	     */
+		u.setId(1);
+
+		return this.usermapper.insert(u);
 	}
 }
