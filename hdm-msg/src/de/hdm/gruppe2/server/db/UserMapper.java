@@ -81,8 +81,7 @@ public class UserMapper {
 		Connection con = DBConnection.connection();
 		try {
 			PreparedStatement preStmt;
-			preStmt = con
-					.prepareStatement("UPDATE nutzer SET firstName=?, "
+			preStmt = con.prepareStatement("UPDATE nutzer SET firstName=?, "
 							+ "LastName=?, email=?, date=? WHERE GoogleID="
 							+ user.getGoogleId());
 			preStmt.setString(1, user.getFirstName());
@@ -241,41 +240,40 @@ public User findUserByEmail(String email)
 	}
 	return null;
 }
-/**
- * Diese Methode ermöglicht einen Nutzer anhand des Prim�rschl�ssels zu
- * finden und anzuzeigen.
- * 
- * @return uebergebener Paramater
- * @author Thies
- * @author Serkan 
- * 
- */
-
-public User findUserById(int userID) throws IllegalArgumentException {
-	Connection con = DBConnection.connection();
-	try {
-		Statement stmt = con.createStatement();
-
-		ResultSet rs = stmt.executeQuery("SELECT * FROM user WHERE userID= "+userID+" ORDER BY userID");
-		
-		if(rs.next()){
-			User user=new User();
-			user.setId(rs.getInt("userID"));
-
-
-			user.setFirstName(rs.getString("firstName"));
-			user.setLastName(rs.getString("LastName"));
-			user.setEmail(rs.getString("email"));
-			//user.setCreationDate(creationDate);
-			return user;
+	/**
+	 * Diese Methode ermöglicht einen Nutzer anhand des Prim�rschl�ssels zu
+	 * finden und anzuzeigen.
+	 * 
+	 * @return uebergebener Paramater
+	 * @author Thies
+	 * @author Serkan 
+	 * 
+	 */
+	
+	public User findUserById(int id) throws IllegalArgumentException {
+		Connection con = DBConnection.connection();
+		try {
+			Statement stmt = con.createStatement();
+	
+			ResultSet rs = stmt.executeQuery("SELECT * FROM `user` WHERE id=" + id);
+			
+			if(rs.next()){
+				User user = new User();
+				user.setId(rs.getInt("id"));
+				user.setFirstName(rs.getString("firstName"));
+				user.setLastName(rs.getString("lastName"));
+				user.setEmail(rs.getString("email"));
+				user.setCreationDate(rs.getDate("creationDate"));
+				
+				return user;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new IllegalArgumentException("Error with Database or Connection failed"
+					+ e.toString());
 		}
-	} catch (SQLException e) {
-		e.printStackTrace();
-		throw new IllegalArgumentException("Error with Database or Connection failed"
-				+ e.toString());
+		return null;
 	}
-	return null;
-}
 
 }
 
