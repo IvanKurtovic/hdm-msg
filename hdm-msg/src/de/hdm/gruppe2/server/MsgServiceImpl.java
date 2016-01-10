@@ -5,6 +5,8 @@ import de.hdm.gruppe2.shared.FieldVerifier;
 import de.hdm.gruppe2.shared.MsgService;
 import de.hdm.gruppe2.shared.bo.User;
 
+import java.util.ArrayList;
+
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 /**
@@ -69,5 +71,10 @@ public class MsgServiceImpl extends RemoteServiceServlet implements MsgService {
 	@Override
 	public User editUser(User user) {
 		return this.usermapper.update(user);
+	}
+
+	@Override
+	public ArrayList<User> findAllUser() {
+		return this.usermapper.findAllUsers();
 	}
 }

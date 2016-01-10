@@ -1,5 +1,7 @@
 package de.hdm.gruppe2.shared;
 
+import java.util.ArrayList;
+
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
@@ -15,4 +17,6 @@ public interface MsgService extends RemoteService {
 	public User createUser(String email, String firstName, String lastName);
 	
 	public User editUser(User user);
+	
+	public ArrayList<User> findAllUser();
 }
