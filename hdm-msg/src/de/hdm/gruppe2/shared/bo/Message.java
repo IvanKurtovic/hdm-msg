@@ -44,4 +44,4 @@ public class Message extends BusinessObject {
 		this.hashtagList = hashtagList; 
 	}
 }
-// Author Cem
+// Author Cem Korkmaz
