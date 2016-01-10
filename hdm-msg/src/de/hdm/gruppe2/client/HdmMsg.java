@@ -77,7 +77,6 @@ public class HdmMsg extends VerticalPanel implements EntryPoint {
 		chatMenu.addItem("Chats anzeigen", chatOverview);
 		
 		MenuBar mainMenu = new MenuBar();
-		mainMenu.setWidth("100%");
 		mainMenu.setAutoOpen(true);
 		mainMenu.addItem("Home", test);
 		mainMenu.addItem("Neuer Post", messageMenu);
