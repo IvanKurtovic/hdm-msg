@@ -2,8 +2,6 @@ package de.hdm.gruppe2.server.db;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import com.mysql.jdbc.*;
-
 import com.google.appengine.api.utils.SystemProperty;
 
 /**
