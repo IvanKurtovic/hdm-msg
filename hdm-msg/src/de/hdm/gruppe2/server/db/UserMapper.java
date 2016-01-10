@@ -45,40 +45,29 @@ public class UserMapper {
 		Connection con = DBConnection.connection();
 		try {
 			// Insert-Statement erzeugen
-			// Statement stmt = con.createStatement();
-			// Zunï¿½chst wird geschaut welches der momentan hï¿½chste
-			// Primï¿½rschlï¿½ssel ist
-			// ResultSet
-			// rs=stmt.executeQuery("SELECT MAX(UserID) AS maxid "+"FROM user");
-
+			Statement stmt = con.createStatement();
+			// Zunächst wird geschaut welches der momentan höchste
+			// Primärschlüssel ist.
+			ResultSet rs = stmt.executeQuery("SELECT MAX(id) AS maxid FROM user");
+	
 			// Wenn ein Datensatz gefunden wurde, wird auf diesen zugegriffen
-			// if(rs.next()) @Author: Thies{
-			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-			Date d = new Date();
-			try {
-				d = sdf.parse("21/12/2015");
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			if(rs.next()) {
+				// Die gefundene id wird um 1 inkrementiert und in das neue User-Objekt geschrieben.
+				user.setId(rs.getInt("maxid") + 1);
 			}
-			//user.setCreationDate(creationDate);
-
-			String sql = "INSERT INTO `user`(`GoogleID`, `vorname`, `nachname`, `email`, `nickname`, `datum`) "
-					+ "VALUES (NULL, ?, ?, ?, ?, ?)";
+			
+			String sql = "INSERT INTO `user`(`id`, `email`, `firstName`, `lastName`) "
+					+ "VALUES (?, ?, ?, ?)";
 
 			PreparedStatement preStmt;
 			preStmt = con.prepareStatement(sql);
-			preStmt.setString(1, user.getFirstName());
-			preStmt.setString(3, user.getLastName());
+			preStmt.setString(1, Integer.toString(user.getId()));
 			preStmt.setString(2, user.getEmail());
-			preStmt.setString(4, user.getGoogleId());
+			preStmt.setString(3, user.getFirstName());
+			preStmt.setString(4, user.getLastName());
 			preStmt.executeUpdate();
 			preStmt.close();
 
-		
-	
-
-			
 		} catch (SQLException e) {
 
 			e.printStackTrace();

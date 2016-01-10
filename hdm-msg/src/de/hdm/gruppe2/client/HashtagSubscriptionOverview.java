@@ -1,0 +1,97 @@
+package de.hdm.gruppe2.client;
+
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.VerticalPanel;
+
+public class HashtagSubscriptionOverview extends VerticalPanel {
+	
+	private String[] hashtags = {"thies", "itprojekt", "ibne2015", "banane", "up0rn"};
+	
+	@Override
+	public void onLoad() {
+		
+		final Grid mainGrid = new Grid(2, 2);
+		
+		final ListBox hashtagList = new ListBox();
+		hashtagList.setStyleName("listbox");
+		hashtagList.setVisibleItemCount(11);
+		
+		for(String s : hashtags) {
+			hashtagList.addItem("#" + s);
+		}
+		
+		final Button btnNewSubscription = new Button("Neues Abonnement");
+		btnNewSubscription.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				DialogBox dialogBox = subscriptionDialog();
+				dialogBox.show();
+				dialogBox.center();
+			}
+		});
+		final Button btnUnsubscribe = new Button("Deabonnieren");
+		
+		final HorizontalPanel pnlSubscribeAndUnsubscribe = new HorizontalPanel();
+		pnlSubscribeAndUnsubscribe.add(btnNewSubscription);
+		pnlSubscribeAndUnsubscribe.add(btnUnsubscribe);
+		
+		mainGrid.setWidget(0, 0, hashtagList);
+		mainGrid.setWidget(1, 0, pnlSubscribeAndUnsubscribe);
+		
+		this.add(mainGrid);		
+	}
+	
+	private DialogBox subscriptionDialog() {
+		
+		final DialogBox dialogBox = new DialogBox();
+		dialogBox.setGlassEnabled(true);
+		dialogBox.setAnimationEnabled(true);
+		
+		final Grid mainGrid = new Grid(4,1);
+		
+		final Label lblTitle = new Label("Neues Hashtag-Abo");
+		lblTitle.addStyleName("popup-title");
+		final TextBox tbSearch = new TextBox();
+		final Button btnSearch = new Button("Suchen");
+		
+		final HorizontalPanel pnlSearchControls = new HorizontalPanel();
+		pnlSearchControls.add(tbSearch);
+		pnlSearchControls.add(btnSearch);
+		
+		final ListBox hashtagList = new ListBox();
+		hashtagList.setStyleName("listbox");
+		hashtagList.setVisibleItemCount(5);
+		
+		final Button btnSubscribe = new Button("Abonnieren");
+		final Button btnCancel = new Button("Abbrechen");
+		btnCancel.addClickHandler(new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent event) {
+				dialogBox.hide();
+			}
+		});
+		
+		final HorizontalPanel pnlSubscriptionControls = new HorizontalPanel();
+		pnlSubscriptionControls.add(btnSubscribe);
+		pnlSubscriptionControls.add(btnCancel);
+		
+		mainGrid.setWidget(0, 0, lblTitle);
+		mainGrid.setWidget(1, 0, pnlSearchControls);
+		mainGrid.setWidget(2, 0, hashtagList);
+		mainGrid.setWidget(3, 0, pnlSubscriptionControls);
+		
+		dialogBox.add(mainGrid);
+		
+		return dialogBox;		
+	}
+}

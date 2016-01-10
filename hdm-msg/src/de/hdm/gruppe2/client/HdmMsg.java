@@ -1,8 +1,9 @@
 package de.hdm.gruppe2.client;
 
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -12,19 +13,83 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class HdmMsg extends VerticalPanel implements EntryPoint {
 	
 	public void onModuleLoad() {
-		
 	
-		Image welcomeImage = new Image();
-		HTML welcomeText = new HTML("<h1>Willkommen im Editor!</h1>");
+		Command test = new Command() {
+			public void execute() {
+				Window.alert("BANANAAAAA!!!");
+			}
+		};
 		
+		Command userOverview = new Command() {
+			public void execute() {
+				RootPanel.get("content_wrap").clear();
+				RootPanel.get("content_wrap").add(new UserOverview());
+			}
+		};
 		
+		Command chatOverview = new Command() {
+
+			@Override
+			public void execute() {
+				RootPanel.get("content_wrap").clear();
+				RootPanel.get("content_wrap").add(new ChatOverview());			
+			}	
+		};
 		
-		//Hautpmenü schließlich dem RootPanel in den Menü-div Container zuordnen
+		Command hashtagSubscription = new Command() {
+
+			@Override
+			public void execute() {
+				RootPanel.get("content_wrap").clear();
+				RootPanel.get("content_wrap").add(new HashtagSubscriptionOverview());	
+			}
+		};
 		
-		RootPanel.get("content_wrap").add(welcomeImage);
-	    RootPanel.get("content_wrap").add(welcomeText);
-		RootPanel.get("Impressum").add(new Impressum());
+		Command userSubscription = new Command() {
+
+			@Override
+			public void execute() {
+				RootPanel.get("content_wrap").clear();
+				RootPanel.get("content_wrap").add(new UserSubscriptionOverview());
+			}
+		};
 		
-}
+		Command about = new Command() {
+
+			@Override
+			public void execute() {
+				RootPanel.get("content_wrap").clear();
+				RootPanel.get("content_wrap").add(new Impressum());	
+			}
+		};
+
+		MenuBar messageMenu = new MenuBar(true);
+		messageMenu.addItem("Neue Nachricht", test);
+		
+		MenuBar userMenu = new MenuBar(true);
+		userMenu.addItem("Alle User anzeigen", userOverview);
+		
+		MenuBar aboMenu = new MenuBar(true);
+		aboMenu.addItem("User Abos", userSubscription);
+		aboMenu.addItem("Hashtag Abos", hashtagSubscription);
+		
+		MenuBar chatMenu = new MenuBar(true);
+		chatMenu.addItem("Chats anzeigen", chatOverview);
+		
+		MenuBar mainMenu = new MenuBar();
+		mainMenu.setWidth("100%");
+		mainMenu.setAutoOpen(true);
+		mainMenu.addItem("Home", test);
+		mainMenu.addItem("Neuer Post", messageMenu);
+		mainMenu.addItem("Chats", chatMenu);
+		mainMenu.addItem("Users", userMenu);
+		mainMenu.addItem("Abos", aboMenu);
+		mainMenu.addItem("About", about);
+		
+		//RootPanel.get("content_wrap").add(welcomeImage);
+	    RootPanel.get("header_wrap").add(mainMenu);
+		RootPanel.get("footer_wrap").add(new Impressum());
+		
+	}
 	
 }

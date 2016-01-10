@@ -2,7 +2,7 @@ package de.hdm.gruppe2.server.db;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-
+import com.google.appengine.api.utils.SystemProperty;
 
 /**
  * Verwalten einer Verbindung zur Datenbank.
@@ -18,12 +18,11 @@ import java.sql.DriverManager;
  * allerdings den Rahmen dieses Projekts sprengen bzw. die Software unnötig
  * verkomplizieren, da dies für diesen Anwendungsfall nicht erforderlich ist.
  * 
- * 
+ * @author Thies
  */
 public class DBConnection {
-	
-	
-	/**
+
+    /**
      * Die Klasse DBConnection wird nur einmal instantiiert. Man spricht hierbei
      * von einem sogenannten <b>Singleton</b>.
      * <p>
@@ -31,7 +30,8 @@ public class DBConnection {
      * für sämtliche eventuellen Instanzen dieser Klasse vorhanden. Sie
      * speichert die einzige Instanz dieser Klasse.
      * 
-     * @see UserMapper.userMapper()
+     * @see AccountMapper.accountMapper()
+     * @see CustomerMapper.customerMapper()
      */
     private static Connection con = null;
 
@@ -42,10 +42,9 @@ public class DBConnection {
      * mitgegeben, um bei einer Veränderung dieser URL nicht die gesamte
      * Software neu komilieren zu müssen.
      */
-    
-    //TODO Gooogle URL anpassen sobald Datenbank angelegt ist 
-    private static String googleUrl = "jdbc:mysql://173.194.236.86:3306/sms?user=root";
-    
+    private static String googleUrl = "jdbc:google:mysql://fair-scout-118511:hdmmsg-instanz?user=root";
+    private static String localUrl = "jdbc:mysql://127.0.0.1:3306/dbmessenger?user=root&password=123456";
+
     /**
      * Diese statische Methode kann aufgrufen werden durch
      * <code>DBConnection.connection()</code>. Sie stellt die
@@ -73,14 +72,28 @@ public class DBConnection {
     public static Connection connection() {
         // Wenn es bisher keine Conncetion zur DB gab, ...
         if (con == null) {
-        	String url=null;
-        	try {
-
-        		Class.forName("com.mysql.jdbc.Driver");
-      	        url = googleUrl;
-        	      con= DriverManager.getConnection(url);
-            }
-        	catch (Exception e) {
+            String url = null;
+            try {
+                if (SystemProperty.environment.value() == SystemProperty.Environment.Value.Production) {
+                    // Load the class that provides the new
+                    // "jdbc:google:mysql://" prefix.
+                    Class.forName("com.mysql.jdbc.GoogleDriver");
+                    url = googleUrl;
+                } else {
+                    // Local MySQL instance to use during development.
+                    Class.forName("com.mysql.jdbc.Driver");
+                    url = localUrl;
+                }
+                /*
+                 * Dann erst kann uns der DriverManager eine Verbindung mit den
+                 * oben in der Variable url angegebenen Verbindungsinformationen
+                 * aufbauen.
+                 * 
+                 * Diese Verbindung wird dann in der statischen Variable con
+                 * abgespeichert und fortan verwendet.
+                 */
+                con = DriverManager.getConnection(url);
+            } catch (Exception e) {
                 con = null;
                 e.printStackTrace();
             }
@@ -89,4 +102,5 @@ public class DBConnection {
         // Zurückgegeben der Verbindung
         return con;
     }
+    
 }

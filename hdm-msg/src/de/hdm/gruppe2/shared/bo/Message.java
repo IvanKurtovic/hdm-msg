@@ -1,18 +1,17 @@
+
 package de.hdm.gruppe2.shared.bo;
 
 import java.util.ArrayList;
 
-public class Message extends BusinessObject {
+public class Message extends BusinessObject {	
 	
-	
-	private static long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 	
 	private String text; 
 	
 	private User sender; 
 	
-	private ArrayList<Hashtag> hashtagList;
-	
+	private ArrayList<Hashtag> hashtagList;	
 	
 	private ArrayList<User> receiver;   
 	
@@ -34,8 +33,6 @@ public class Message extends BusinessObject {
 	public ArrayList<User> getReceiver() {
 		return this.receiver;
 	}
-	
-	
 	
 	public void setReciver (ArrayList<User> receiver) {
 		this.receiver = receiver; 
