@@ -23,15 +23,9 @@ import de.hdm.gruppe2.shared.bo.*;
  */
 public class UserMapper {
 
-	
-	 
 	private static UserMapper userMapper = null;
-
 	
-	protected UserMapper() {
-
-	}
-
+	protected UserMapper() {}
 	
 	public static UserMapper usermapper() {
 		if (userMapper == null) {
@@ -81,17 +75,12 @@ public class UserMapper {
 		Connection con = DBConnection.connection();
 		try {
 			PreparedStatement preStmt;
-			preStmt = con.prepareStatement("UPDATE nutzer SET firstName=?, "
-							+ "LastName=?, email=?, date=? WHERE GoogleID="
-							+ user.getGoogleId());
+			preStmt = con.prepareStatement("UPDATE `user` SET firstName=?, lastName=?, email=? WHERE id=" + user.getId());
 			preStmt.setString(1, user.getFirstName());
 			preStmt.setString(2, user.getLastName());
 			preStmt.setString(3, user.getEmail());
-			preStmt.setString(5, user.getCreationDate().toString());
 			preStmt.executeUpdate();
-			preStmt.close();
-			
-			
+			preStmt.close();		
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new IllegalArgumentException("Error with Database or Connection failed"
@@ -113,10 +102,8 @@ public class UserMapper {
 		Connection con = DBConnection.connection();
 		try {
 			Statement stmt = con.createStatement();
-			stmt.executeUpdate("DELETE FROM user WHERE userID="
-					+ user.getId());
+			stmt.executeUpdate("DELETE FROM `user` WHERE id="	+ user.getId());
 			stmt.close();
-			
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new IllegalArgumentException("Error with Database or Connection failed"
@@ -124,122 +111,110 @@ public class UserMapper {
 		}
 	}
 
-
-
-
-/**
- * Diese Methode ermöglicht es alle Nutzer aus der Datenbank in einer Liste
- * zu finden und anzuzeigen.
- * 
- * @return allUser
- *	@Autor Thies
- *
- */
-public ArrayList<User> findAllUser() throws IllegalArgumentException {
-	Connection con = DBConnection.connection();
-	ArrayList<User> allUser = new ArrayList<User>();
-	try {
-		Statement stmt = con.createStatement();
-		ResultSet rs = stmt
-				.executeQuery("SELECT userID, firstName, LastName, email, date "
-						+ "FROM user ORDER BY userID");
-
-		while (rs.next()) {
-			User user = new User();
-			user.setId(rs.getInt("userID"));
-			user.setFirstName(rs.getString("firstName"));
-			user.setLastName(rs.getString("lastName"));
-			user.setEmail(rs.getString("email"));
-			//user.setCreationDate(rs.getString("date"));
-
-			allUser.add(user);
+	/**
+	 * Diese Methode ermöglicht es alle Nutzer aus der Datenbank in einer Liste
+	 * zu finden und anzuzeigen.
+	 * 
+	 * @return allUser
+	 *	@Autor Thies
+	 *
+	 */
+	public ArrayList<User> findAllUsers() throws IllegalArgumentException {
+		Connection con = DBConnection.connection();
+		ArrayList<User> allUsers = new ArrayList<User>();
+		try {
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM `user` ORDER BY id");
+	
+			while (rs.next()) {
+				User user = new User();
+				
+				user.setId(rs.getInt("id"));
+				user.setFirstName(rs.getString("firstName"));
+				user.setLastName(rs.getString("lastName"));
+				user.setEmail(rs.getString("email"));
+				user.setCreationDate(rs.getDate("creationDate"));
+	
+				allUsers.add(user);
+			}
+			stmt.close();
+			rs.close();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new IllegalArgumentException("Error with Database or Connection failed"
+					+ e.toString());
 		}
-		stmt.close();
-		rs.close();
-		
-	} catch (SQLException e) {
-		e.printStackTrace();
-		throw new IllegalArgumentException("Error with Database or Connection failed"
-				+ e.toString());
+		return allUsers;
 	}
-	return allUser;
-}
 
-
-/**
- * Diese Methode ermöglicht einen Nutzer anhand seines Nachnamens zu finden
- * und anzuzeigen.
- * 
- * @return uebergebener Paramater
- * @author Thies
- * @author Serkan
- */
-public User findUserByLastName(String lastName)
-		throws IllegalArgumentException {
-	Connection con = DBConnection.connection();
-
-	try {
-		Statement stmt = con.createStatement();
-		ResultSet rs = stmt
-				.executeQuery("SELECT * FROM user WHERE lastname='"
-						 + "'");
-
-		if (rs.next()) {
-			User user = new User();
-			user.setId(rs.getInt("userID"));
-
-			user.setFirstName(rs.getString("firstName"));
-			user.setLastName(rs.getString("lastName"));
-			user.setEmail(rs.getString("email"));
-			//user.setCreationDate(rs.getString("date"));
-
-			return user;
+	/**
+	 * Diese Methode ermöglicht einen Nutzer anhand seines Nachnamens zu finden
+	 * und anzuzeigen.
+	 * 
+	 * @return uebergebener Paramater
+	 * @author Thies
+	 * @author Serkan
+	 */
+	public User findUserByLastName(String lastName) throws IllegalArgumentException {
+		Connection con = DBConnection.connection();
+		try {
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM `user` WHERE lastname=`" + lastName + "`");
+	
+			if (rs.next()) {
+				User user = new User();
+				
+				user.setId(rs.getInt("id"));	
+				user.setFirstName(rs.getString("firstName"));
+				user.setLastName(rs.getString("lastName"));
+				user.setEmail(rs.getString("email"));
+				user.setCreationDate(rs.getDate("creationDate"));
+	
+				return user;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new IllegalArgumentException("Error with Database or Connection failed"
+					+ e.toString());
 		}
-	} catch (SQLException e) {
-		e.printStackTrace();
-		throw new IllegalArgumentException("Error with Database or Connection failed"
-				+ e.toString());
+		return null;
 	}
-	return null;
-}
 
-/**
- * Diese Methode ermöglicht einen Nutzer anhand seiner Email zu finden
- * und anzuzeigen.
- * 
- * @return uebergebener Paramater
- * @author Thies
- * @author Serkan
- * 
- */
-public User findUserByEmail(String email)
-		throws IllegalArgumentException {
-	Connection con = DBConnection.connection();
-
-	try {
-		Statement stmt = con.createStatement();
-		ResultSet rs = stmt
-				.executeQuery("SELECT * FROM user WHERE email='"
-						+ email + "'");
-
-		if (rs.next()) {
-			User user = new User();
-			user.setId(rs.getInt("userID"));
-
-			user.setFirstName(rs.getString("firstName"));
-			user.setLastName(rs.getString("lastName"));
-			user.setEmail(rs.getString("email"));
-			//user.setCreationDate(creationDate);
-
-			return user;
+	/**
+	 * Diese Methode ermöglicht einen Nutzer anhand seiner Email zu finden
+	 * und anzuzeigen.
+	 * 
+	 * @return uebergebener Paramater
+	 * @author Thies
+	 * @author Serkan
+	 * 
+	 */
+	public User findUserByEmail(String email) throws IllegalArgumentException {
+		Connection con = DBConnection.connection();
+		try {
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM `user` WHERE email=`"	+ email + "`");
+	
+			if (rs.next()) {
+				User user = new User();
+				
+				user.setId(rs.getInt("id"));
+				user.setFirstName(rs.getString("firstName"));
+				user.setLastName(rs.getString("lastName"));
+				user.setEmail(rs.getString("email"));
+				user.setCreationDate(rs.getDate("creationDate"));
+	
+				return user;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new IllegalArgumentException("Error with Database or Connection failed"
+					+ e.toString());
 		}
-	} catch (SQLException e) {
-		e.printStackTrace();
-		throw new IllegalArgumentException("Error with Database or Connection failed"
-				+ e.toString());
+		return null;
 	}
-	return null;
-}
+	
 	/**
 	 * Diese Methode ermöglicht einen Nutzer anhand des Prim�rschl�ssels zu
 	 * finden und anzuzeigen.
@@ -249,16 +224,16 @@ public User findUserByEmail(String email)
 	 * @author Serkan 
 	 * 
 	 */
-	
 	public User findUserById(int id) throws IllegalArgumentException {
 		Connection con = DBConnection.connection();
 		try {
 			Statement stmt = con.createStatement();
-	
+
 			ResultSet rs = stmt.executeQuery("SELECT * FROM `user` WHERE id=" + id);
 			
 			if(rs.next()){
 				User user = new User();
+				
 				user.setId(rs.getInt("id"));
 				user.setFirstName(rs.getString("firstName"));
 				user.setLastName(rs.getString("lastName"));
@@ -274,7 +249,6 @@ public User findUserByEmail(String email)
 		}
 		return null;
 	}
-
 }
 
 
