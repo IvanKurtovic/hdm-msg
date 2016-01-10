@@ -1,9 +1,8 @@
-
 package de.hdm.gruppe2.shared.bo;
 
 import java.util.ArrayList;
 
-public class Message extends BusinessObject {	
+public class Message extends BusinessObject {
 	
 	private static final long serialVersionUID = 1L;
 	
