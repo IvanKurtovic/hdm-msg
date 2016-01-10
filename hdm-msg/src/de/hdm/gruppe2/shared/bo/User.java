@@ -1,5 +1,7 @@
 package de.hdm.gruppe2.shared.bo;
 
+import java.sql.Date;
+
 /**
  * Nutzer-Klasse zur Verwaltung der Nutzerdaten
  * @author Ioannidou
@@ -20,6 +22,7 @@ public class User extends BusinessObject {
 	private String firstName;
 	private String lastName;
 	private String email;
+	private Date creationDate;
 	
 	public String getFirstName() {
 		return firstName;
@@ -38,5 +41,11 @@ public class User extends BusinessObject {
 	}
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	public Date getCreationDate() {
+		return creationDate;
+	}
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
 	}
 }
