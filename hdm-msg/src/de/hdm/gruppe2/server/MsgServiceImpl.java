@@ -65,4 +65,9 @@ public class MsgServiceImpl extends RemoteServiceServlet implements MsgService {
 
 		return this.usermapper.insert(u);
 	}
+
+	@Override
+	public User editUser(User user) {
+		return this.usermapper.update(user);
+	}
 }

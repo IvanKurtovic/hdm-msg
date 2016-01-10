@@ -13,4 +13,6 @@ public interface MsgService extends RemoteService {
 	String greetServer(String name) throws IllegalArgumentException;
 	
 	public User createUser(String email, String firstName, String lastName);
+	
+	public User editUser(User user);
 }

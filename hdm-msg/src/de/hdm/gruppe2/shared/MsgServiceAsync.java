@@ -11,4 +11,6 @@ public interface MsgServiceAsync {
 	void greetServer(String input, AsyncCallback<String> callback) throws IllegalArgumentException;
 
 	void createUser(String email, String firstName, String lastName, AsyncCallback<User> callback);
+
+	void editUser(User user, AsyncCallback<User> callback);
 }
