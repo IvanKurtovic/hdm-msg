@@ -81,12 +81,108 @@ h1 {
 }
 	
 .gwt-MenuBar-vertical .gwt-MenuItem {
-  padding: 2px 40px 2px 1px;
-  width: 165px;
-  color: #20ac8e;
+  	padding: 2px 40px 2px 1px;
+  	width: 165px;
+  	color: #20ac8e;
 }
 
 
+.listbox{
+	font-family: bradley hand;
+	font-size:15px;
+	position: relative;       
+    left: 9px; 
+    top: 9px;
+    width: 30em;
+    height: 30em;
+  	background-color:rgba(152,251,152,0.3);
+}
+	
+	
+.new-chat{
+	font-family: bradley hand;
+	font-size:15px;
+	height: 4em;
+	width: 160px;
+	position: relative; 
+	top: 10px;
+	background: rgb(66, 184, 221);
+	color: white;
+    border-radius: 4px;
+ 	text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+	
+}
+	
+	
+
+.delete-chat{
+	font-family: bradley hand;
+	font-size:15px;
+	height: 4em;
+	width: 160px;
+	position: relative;
+	top: 10px;
+	background: rgb(202, 60, 60);
+	color: white;
+    border-radius: 4px; 
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+	
+}
+
+.send-chat{
+	font-family: bradley hand;
+	font-size:15px;
+	height: 4em;
+	width: 160px;
+	position: absolute;
+	bottom: 6em; 
+	right:3px;
+	background: rgb(28, 184, 65);
+	color: white;
+    border-radius: 4px;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+.textbox-chat{
+	font-family: bradley hand;
+	position: absolute;
+	bottom: 6em;
+	left: 40em;
+	right: 50em; 
+	width: 40em;
+	height: 3em;
+}
+
 
 	
+	
+.popup-dialogbox-chat{
+	font-family: bradley hand;
+	background: rgb(66, 184, 221);
+	color: white;
+}
+
+.popup-listbox-chat{
+	font-family: bradley hand;
+	font-size: 20px;
+	width: 20em;
+	
+	
+}
+
+.popup-title-chat{
+	font-family: bradley hand;
+	font-size: 48px;
+}
+
+.popup-contacts-chat{
+	font-family: bradley hand;
+	font-size: 20px;
+}	
+
+.popup-recipients-chat{
+	font-family: bradley hand;
+	font-size: 20px;
+}	
+
 
