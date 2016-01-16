@@ -276,3 +276,37 @@ h1 {
 
 }
 
+
+.newsubs-usersubs{
+	position: relative; 
+	font-family: bradley hand;
+	font-size:15px;
+	height: 4em;
+	width: 160px; 
+	top: 10px;
+	left:5px;
+	
+}
+
+.unsubs-usersubs{
+	position: relative; 
+	font-family: bradley hand;
+	font-size:15px;
+	height: 4em;
+	width: 160px;
+	top: 10px;
+	left:5px;
+}
+
+.dialogbox-usersubs{
+	font-family: bradley hand;
+	background: rgb(176,196,222);
+	color: white;
+	border:5px solid white;
+	
+}
+
+.listbox-usersubs{
+	height:90px;
+	width:240px;
+}
