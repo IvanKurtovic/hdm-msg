@@ -1,7 +1,7 @@
 package de.hdm.gruppe2.shared.bo;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Date;
 /**
  * <p>
  * Die Klasse <code>BusinessObject</code> stellt die Basisklasse aller in diesem
@@ -45,5 +45,10 @@ public abstract class BusinessObject implements Serializable {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public boolean equals() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

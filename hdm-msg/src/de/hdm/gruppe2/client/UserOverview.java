@@ -27,6 +27,8 @@ public class UserOverview extends VerticalPanel{
 	private ArrayList<User> users = new ArrayList<User>();	
 	private MsgServiceAsync msgSvc = GWT.create(MsgService.class);
 	private Label lblNotification = new Label();
+	private final ListBox userList = new ListBox();
+	private User selectedUser = null;
 	
 	@Override
 	public void onLoad() {
@@ -46,7 +48,6 @@ public class UserOverview extends VerticalPanel{
 		tbCreationDate.setEnabled(false);
 		
 		// User List links
-		final ListBox userList = new ListBox();
 		userList.setStyleName("listbox");
 		userList.setVisibleItemCount(11);
 		userList.addChangeHandler(new ChangeHandler() {
@@ -57,7 +58,7 @@ public class UserOverview extends VerticalPanel{
 					return;
 				}
 				
-				User selectedUser = users.get(userList.getSelectedIndex());
+				selectedUser = users.get(userList.getSelectedIndex());
 				
 				tbFirstName.setText(selectedUser.getFirstName());
 				tbLastName.setText(selectedUser.getLastName());
@@ -67,7 +68,7 @@ public class UserOverview extends VerticalPanel{
 		});
 		
 		// Alle User aus der Datenbank laden und in die Liste speichern.
-		msgSvc.findAllUser(new FindAllUsersCallback(userList, lblNotification));
+		this.getAllUsers(lblNotification);
 		
 		//final HorizontalPanel pnlFunctions = new HorizontalPanel();		
 		final Button btnCreateUser = new Button("Neuer User");
@@ -87,18 +88,27 @@ public class UserOverview extends VerticalPanel{
 			@Override
 			public void onClick(ClickEvent event) {
 				
+				String firstName = tbFirstName.getText();
+				String lastName = tbLastName.getText();
+				String email = tbEmail.getText();
+				
 				if(userList.getSelectedIndex() == -1) {
 					lblNotification.setText("Kein User ausgewaehlt.");
 					return;
 				}
 				
-				if(userList.getValue(userList.getSelectedIndex()) == tbFirstName.getText()) {
+				if(selectedUser.getFirstName() == firstName && selectedUser.getLastName() == lastName 
+						&& selectedUser.getEmail() == email) {
+					
 					lblNotification.setText("Keine Aenderung vorgenommen.");
 					return;	
-				} else if (userList.getValue(userList.getSelectedIndex()) != tbFirstName.getText()) {
-					int index = userList.getSelectedIndex();
-					userList.removeItem(index);
-					userList.insertItem(tbFirstName.getText(), index);
+					
+				} else {
+					selectedUser.setFirstName(firstName);
+					selectedUser.setLastName(lastName);
+					selectedUser.setEmail(email);
+					
+					msgSvc.saveUser(selectedUser, new SaveUserCallback(lblNotification));
 				}
 			}
 			
@@ -115,15 +125,27 @@ public class UserOverview extends VerticalPanel{
 					return;
 				}
 				
+				
 				userList.removeItem(userList.getSelectedIndex());
 			}
 		});
 		
+		final Button btnRefresh = new Button("Refresh");
+		btnRefresh.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				getAllUsers(lblNotification);
+			}
+			
+		});
+		
 		// Damit die Buttons zusammen an einer Stelle des Grids angezeigt werden,
 		// legen wir sie in einem Horizontal Panel zusammen.
-		HorizontalPanel pnlSaveAndDeleteButton = new HorizontalPanel();
-		pnlSaveAndDeleteButton.add(btnCreateUser);
-		pnlSaveAndDeleteButton.add(btnDeleteUser);
+		HorizontalPanel pnlSaveDeleteRefresh = new HorizontalPanel();
+		pnlSaveDeleteRefresh.add(btnCreateUser);
+		pnlSaveDeleteRefresh.add(btnRefresh);
+		pnlSaveDeleteRefresh.add(btnDeleteUser);
 
 		detailsGrid.setWidget(0, 0, lblFirstName);
 		detailsGrid.setWidget(0, 1, tbFirstName);
@@ -138,10 +160,14 @@ public class UserOverview extends VerticalPanel{
 		
 		mainGrid.setWidget(0, 0, userList);
 		mainGrid.setWidget(0, 1, detailsGrid);
-		mainGrid.setWidget(1, 0, pnlSaveAndDeleteButton);
+		mainGrid.setWidget(1, 0, pnlSaveDeleteRefresh);
 		mainGrid.setWidget(1, 1, lblNotification);
 
 		this.add(mainGrid);
+	}
+	
+	private void getAllUsers(Label notificationLabel){
+		msgSvc.findAllUser(new FindAllUsersCallback(notificationLabel));
 	}
 	
 	private DialogBox createUserDialog() {
@@ -240,11 +266,9 @@ public class UserOverview extends VerticalPanel{
 	private class FindAllUsersCallback implements AsyncCallback<ArrayList<User>> {
 
 		private Label notification = null;
-		private ListBox userList = null;
 		
-		public FindAllUsersCallback(ListBox userList, Label notificationLabel) {
+		public FindAllUsersCallback(Label notificationLabel) {
 			this.notification = notificationLabel;
-			this.userList = userList;
 		}
 		
 		@Override
@@ -254,14 +278,37 @@ public class UserOverview extends VerticalPanel{
 
 		@Override
 		public void onSuccess(ArrayList<User> result) {
-			
 			users = result;
 			
-			for (User s : users) {
-				userList.addItem(s.getFirstName() + " " + s.getLastName());
+			// Da wir nur ein Listobjekt weiter reichen, säubern wir zunächst alle vorhandenen
+			// Einträge.
+			userList.clear();
+			
+			for(User u : users) {
+				userList.addItem(u.getFirstName() + " " + u.getLastName());
 			}
 			
 			this.notification.setText("Alle User wurden geladen!");			
+		}
+		
+	}
+	
+	private class SaveUserCallback implements AsyncCallback<User> {
+
+		private Label notification = null;
+		
+		public SaveUserCallback(Label notificationLabel) {
+			this.notification = notificationLabel;
+		}
+		
+		@Override
+		public void onFailure(Throwable caught) {
+			notification.setText("Änderungen konnten nicht übernommen werden.");			
+		}
+
+		@Override
+		public void onSuccess(User result) {
+			notification.setText("Änderungen erfolgreich eingetragen. Bitte refreshen.");			
 		}
 		
 	}

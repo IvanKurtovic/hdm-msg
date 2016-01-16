@@ -55,7 +55,7 @@ public class ChatMapper {
 		  		     	  DateFormat df = new SimpleDateFormat("dd/MM/YYYY HH:mm:ss");
 		  		     	  df.format(sqlDate);
 		  		     	  
-		  		     	  chat.setCreationDate(sqlDate);
+		  		     	  //chat.setCreationDate(sqlDate);
 
 		  		     	  stmt = con.createStatement();
 
@@ -120,7 +120,7 @@ public class ChatMapper {
 		 			    	   	
 		 			    	
 		 			        java.sql.Timestamp sqlDate = rs.getTimestamp("creationDate");
-		 		     	 	chat.setCreationDate(sqlDate);
+		 		     	 	//chat.setCreationDate(sqlDate);
 		 			    }
 		 			}
 		 			catch(SQLException e){
@@ -146,7 +146,7 @@ public class ChatMapper {
 		 			    	//chat.setDate(rs.getDate("dd/MM/YYYY HH:mm:ss"));   	
 		 			    	
 		 			        java.sql.Timestamp sqlDate = rs.getTimestamp("creationDate");
-		 		     	 	chat.setCreationDate(sqlDate);
+		 		     	 	//chat.setCreationDate(sqlDate);
 		 			    }
 		 			}
 		 			catch(SQLException e){

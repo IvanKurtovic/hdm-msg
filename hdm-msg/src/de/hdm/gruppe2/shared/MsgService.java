@@ -16,7 +16,7 @@ public interface MsgService extends RemoteService {
 	
 	public User createUser(String email, String firstName, String lastName);
 	
-	public User editUser(User user);
+	public User saveUser(User user);
 	
 	public ArrayList<User> findAllUser();
 }

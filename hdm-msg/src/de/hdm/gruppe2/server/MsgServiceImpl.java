@@ -69,7 +69,7 @@ public class MsgServiceImpl extends RemoteServiceServlet implements MsgService {
 	}
 
 	@Override
-	public User editUser(User user) {
+	public User saveUser(User user) {
 		return this.usermapper.update(user);
 	}
 
