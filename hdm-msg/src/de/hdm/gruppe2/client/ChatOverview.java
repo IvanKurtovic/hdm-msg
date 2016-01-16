@@ -34,6 +34,8 @@ public class ChatOverview extends VerticalPanel {
 		}
 		
 		final Button btnCreateChat = new Button("Neuer Chat");
+//TODO setStyleName für Neuer Chat Button 
+		btnCreateChat.setStyleName("new-chat");
 		btnCreateChat.addClickHandler(new ClickHandler() {
 
 			@Override
@@ -44,13 +46,19 @@ public class ChatOverview extends VerticalPanel {
 			}
 		});
 		final Button btnDeleteChat = new Button("Entfernen");
-		
+//TODO setStyleName für Entfernen Button		
+		btnDeleteChat.setStyleName("delete-chat");
 		final HorizontalPanel pnlCreateAndDeleteChat = new HorizontalPanel();
 		pnlCreateAndDeleteChat.add(btnCreateChat);
 		pnlCreateAndDeleteChat.add(btnDeleteChat);
 		
 		final TextBox tbMessage = new TextBox();
+		
+//TODO setStyleName für TextBox	
+		tbMessage.setStyleName("textbox-chat");
 		final Button btnSendMessage = new Button("Senden");
+//TODO setStyleName für Senden Button 		
+		btnSendMessage.setStyleName("send-chat");
 		
 		final HorizontalPanel pnlSendMessage = new HorizontalPanel();
 		pnlSendMessage.add(tbMessage);
@@ -66,15 +74,18 @@ public class ChatOverview extends VerticalPanel {
 	private DialogBox createChatDialog() {
 		
 		final DialogBox dialogBox = new DialogBox();
+		dialogBox.setStyleName("popup-dialogbox-chat");
 		dialogBox.setGlassEnabled(true);
 		dialogBox.setAnimationEnabled(true);
 		
 		final Grid mainGrid = new Grid(4, 2);
 		
 		final Label lblTitle = new Label("Neuer Chat");
-		lblTitle.setStyleName("popup-title");
+		lblTitle.setStyleName("popup-title-chat");
 		final Label lblContacts = new Label("Kontakte: ");
-		final Label lblRecipients = new Label("Empfänger: ");
+		lblContacts.setStyleName("popup-contacts-chat");
+		final Label lblRecipients = new Label("Empfaenger: ");
+		lblRecipients.setStyleName("popup-recipients-chat");
 		final TextBox tbRecipients = new TextBox();
 		
 		final HorizontalPanel pnlRecipients = new HorizontalPanel();
@@ -82,7 +93,8 @@ public class ChatOverview extends VerticalPanel {
 		pnlRecipients.add(tbRecipients);
 		
 		final ListBox recipientList = new ListBox();
-		recipientList.setStyleName("listbox");
+//TODO setStyleName popup-listbox 		
+		recipientList.setStyleName("popup-listbox-chat");
 		recipientList.setMultipleSelect(true);
 		recipientList.setVisibleItemCount(11);
 		recipientList.addChangeHandler(new ChangeHandler() {
@@ -135,3 +147,4 @@ public class ChatOverview extends VerticalPanel {
 		return dialogBox;
 	}
 }
+
