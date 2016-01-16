@@ -7,7 +7,7 @@ h1 {
   font-weight: bold;
   color: #ffffff;
   text-align: center;
-  background: rgba(131,150,180,0.3);
+  background: rgb(176,196,222);
 
 
 }
@@ -53,7 +53,7 @@ h1 {
 	width: 100%;
 	height: 44em;
 	/*border: solid;*/
-	background: rgba(131,150,180,0.3);
+	background: rgb(176,196,222);
 
 }
 
@@ -95,7 +95,10 @@ h1 {
     top: 9px;
     width: 30em;
     height: 30em;
-  	background-color:rgba(152,251,152,0.3);
+  	
+  	/*rgba(152,251,152,0.3);*/
+  	
+  	
 }
 	
 	
@@ -106,10 +109,7 @@ h1 {
 	width: 160px;
 	position: relative; 
 	top: 10px;
-	background: rgb(66, 184, 221);
-	color: white;
-    border-radius: 4px;
- 	text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+	left:5px;
 	
 }
 	
@@ -126,6 +126,7 @@ h1 {
 	color: white;
     border-radius: 4px; 
     text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    left:10px;
 	
 }
 
@@ -135,8 +136,9 @@ h1 {
 	height: 4em;
 	width: 160px;
 	position: absolute;
-	bottom: 6em; 
-	right:3px;
+	top:32em;
+	bottom: 7em; 
+	right:6px;
 	background: rgb(28, 184, 65);
 	color: white;
     border-radius: 4px;
@@ -145,12 +147,14 @@ h1 {
 
 .textbox-chat{
 	font-family: bradley hand;
+	height: 4em;
+	width: 630px;
 	position: absolute;
-	bottom: 6em;
+	top:36em;
+	bottom:7em;
 	left: 40em;
 	right: 50em; 
-	width: 40em;
-	height: 3em;
+	
 }
 
 
@@ -158,31 +162,117 @@ h1 {
 	
 .popup-dialogbox-chat{
 	font-family: bradley hand;
-	background: rgb(66, 184, 221);
+	background: rgb(176,196,222);
 	color: white;
+	border:5px solid white;
 }
 
 .popup-listbox-chat{
-	font-family: bradley hand;
-	font-size: 20px;
+	
 	width: 20em;
 	
+	}
+	
+	
+	
+
+
+.detailsgrid-user{
+	
+	position: absolute;
+	margin-right: auto;
+	margin-left: 100px;
+	top: 2em;
+}
+
+
+.firstname-user{
+	font-family: bradley hand;
+	font-size: 20px;
+}
+
+.textbox-firstname-user{
+	
+	width:20em;
+}
+
+.lastname-user{
+	font-family: bradley hand;
+	font-size: 20px;
+}
+
+.textbox-lastname-user{
+	width:20em;
+}
+
+.email-user{
+	font-family: bradley hand;
+	font-size: 20px;
+}
+.textbox-email-user{
+	width:20em;
+}
+.textbox-email-user{
+	width:20em;
+}
+.timestamp-user{
+	font-family: bradley hand;
+	font-size: 20px;
+}
+
+.textbox-timestamp-user{
+	width:20em;
+}
+
+
+.save-user{
+	font-family: bradley hand;
+	font-size:15px;
+	height: 4em;
+	width: 160px;
+	background: rgb(28, 184, 65);
+	color: white;
+    border-radius: 4px;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+.newuser-user{
+	position: relative; 
+	top: 10px;
+	font-family: bradley hand;
+	font-size:15px;
+	height: 4em;
+	width: 160px;
+
+	
+}
+.delete-user{
+	position: relative; 
+	top: 10px;
+	font-family: bradley hand;
+	font-size:15px;
+	height: 4em;
+	width: 160px;
+	background: rgb(202, 60, 60);
+	color: white;
+    border-radius: 4px; 
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);	
+}
+.refresh-user{
+	position: relative; 
+	top: 10px;
+	font-family: bradley hand;
+	font-size:15px;
+	height: 4em;
+	width: 160px;
 	
 }
 
-.popup-title-chat{
+.dialogbox-user{
 	font-family: bradley hand;
-	font-size: 48px;
+	background: rgb(176,196,222);
+	color: white;
+	border:5px solid white;
+
 }
-
-.popup-contacts-chat{
-	font-family: bradley hand;
-	font-size: 20px;
-}	
-
-.popup-recipients-chat{
-	font-family: bradley hand;
-	font-size: 20px;
-}	
-
 

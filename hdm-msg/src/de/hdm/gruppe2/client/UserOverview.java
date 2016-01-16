@@ -33,18 +33,30 @@ public class UserOverview extends VerticalPanel{
 	@Override
 	public void onLoad() {
 		
+		
+		
+		
 		// User Details
 		final Grid mainGrid = new Grid(5,3);
 		final Grid detailsGrid = new Grid(5,2);
+		detailsGrid.setStyleName("detailsgrid-user");
 		
 		final Label lblFirstName = new Label("Vorname: ");
+		lblFirstName.setStyleName("firstname-user");
 		final Label lblLastName = new Label("Nachname: ");
+		lblLastName.setStyleName("lastname-user");
 		final Label lblEmail = new Label("Email: ");
+		lblEmail.setStyleName("email-user");
 		final Label lblCreationDate = new Label("Angelegt am: ");
+		lblCreationDate.setStyleName("timestamp-user");
 		final TextBox tbFirstName = new TextBox();
+		tbFirstName.setStyleName("textbox-firstname-user");
 		final TextBox tbLastName = new TextBox();
+		tbLastName.setStyleName("textbox-lastname-user");
 		final TextBox tbEmail = new TextBox();
+		tbEmail.setStyleName("textbox-email-user");
 		final TextBox tbCreationDate = new TextBox();
+		tbCreationDate.setStyleName("textbox-timestamp-user");
 		tbCreationDate.setEnabled(false);
 		
 		// User List links
@@ -72,6 +84,7 @@ public class UserOverview extends VerticalPanel{
 		
 		//final HorizontalPanel pnlFunctions = new HorizontalPanel();		
 		final Button btnCreateUser = new Button("Neuer User");
+		btnCreateUser.setStyleName("newuser-user");
 		btnCreateUser.addClickHandler(new ClickHandler() {
 
 			@Override
@@ -83,6 +96,7 @@ public class UserOverview extends VerticalPanel{
 		});
 		
 		final Button btnSaveUser = new Button("Speichern");
+		btnSaveUser.setStyleName("save-user");
 		btnSaveUser.addClickHandler(new ClickHandler() {
 
 			@Override
@@ -115,6 +129,7 @@ public class UserOverview extends VerticalPanel{
 		});
 		
 		final Button btnDeleteUser = new Button("Entfernen");
+		btnDeleteUser.setStyleName("delete-user");
 		btnDeleteUser.addClickHandler(new ClickHandler() {
 
 			@Override
@@ -131,6 +146,7 @@ public class UserOverview extends VerticalPanel{
 		});
 		
 		final Button btnRefresh = new Button("Refresh");
+		btnRefresh.setStyleName("refresh-user");
 		btnRefresh.addClickHandler(new ClickHandler() {
 
 			@Override
@@ -173,16 +189,20 @@ public class UserOverview extends VerticalPanel{
 	private DialogBox createUserDialog() {
 		
 		final DialogBox dialogBox = new DialogBox();
+		dialogBox.setStyleName("dialogbox-user");
 		dialogBox.setGlassEnabled(true);
 		dialogBox.setAnimationEnabled(true);
 		
 		final Grid mainGrid = new Grid(5,2);
 		
 		final Label lblTitle = new Label("Neuer User");
-		lblTitle.setStyleName("popup-title");
+		lblTitle.setStyleName("popup-title-user");
 		final Label lblFirstName = new Label("Vorname: ");
+		lblFirstName.setStyleName("popup-firstname-user");
 		final Label lblLastName = new Label("Nachname: ");
+		lblLastName.setStyleName("popup-lastname-user");
 		final Label lblEmail = new Label("Email: ");
+		lblEmail.setStyleName("popup-email-user");
 		final TextBox tbFirstNameDialog = new TextBox();
 		final TextBox tbLastNameDialog = new TextBox();
 		final TextBox tbEmailDialog = new TextBox();
