@@ -20,6 +20,13 @@ public class HdmMsg extends VerticalPanel implements EntryPoint {
 			}
 		};
 		
+		Command newPostOverview = new Command() {
+			public void execute() {
+				RootPanel.get("content_wrap").clear();
+				RootPanel.get("content_wrap").add(new NewPostOverview());
+			}
+		};
+		
 		Command userOverview = new Command() {
 			public void execute() {
 				RootPanel.get("content_wrap").clear();
@@ -64,7 +71,7 @@ public class HdmMsg extends VerticalPanel implements EntryPoint {
 		};
 
 		MenuBar messageMenu = new MenuBar(true);
-		messageMenu.addItem("Neue Nachricht", test);
+		messageMenu.addItem("Neuer Post", newPostOverview);
 		
 		MenuBar userMenu = new MenuBar(true);
 		userMenu.addItem("Alle User anzeigen", userOverview);
