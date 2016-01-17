@@ -2,12 +2,10 @@ package de.hdm.gruppe2.client;
 
 import java.util.ArrayList;
 
-import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
@@ -18,21 +16,20 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-import de.hdm.gruppe2.shared.MsgService;
 import de.hdm.gruppe2.shared.MsgServiceAsync;
 import de.hdm.gruppe2.shared.bo.User;
 
 public class UserOverview extends VerticalPanel{
 	
 	private ArrayList<User> users = new ArrayList<User>();	
-	private MsgServiceAsync msgSvc = GWT.create(MsgService.class);
+	private MsgServiceAsync msgSvc = ClientsideSettings.getMsgService();
 	private Label lblNotification = new Label();
 	private final ListBox userList = new ListBox();
 	private User selectedUser = null;
 	
 	@Override
 	public void onLoad() {
-		
+
 		// User Details
 		final Grid mainGrid = new Grid(5,3);
 		final Grid detailsGrid = new Grid(5,2);
@@ -93,6 +90,7 @@ public class UserOverview extends VerticalPanel{
 				String email = tbEmail.getText();
 				
 				if(userList.getSelectedIndex() == -1) {
+					ClientsideSettings.getLogger().warning("Kein User ausgewaehlt.");
 					lblNotification.setText("Kein User ausgewaehlt.");
 					return;
 				}
@@ -100,6 +98,7 @@ public class UserOverview extends VerticalPanel{
 				if(selectedUser.getFirstName() == firstName && selectedUser.getLastName() == lastName 
 						&& selectedUser.getEmail() == email) {
 					
+					ClientsideSettings.getLogger().warning("Keine Aenderung vorgenommen.");
 					lblNotification.setText("Keine Aenderung vorgenommen.");
 					return;	
 					
@@ -121,6 +120,7 @@ public class UserOverview extends VerticalPanel{
 			public void onClick(ClickEvent event) {
 				
 				if(userList.getSelectedIndex() == -1) {
+					ClientsideSettings.getLogger().warning("Kein User ausgewaehlt.");
 					lblNotification.setText("Kein User ausgewaehlt.");
 					return;
 				}
@@ -201,15 +201,19 @@ public class UserOverview extends VerticalPanel{
 				// Nur wenn die Eingaben des Nutzers sinnvoll sind soll ein Eintrag in
 				// die Datenbank erfolgen.
 				if(firstName == null || firstName.isEmpty()) {
+					ClientsideSettings.getLogger().warning("Keinen Vornamen eingetragen.");
 					lblNotification.setText("Keinen Vornamen eingetragen.");
 					return;
 				} else if (lastName == null || lastName.isEmpty()){
+					ClientsideSettings.getLogger().warning("Keinen Nachnamen eingetragen.");
 					lblNotification.setText("Keinen Nachnamen eingetragen.");
 					return;
 				} else if(email == null || email.isEmpty()) {
+					ClientsideSettings.getLogger().warning("Keine Email eingetragen.");
 					lblNotification.setText("Keine Email eingetragen.");
 					return;
 				} else if(!(email.matches(regEx))) {
+					ClientsideSettings.getLogger().warning("Eingabe entspricht keiner Email-Adresse.");
 					lblNotification.setText("Eingabe entspricht keiner Email-Adresse.");
 					return;
 				}
@@ -253,11 +257,13 @@ public class UserOverview extends VerticalPanel{
 		
 		@Override
 		public void onFailure(Throwable caught) {
+			ClientsideSettings.getLogger().severe("User konnte nicht angelegt werden \n" + caught.getMessage());
 			this.notification.setText("Der User wurde nicht angelegt!");			
 		}
 
 		@Override
 		public void onSuccess(User result) {
+			ClientsideSettings.getLogger().fine("Der User wurde angelegt!");
 			this.notification.setText("Der User wurde angelegt!");
 		}
 		
@@ -273,6 +279,7 @@ public class UserOverview extends VerticalPanel{
 		
 		@Override
 		public void onFailure(Throwable caught) {
+			ClientsideSettings.getLogger().severe("User konnte nicht geladen werden \n" + caught.getMessage());
 			this.notification.setText("User konnten nicht geladen werden!");			
 		}
 
@@ -288,9 +295,9 @@ public class UserOverview extends VerticalPanel{
 				userList.addItem(u.getFirstName() + " " + u.getLastName());
 			}
 			
-			this.notification.setText("Alle User wurden geladen!");			
-		}
-		
+			ClientsideSettings.getLogger().fine("Alle User wurden geladen!");
+			this.notification.setText("Alle User wurden geladen!");		
+		}		
 	}
 	
 	private class SaveUserCallback implements AsyncCallback<User> {
@@ -303,14 +310,15 @@ public class UserOverview extends VerticalPanel{
 		
 		@Override
 		public void onFailure(Throwable caught) {
-			notification.setText("Änderungen konnten nicht übernommen werden.");			
+			ClientsideSettings.getLogger().severe("Aenderungen konnten nicht uebernommen werden. \n" + caught.getMessage());
+			notification.setText("Aenderungen konnten nicht uebernommen werden.");			
 		}
 
 		@Override
 		public void onSuccess(User result) {
-			notification.setText("Änderungen erfolgreich eingetragen. Bitte refreshen.");			
+			ClientsideSettings.getLogger().fine("Aenderungen erfolgreich eingetragen. Bitte refreshen.");
+			notification.setText("Aenderungen erfolgreich eingetragen. Bitte refreshen.");			
 		}
-		
 	}
 
 }
