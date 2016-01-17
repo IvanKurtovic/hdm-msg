@@ -3,6 +3,8 @@
 
 /** Example rules used by the template application (remove for your app) */
 h1 {
+	
+font-family: bradley hand;	
   font-size: 2em;
   font-weight: bold;
   color: #ffffff;
@@ -96,7 +98,7 @@ h1 {
     width: 30em;
     height: 30em;
   	
-  	/*rgba(152,251,152,0.3);*/
+  	
   	
   	
 }
@@ -289,13 +291,17 @@ h1 {
 }
 
 .unsubs-usersubs{
-	position: relative; 
 	font-family: bradley hand;
 	font-size:15px;
 	height: 4em;
 	width: 160px;
+	position: relative;
 	top: 10px;
-	left:5px;
+	background: rgb(202, 60, 60);
+	color: white;
+    border-radius: 4px; 
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    left:10px;
 }
 
 .dialogbox-usersubs{
@@ -309,4 +315,49 @@ h1 {
 .listbox-usersubs{
 	height:90px;
 	width:240px;
+}
+
+
+.newabo-hashtagabo{
+	position: relative; 
+	font-family: bradley hand;
+	font-size:15px;
+	height: 4em;
+	width: 160px; 
+	top: 10px;
+	left:5px;
+}
+
+.unsubs-hashtagabo{
+	font-family: bradley hand;
+	font-size:15px;
+	height: 4em;
+	width: 160px;
+	position: relative;
+	top: 10px;
+	background: rgb(202, 60, 60);
+	color: white;
+    border-radius: 4px; 
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    left:10px;
+}
+
+.dialogbox-hashtagabo{
+	
+	font-family: bradley hand;
+	background: rgb(176,196,222);
+	color: white;
+	border:5px solid white;
+	
+	
+}
+
+popup-abo-hashtagabo{
+	
+	top: 2em;
+}
+
+popup-cancel-hashtagabo{
+	
+	top:2em;
 }

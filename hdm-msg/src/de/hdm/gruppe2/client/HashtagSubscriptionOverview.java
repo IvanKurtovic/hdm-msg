@@ -29,16 +29,19 @@ public class HashtagSubscriptionOverview extends VerticalPanel {
 		}
 		
 		final Button btnNewSubscription = new Button("Neues Abonnement");
+		btnNewSubscription.setStyleName("newabo-hashtagabo");
 		btnNewSubscription.addClickHandler(new ClickHandler() {
 
 			@Override
 			public void onClick(ClickEvent event) {
 				DialogBox dialogBox = subscriptionDialog();
+				dialogBox.setStyleName("dialogbox-hashtagabo");
 				dialogBox.show();
 				dialogBox.center();
 			}
 		});
 		final Button btnUnsubscribe = new Button("Deabonnieren");
+		btnUnsubscribe.setStyleName("unsubs-hashtagabo");
 		
 		final HorizontalPanel pnlSubscribeAndUnsubscribe = new HorizontalPanel();
 		pnlSubscribeAndUnsubscribe.add(btnNewSubscription);
@@ -72,7 +75,9 @@ public class HashtagSubscriptionOverview extends VerticalPanel {
 		hashtagList.setVisibleItemCount(5);
 		
 		final Button btnSubscribe = new Button("Abonnieren");
+		btnSubscribe.setStyleName("popup-abo-hashtagabo");
 		final Button btnCancel = new Button("Abbrechen");
+		btnCancel.setStyleName("popup-cancel-hashtagabo");
 		btnCancel.addClickHandler(new ClickHandler() {
 			
 			@Override
