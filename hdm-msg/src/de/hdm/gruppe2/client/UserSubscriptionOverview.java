@@ -29,16 +29,19 @@ private String[] users = {"cem", "ivan", "serkan", "marina", "kerim", "thies"};
 		}
 		
 		final Button btnNewSubscription = new Button("Neues Abonnement");
+		btnNewSubscription.setStyleName("newsubs-usersubs");
 		btnNewSubscription.addClickHandler(new ClickHandler() {
 
 			@Override
 			public void onClick(ClickEvent event) {
 				DialogBox dialogBox = subscriptionDialog();
+				dialogBox.setStyleName("dialogbox-usersubs");
 				dialogBox.show();
 				dialogBox.center();
 			}
 		});
 		final Button btnUnsubscribe = new Button("Deabonnieren");
+		btnUnsubscribe.setStyleName("unsubs-usersubs");
 		
 		final HorizontalPanel pnlSubscribeAndUnsubscribe = new HorizontalPanel();
 		pnlSubscribeAndUnsubscribe.add(btnNewSubscription);
@@ -68,7 +71,7 @@ private String[] users = {"cem", "ivan", "serkan", "marina", "kerim", "thies"};
 		pnlSearchControls.add(btnSearch);
 		
 		final ListBox userList = new ListBox();
-		userList.setStyleName("listbox");
+		userList.setStyleName("listbox-usersubs");
 		userList.setVisibleItemCount(5);
 		
 		final Button btnSubscribe = new Button("Abonnieren");
