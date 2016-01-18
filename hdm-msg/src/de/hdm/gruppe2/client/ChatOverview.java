@@ -107,20 +107,12 @@ public class ChatOverview extends VerticalPanel {
 			}
 		});
 		
+		// TODO: Dynamisches laden aktueller Kontakte
 		for(String s : contacts) {
 			recipientList.addItem(s);
-		}
+		}	
 		
-		final TextArea taTextField = new TextArea();
-		
-		final TextBox tbSearchField = new TextBox();
-		final Button btnSearch = new Button("Suchen");
-		
-		final HorizontalPanel pnlSearchControls = new HorizontalPanel();
-		pnlSearchControls.add(tbSearchField);
-		pnlSearchControls.add(btnSearch);
-		
-		final Button btnSendMessage = new Button("Senden");
+		final Button btnCreateChat = new Button("Chat Anlegen");
 		final Button btnCancel = new Button("Abbruch");
 		btnCancel.addClickHandler(new ClickHandler() {
 
@@ -131,16 +123,13 @@ public class ChatOverview extends VerticalPanel {
 		});
 		
 		final HorizontalPanel pnlMainControls = new HorizontalPanel();
-		pnlMainControls.add(btnSendMessage);
+		pnlMainControls.add(btnCreateChat);
 		pnlMainControls.add(btnCancel);
 		
 		mainGrid.setWidget(0, 0, lblTitle);
 		mainGrid.setWidget(1, 0, lblContacts);
-		mainGrid.setWidget(1, 1, pnlRecipients);
 		mainGrid.setWidget(2, 0, recipientList);
-		mainGrid.setWidget(2, 1, taTextField);
-		mainGrid.setWidget(3, 0, pnlSearchControls);
-		mainGrid.setWidget(3, 1, pnlMainControls);
+		mainGrid.setWidget(3, 0, pnlMainControls);
 		
 		dialogBox.add(mainGrid);
 		
