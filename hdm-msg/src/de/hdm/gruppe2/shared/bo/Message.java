@@ -6,41 +6,35 @@ public class Message extends BusinessObject {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private String text; 
-	
-	private User sender; 
-	
-	private ArrayList<Hashtag> hashtagList;	
-	
-	private ArrayList<User> receiver;   
+	private String text; 	
+	// Fremdschlüssel des Users - Verfasser
+	private int userId;
+	// Fremdschlüssel des Chats - Empfänger
+	private int chatId;
+	private ArrayList<Hashtag> hashtagList;
 	
 	public String getText() {
 		return text;
 	}
-
-	public void setText (String text) {
-		this.text = text; 
+	public void setText(String text) {
+		this.text = text;
 	}
-	public User getUser() {
-		return sender;
+	public int getUserId() {
+		return userId;
 	}
-
-	public void setUser (User sender) {
-		this.sender = sender; 
+	public void setUserId(int userId) {
+		this.userId = userId;
 	}
-
-	public ArrayList<User> getReceiver() {
-		return this.receiver;
+	public int getChatId() {
+		return chatId;
 	}
-	
-	public void setReciver (ArrayList<User> receiver) {
-		this.receiver = receiver; 
+	public void setChatId(int chatId) {
+		this.chatId = chatId;
 	}
-	
 	public ArrayList<Hashtag> getHashtagList() {
-		return hashtagList; 
+		return hashtagList;
 	}
-	public void setHashtagList (ArrayList<Hashtag> hashtagList) {
-		this.hashtagList = hashtagList; 
+	public void setHashtagList(ArrayList<Hashtag> hashtagList) {
+		this.hashtagList = hashtagList;
 	}
 }

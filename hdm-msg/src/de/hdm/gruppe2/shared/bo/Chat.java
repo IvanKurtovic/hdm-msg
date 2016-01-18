@@ -9,6 +9,8 @@ public class Chat extends BusinessObject {
 	private Vector<User> memberList;
 	
 	private Vector<Message> messageList;
+	
+	private String name;
 
 	public Vector<User> getMemberList() {
 		return memberList;
@@ -24,6 +26,14 @@ public class Chat extends BusinessObject {
 
 	public void setMessageList(Vector<Message> messageList) {
 		this.messageList = messageList;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 }
