@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -22,7 +23,7 @@ import de.hdm.gruppe2.shared.bo.User;
  * in DB-Strukturen und DB-Strukturen in Objekte umgewandelt werden.
  * 
  * @see ChatMapper
- * @author Thies & Ioannidou
+ * @author Ivan & Ioannidou & Cem
  */
 public class ChatMapper {
 	
@@ -178,7 +179,7 @@ public class ChatMapper {
 	   * Eine Chat in der Datenbank anhand seiner 
 	   * ID finden
 	   */
-	  public Chat findByID (String id){
+	  public Chat findByID (int id){
 			Connection con = DBConnection.connection();
 			Chat chat = null;
 			try{
@@ -209,6 +210,38 @@ public class ChatMapper {
 		}
 	  
 	  
-	  //TODO Die Methode find by User and Time fehlt noch
+	  /**
+	   * Mehrere Chat in der Datenbank anhand des 
+	   * Nutzers finden
+	   */
+	  public Chat findByUser(User user){
+			
+		  Connection con = DBConnection.connection();
+			Chat chat = null;
+			try{
+				Statement stmt = con.createStatement();
+			    
+				//TODO: Statement anpassen sobald DB steht
+			    ResultSet rs = stmt.executeQuery("SELECT * FROM Message WHERE messageID ='"
+			    		+user+"';");
+			   
+			    //Da es nur einen Message mit dieser ID geben kann ist davon auszugehen, dass das ResultSet nur eine Zeile enthält
+			    if(rs.next()){
+			    	
+			    	//TODO: Chat aufbau anpassen sobald DB steht
+			    	chat = new Chat();
+			    	chat.setId(rs.getInt("chatID"));
+			    	
+			    	// Java Util Date wird umgewandelt in SQL Date um das Änderungsdatum in
+			        // die Datenbank zu speichern 
+			        java.sql.Timestamp sqlDate = rs.getTimestamp("creationDate");
+		     	 	chat.setCreationDate(sqlDate);
+			    }
+			}
+			catch(SQLException e){
+				e.printStackTrace();
+			}
+			return chat;
+		}	  
 
 }
