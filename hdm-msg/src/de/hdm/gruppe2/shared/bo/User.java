@@ -44,4 +44,12 @@ public class User extends BusinessObject {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	public void setGoogleID(String string) {
+		// TODO Auto-generated method stub
+		
+	}
+	public String getGoogleID() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

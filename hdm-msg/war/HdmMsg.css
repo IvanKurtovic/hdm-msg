@@ -77,5 +77,368 @@ div#footer_wrap {
 	}
 
 
+/** Add css rules here for your application. */
+
+
+/** Example rules used by the template application (remove for your app) */
+h1 {
+	
+font-family: bradley hand;	
+  font-size: 2em;
+  font-weight: bold;
+  color: #ffffff;
+  text-align: center;
+  background: rgb(176,196,222);
+
+
+}
+
+.sendButton {
+  display: block;
+  font-size: 16pt;
+}
+
+/** Most GWT widgets already have a style name defined */
+.gwt-DialogBox {
+  width: 1000px;
+}
+
+.dialogVPanel {
+  margin: 5px;
+}
+
+.serverResponseLabelError {
+  color: red;
+}
+
+/** Set ids using widget.getElement().setId("idOfElement") */
+#closeButton {
+  margin: 15px 6px 6px;
+}
+
+#header_wrap {
+	position: absolute;
+	top: 4em;
+	left: 0em;
+	width: 100%;
+	height: 4em;
+	
+
+	
+}
+
+#content_wrap {
+	position: absolute;
+	top: 3em;
+	left: 0em;
+	width: 100%;
+	height: 44em;
+	/*border: solid;*/
+	background: rgb(176,196,222);
+
+}
+
+.listbox {
+	width: 16em;
+	height: 100%;
+}
+
+.popup-title {
+	text-align: center;
+	font-size: 2.5em;
+	font-weight: bold;
+}
+
+.gwt-MenuBar-horizontal .gwt-MenuItem {
+  padding: 50px 10px;
+  width: 205px;
+  vertical-align: bottom;
+  color: #ffffff;
+  /*background: #619eff;*/
+  font-weight: bold;
+  
+  
+
+}
+	
+.gwt-MenuBar-vertical .gwt-MenuItem {
+  	padding: 2px 40px 2px 1px;
+  	width: 165px;
+  	color: #20ac8e;
+}
+
+
+.listbox{
+	font-family: bradley hand;
+	font-size:15px;
+	position: relative;       
+    left: 9px; 
+    top: 9px;
+    width: 30em;
+    height: 30em;
+  	
+  	
+  	
+  	
+}
+	
+	
+.new-chat{
+	font-family: bradley hand;
+	font-size:15px;
+	height: 4em;
+	width: 160px;
+	position: relative; 
+	top: 10px;
+	left:5px;
+	
+}
+	
+	
+
+.delete-chat{
+	font-family: bradley hand;
+	font-size:15px;
+	height: 4em;
+	width: 160px;
+	position: relative;
+	top: 10px;
+	background: rgb(202, 60, 60);
+	color: white;
+    border-radius: 4px; 
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    left:10px;
+	
+}
+
+.send-chat{
+	font-family: bradley hand;
+	font-size:15px;
+	height: 4em;
+	width: 160px;
+	position: absolute;
+	top:32em;
+	bottom: 7em; 
+	right:6px;
+	background: rgb(28, 184, 65);
+	color: white;
+    border-radius: 4px;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+.textbox-chat{
+	font-family: bradley hand;
+	height: 4em;
+	width: 630px;
+	position: absolute;
+	top:36em;
+	bottom:7em;
+	left: 40em;
+	right: 50em; 
+	
+}
+
+
+	
+	
+.popup-dialogbox-chat{
+	font-family: bradley hand;
+	background: rgb(176,196,222);
+	color: white;
+	border:5px solid white;
+}
+
+.popup-listbox-chat{
+	
+	width: 20em;
+	
+	}
+	
+	
+	
+
+
+.detailsgrid-user{
+	
+	position: absolute;
+	margin-right: auto;
+	margin-left: 100px;
+	top: 2em;
+}
+
+
+.firstname-user{
+	font-family: bradley hand;
+	font-size: 20px;
+}
+
+.textbox-firstname-user{
+	
+	width:20em;
+}
+
+.lastname-user{
+	font-family: bradley hand;
+	font-size: 20px;
+}
+
+.textbox-lastname-user{
+	width:20em;
+}
+
+.email-user{
+	font-family: bradley hand;
+	font-size: 20px;
+}
+.textbox-email-user{
+	width:20em;
+}
+.textbox-email-user{
+	width:20em;
+}
+.timestamp-user{
+	font-family: bradley hand;
+	font-size: 20px;
+}
+
+.textbox-timestamp-user{
+	width:20em;
+}
+
+
+.save-user{
+	font-family: bradley hand;
+	font-size:15px;
+	height: 4em;
+	width: 160px;
+	background: rgb(28, 184, 65);
+	color: white;
+    border-radius: 4px;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+.newuser-user{
+	position: relative; 
+	top: 10px;
+	font-family: bradley hand;
+	font-size:15px;
+	height: 4em;
+	width: 160px;
+
+	
+}
+.delete-user{
+	position: relative; 
+	top: 10px;
+	font-family: bradley hand;
+	font-size:15px;
+	height: 4em;
+	width: 160px;
+	background: rgb(202, 60, 60);
+	color: white;
+    border-radius: 4px; 
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);	
+}
+.refresh-user{
+	position: relative; 
+	top: 10px;
+	font-family: bradley hand;
+	font-size:15px;
+	height: 4em;
+	width: 160px;
+	
+}
+
+.dialogbox-user{
+	font-family: bradley hand;
+	background: rgb(176,196,222);
+	color: white;
+	border:5px solid white;
+
+}
+
+
+.newsubs-usersubs{
+	position: relative; 
+	font-family: bradley hand;
+	font-size:15px;
+	height: 4em;
+	width: 160px; 
+	top: 10px;
+	left:5px;
+	
+}
+
+.unsubs-usersubs{
+	font-family: bradley hand;
+	font-size:15px;
+	height: 4em;
+	width: 160px;
+	position: relative;
+	top: 10px;
+	background: rgb(202, 60, 60);
+	color: white;
+    border-radius: 4px; 
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    left:10px;
+}
+
+.dialogbox-usersubs{
+	font-family: bradley hand;
+	background: rgb(176,196,222);
+	color: white;
+	border:5px solid white;
+	
+}
+
+.listbox-usersubs{
+	height:90px;
+	width:240px;
+}
+
+
+.newabo-hashtagabo{
+	position: relative; 
+	font-family: bradley hand;
+	font-size:15px;
+	height: 4em;
+	width: 160px; 
+	top: 10px;
+	left:5px;
+}
+
+.unsubs-hashtagabo{
+	font-family: bradley hand;
+	font-size:15px;
+	height: 4em;
+	width: 160px;
+	position: relative;
+	top: 10px;
+	background: rgb(202, 60, 60);
+	color: white;
+    border-radius: 4px; 
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    left:10px;
+}
+
+.dialogbox-hashtagabo{
+	
+	font-family: bradley hand;
+	background: rgb(176,196,222);
+	color: white;
+	border:5px solid white;
+	
+	
+}
+
+popup-abo-hashtagabo{
+	
+	top: 2em;
+}
+
+popup-cancel-hashtagabo{
+	
+	top:2em;
+}
 
 
