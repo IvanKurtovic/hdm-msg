@@ -10,6 +10,11 @@ import java.util.Date;
 import java.util.Vector;
 
 import de.hdm.gruppe2.shared.bo.Abo;
+import de.hdm.gruppe2.shared.bo.Chat;
+import de.hdm.gruppe2.shared.bo.Hashtag;
+import de.hdm.gruppe2.shared.bo.HashtagAbo;
+import de.hdm.gruppe2.shared.bo.User;
+import de.hdm.gruppe2.shared.bo.UserAbo;
 
 /**
  * Mapper-Klasse, die <code>Abo</code>-Objekte auf eine relationale
@@ -19,7 +24,7 @@ import de.hdm.gruppe2.shared.bo.Abo;
  * in DB-Strukturen und DB-Strukturen in Objekte umgewandelt werden.
  * 
  * @see AboMapper
- * @author Thies & Ioannidou
+ * @author Thies & Ivan
  */
 public class AboMapper {
 	
@@ -72,11 +77,11 @@ public class AboMapper {
 	   * <code>id</code>.
 	   */
 	  
-	  
-	  public Abo insertAbo(Abo abo) {
+	  /**
+	   * Einfügen eines Hashtag Abo Objektes
+	   */
+	  public HashtagAbo insertHashtagAbo(HashtagAbo hashtagAbo) {
 		  Connection con = DBConnection.connection();
-		  
-		  // TODO IF Schleife einbauen, die Nutzer & Hashtags Abo verwaltet
 		  
 		  try {
 		      Statement stmt = con.createStatement();
@@ -85,6 +90,7 @@ public class AboMapper {
 		       * Zunächst schauen wir nach, welches der momentan höchste
 		       * Primärschlüsselwert ist.
 		       */
+		      
 		      //TODO: Statement anpassen sobald DB steht
 		      ResultSet rs = stmt.executeQuery("SELECT MAX(aboID) AS maxid "
 		          + "FROM Abo ");
@@ -94,17 +100,17 @@ public class AboMapper {
 		         * Man erhält den bisher maximalen, nun um 1 inkrementierten
 		         * Primärschlüssel.
 		         */
-		    	  abo.setId(rs.getInt("maxid") + 1);
+		    	  hashtagAbo.setId(rs.getInt("maxid") + 1);
 	    	 
 		    	  
 		    	  // Java Util Date wird umgewandelt in SQL Date um das Änderungsdatum in
 		    	  // die Datenbank zu speichern 
-		     	  Date utilDate = abo.getCreationDate();
+		     	  Date utilDate = hashtagAbo.getCreationDate();
 		     	  java.sql.Timestamp sqlDate = new java.sql.Timestamp(utilDate.getTime());  
 		     	  DateFormat df = new SimpleDateFormat("dd/MM/YYYY HH:mm:ss");
 		     	  df.format(sqlDate);
 		     	  
-		     	 abo.setCreationDate(sqlDate);
+		     	 hashtagAbo.setCreationDate(sqlDate);
 		     	  
 	    	  /*
 		       * Das Objekt wird nun in die Datenbank geschrieben 
@@ -114,8 +120,8 @@ public class AboMapper {
 		        
 		      //TODO: Statement anpassen sobald DB steht
 		        stmt.executeUpdate("INSERT INTO Abo VALUES ('"
-		        + abo.getId() +"','"
-		        + abo.getCreationDate() +"');");
+		        + hashtagAbo.getId() +"','"
+		        + hashtagAbo.getCreationDate() +"');");
 		        
 		      //TODO Eintrag in Zwischentabelle für die Hashtags
 		      //TODO Eintrag in Zwischentabelle für die User
@@ -126,43 +132,129 @@ public class AboMapper {
 		      e2.printStackTrace();
 		    }
 
-		  return abo;
+		  return hashtagAbo;
+	  }
+
+	/**
+	 * Einfügen eines User Abo Objektes
+	 */
+	  public UserAbo insertUserAbo(UserAbo userAbo) {
+		  Connection con = DBConnection.connection();
+		  
+		  try {
+		      Statement stmt = con.createStatement();
+
+		      /*
+		       * Zunächst schauen wir nach, welches der momentan höchste
+		       * Primärschlüsselwert ist.
+		       */
+		      
+		      //TODO: Statement anpassen sobald DB steht
+		      ResultSet rs = stmt.executeQuery("SELECT MAX(aboID) AS maxid "
+		          + "FROM Abo ");
+
+		      if (rs.next()) {
+		        /*
+		         * Man erhält den bisher maximalen, nun um 1 inkrementierten
+		         * Primärschlüssel.
+		         */
+		    	  userAbo.setId(rs.getInt("maxid") + 1);
+	    	 
+		    	  
+		    	  // Java Util Date wird umgewandelt in SQL Date um das Änderungsdatum in
+		    	  // die Datenbank zu speichern 
+		     	  Date utilDate = userAbo.getCreationDate();
+		     	  java.sql.Timestamp sqlDate = new java.sql.Timestamp(utilDate.getTime());  
+		     	  DateFormat df = new SimpleDateFormat("dd/MM/YYYY HH:mm:ss");
+		     	  df.format(sqlDate);
+		     	  
+		     	 userAbo.setCreationDate(sqlDate);
+		     	  
+	    	  /*
+		       * Das Objekt wird nun in die Datenbank geschrieben 
+		       */
+		       
+		     	  stmt = con.createStatement();
+		        
+		      //TODO: Statement anpassen sobald DB steht
+		        stmt.executeUpdate("INSERT INTO Abo VALUES ('"
+		        + userAbo.getId() +"','"
+		        + userAbo.getCreationDate() +"');");
+		        
+		      //TODO Eintrag in Zwischentabelle für die Hashtags
+		      //TODO Eintrag in Zwischentabelle für die User
+		      }
+		      
+		    }
+		  catch (SQLException e2) {
+		      e2.printStackTrace();
+		    }
+
+		  return userAbo;
 	  }
 	  
 	  /**
-	   * Wiederholtes Schreiben eines Objekts in die Datenbank.
+	   * Wiederholtes Schreiben eines Hashtag Abo Objekts in die Datenbank.
 	   */
-	  public Abo updateAbo(Abo abo) {
+	  public HashtagAbo updateHashtagAbo(HashtagAbo hashtagAbo) {
 	    Connection con = DBConnection.connection();
 	    
 	    // Für Statement ID in Integer umwandeln
-	    Integer aboId = new Integer(abo.getId());
+	    Integer aboId = new Integer(hashtagAbo.getId());
 
 	    try {
 	      Statement stmt = con.createStatement();
 	      
-	      
-	      //TODO Eintrag in Zwischentabelle für die Hashtags
-	      //TODO Eintrag in Zwischentabelle für die Sender
+	    //TODO: Statement anpassen sobald DB steht
+	      stmt.executeUpdate("UPDATE User SET "
+	      		+"' WHERE userID='"+aboId.toString()+"';");
 
 	    }
 	    catch (SQLException e2) {
 	      e2.printStackTrace();
 	    }
 
-	    return abo;
+	    return hashtagAbo;
 	  }
 	  
 	  
 	  /**
-	   * Löschen des Abo-Objektes aus der Datenbank 
+	   * Wiederholtes Schreiben eines User Abo Objekts in die Datenbank.
 	   */
-	  public void deleteAbo(Abo abo) {
+	  public UserAbo updateUserAbo(UserAbo userAbo) {
+		    Connection con = DBConnection.connection();
+		    
+		    // Für Statement ID in Integer umwandeln
+		    Integer aboId = new Integer(userAbo.getId());
+
+		    try {
+		      Statement stmt = con.createStatement();
+		      
+		    //TODO: Statement anpassen sobald DB steht
+		      stmt.executeUpdate("UPDATE User SET "
+		      		+"' WHERE userID='"+aboId.toString()+"';");
+		      
+		      //TODO Eintrag in Zwischentabelle für die Hashtags
+		      //TODO Eintrag in Zwischentabelle für die Sender
+
+		    }
+		    catch (SQLException e2) {
+		      e2.printStackTrace();
+		    }
+
+		    return userAbo;
+		  }
+	  
+	  
+	  /**
+	   * Löschen des Hashtag Abo-Objektes aus der Datenbank 
+	   */
+	  public void deleteHashtagAbo(HashtagAbo hashtagabo) {
 	    Connection con = DBConnection.connection();
 
 	    try {
 	      Statement stmt = con.createStatement();
-	      stmt.executeUpdate("DELETE FROM Abo WHERE aboID ='"+ abo.getId()+"'");
+	      stmt.executeUpdate("DELETE FROM HashtagAbo WHERE aboID ='"+ hashtagabo.getId()+"'");
 	    }
 	    
 	    catch (SQLException e2) {
@@ -170,8 +262,87 @@ public class AboMapper {
 	    }
 	  }
 	  
+	  /**
+	   * Löschen des Hashtag Abo-Objektes aus der Datenbank 
+	   */
+	  public void deleteUserAbo(UserAbo user) {
+	    Connection con = DBConnection.connection();
+
+	    try {
+	      Statement stmt = con.createStatement();
+	      stmt.executeUpdate("DELETE FROM UserAbo WHERE aboID ='"+ user.getId()+"'");
+	    }
+	    
+	    catch (SQLException e2) {
+	      e2.printStackTrace();
+	    }
+	  }
 	  
-	  //TODO getAboByHashtag Methode
-	  //TODO getAboByUser Methode
+	  /**
+	   * Abo von einem Hashtag finden 
+	   */
+	  public HashtagAbo findAboByHashtag(Hashtag hashtag){
+			
+		  Connection con = DBConnection.connection();
+		  HashtagAbo hashtagAbo = null;
+			try{
+				Statement stmt = con.createStatement();
+			    
+				//TODO: Statement anpassen sobald DB steht
+			    ResultSet rs = stmt.executeQuery("SELECT * FROM HashtagAbo WHERE aboID ='"
+			    		+hashtag+"';");
+			   
+			    //Da es nur einen Message mit dieser ID geben kann ist davon auszugehen, dass das ResultSet nur eine Zeile enthält
+			    if(rs.next()){
+			    	
+			    	//TODO: Useraufbau aufbau anpassen sobald DB steht
+			    	hashtagAbo = new HashtagAbo();
+			    	hashtagAbo.setId(rs.getInt("aboID"));
+			    	
+			    	// Java Util Date wird umgewandelt in SQL Date um das Änderungsdatum in
+			        // die Datenbank zu speichern 
+			        java.sql.Timestamp sqlDate = rs.getTimestamp("creationDate");
+			        hashtagAbo.setCreationDate(sqlDate);
+			    }
+			}
+			catch(SQLException e){
+				e.printStackTrace();
+			}
+			return hashtagAbo;
+		}
+	  
+	  
+	  /**
+	   * Abo von einem Nutzer finden 
+	   */
+	  public UserAbo findAboByUser(User user){
+			
+		  Connection con = DBConnection.connection();
+		  UserAbo userAbo = null;
+			try{
+				Statement stmt = con.createStatement();
+			    
+				//TODO: Statement anpassen sobald DB steht
+			    ResultSet rs = stmt.executeQuery("SELECT * FROM UserAbo WHERE aboID ='"
+			    		+user+"';");
+			   
+			    //Da es nur einen Message mit dieser ID geben kann ist davon auszugehen, dass das ResultSet nur eine Zeile enthält
+			    if(rs.next()){
+			    	
+			    	//TODO: Useraufbau aufbau anpassen sobald DB steht
+			    	userAbo = new UserAbo();
+			    	userAbo.setId(rs.getInt("aboID"));
+			    	
+			    	// Java Util Date wird umgewandelt in SQL Date um das Änderungsdatum in
+			        // die Datenbank zu speichern 
+			        java.sql.Timestamp sqlDate = rs.getTimestamp("creationDate");
+			        userAbo.setCreationDate(sqlDate);
+			    }
+			}
+			catch(SQLException e){
+				e.printStackTrace();
+			}
+			return userAbo;
+		}	  
 
 }
