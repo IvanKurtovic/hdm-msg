@@ -18,7 +18,7 @@ import de.hdm.gruppe2.shared.bo.User;
  * in DB-Strukturen und DB-Strukturen in Objekte umgewandelt werden.
  * 
  * @see UserMapper
- * @author Thies & Ioannidou
+ * @author Thies & Ivan Kurtovic und Serkan Yilmaz
  */
 public class UserMapper {
 
