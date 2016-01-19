@@ -19,7 +19,7 @@ import de.hdm.gruppe2.shared.bo.User;
  * in DB-Strukturen und DB-Strukturen in Objekte umgewandelt werden.
  * 
  * @see HashtagMapper
- * @author Thies & Ioannidou
+ * @author Kerim Sari, Ivan Kurtovic und Marina
  */
 public class HashtagMapper {
 	
@@ -171,7 +171,7 @@ public class HashtagMapper {
 	   * Eine Hashtag in der Datenbank anhand seiner 
 	   * ID finden
 	   */
-	  public Hashtag findByID (String id){
+	  public Hashtag findByID (int id){
 			Connection con = DBConnection.connection();
 			Hashtag hashtag = null;
 			try{
