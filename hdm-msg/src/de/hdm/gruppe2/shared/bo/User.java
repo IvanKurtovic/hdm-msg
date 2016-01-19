@@ -52,4 +52,12 @@ public class User extends BusinessObject {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	public String getMailadresse() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public void setMailadresse(String text) {
+		// TODO Auto-generated method stub
+		
+	}
 }
