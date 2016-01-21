@@ -23,6 +23,8 @@ public class ClientsideSettings extends CommonSettings {
    * namens <code>BankAdministration</code>.
    */
   private static MsgServiceAsync messageVerwaltung = null;
+  
+  private static LoginServiceAsync loginVerwaltung = null;
 
   /**
    * Remote Service Proxy zur Verbindungsaufnahme mit dem Server-seitgen Dienst
@@ -119,6 +121,17 @@ public class ClientsideSettings extends CommonSettings {
     // So, nun brauchen wir die messageVerwaltung nur noch zurückzugeben.
     return messageVerwaltung;
   }
+  
+  public static LoginServiceAsync getLoginService() {
+	    // Gab es bislang noch keine MsgService-Instanz, dann...
+	    if (loginVerwaltung == null) {
+	      // Zunächst instantiieren wir BankAdministration
+	    	loginVerwaltung = GWT.create(LoginService.class);
+	    }
+
+	    // So, nun brauchen wir die messageVerwaltung nur noch zurückzugeben.
+	    return loginVerwaltung;
+	  }
 
   /**
    * <p>

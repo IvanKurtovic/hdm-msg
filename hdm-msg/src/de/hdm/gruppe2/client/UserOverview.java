@@ -29,13 +29,15 @@ public class UserOverview extends VerticalPanel{
 	private Label lblNotification = new Label();
 	private final ListBox userList = new ListBox();
 	private User selectedUser = null;
+	private User loggedInUser = null;
+	
+	public UserOverview(User loggedInUser) {
+		this.loggedInUser = loggedInUser;
+	}
 	
 	@Override
 	public void onLoad() {
-		
-		
-		
-		
+
 		// User Details
 		final Grid mainGrid = new Grid(5,3);
 		final Grid detailsGrid = new Grid(5,2);
@@ -80,7 +82,7 @@ public class UserOverview extends VerticalPanel{
 		});
 		
 		// Alle User aus der Datenbank laden und in die Liste speichern.
-		this.getAllUsers(lblNotification);
+		this.getAllUsers();
 		
 		//final HorizontalPanel pnlFunctions = new HorizontalPanel();		
 		final Button btnCreateUser = new Button("Neuer User");
@@ -151,7 +153,7 @@ public class UserOverview extends VerticalPanel{
 
 			@Override
 			public void onClick(ClickEvent event) {
-				getAllUsers(lblNotification);
+				getAllUsers();
 			}
 			
 		});
@@ -181,10 +183,7 @@ public class UserOverview extends VerticalPanel{
 
 		this.add(mainGrid);
 	}
-	
-	private void getAllUsers(Label notificationLabel){
-		msgSvc.findAllUser(new FindAllUsersCallback(notificationLabel));
-	}
+
 	
 	private DialogBox createUserDialog() {
 		
@@ -283,34 +282,31 @@ public class UserOverview extends VerticalPanel{
 		
 	}
 	
-	private class FindAllUsersCallback implements AsyncCallback<ArrayList<User>> {
+	
+	private void getAllUsers(){
+		msgSvc.findAllUser(new AsyncCallback<ArrayList<User>>() {
 
-		private Label notification = null;
-		
-		public FindAllUsersCallback(Label notificationLabel) {
-			this.notification = notificationLabel;
-		}
-		
-		@Override
-		public void onFailure(Throwable caught) {
-			this.notification.setText("User konnten nicht geladen werden!");			
-		}
+			@Override
+			public void onFailure(Throwable caught) {
+				ClientsideSettings.getLogger().severe("User konnten nicht geladen werden.");
+			}
 
-		@Override
-		public void onSuccess(ArrayList<User> result) {
-			users = result;
-			
-			// Da wir nur ein Listobjekt weiter reichen, säubern wir zunächst alle vorhandenen
-			// Einträge.
-			userList.clear();
-			
-			for(User u : users) {
-				userList.addItem(u.getFirstName() + " " + u.getLastName());
+			@Override
+			public void onSuccess(ArrayList<User> result) {
+				users = result;
+				
+				// Da wir nur ein Listobjekt weiter reichen, säubern wir zunächst alle vorhandenen
+				// Einträge.
+				userList.clear();
+				
+				for(User u : users) {
+					userList.addItem(u.getFirstName() + " " + u.getLastName());
+				}
+				
+				ClientsideSettings.getLogger().finest("Alle User wurden geladen!");
 			}
 			
-			this.notification.setText("Alle User wurden geladen!");			
-		}
-		
+		});
 	}
 	
 	private class SaveUserCallback implements AsyncCallback<User> {

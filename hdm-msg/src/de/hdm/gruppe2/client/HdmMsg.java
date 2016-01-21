@@ -7,13 +7,35 @@ import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
+import de.hdm.gruppe2.shared.bo.User;
+
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
 public class HdmMsg extends VerticalPanel implements EntryPoint {
 	
-	public void onModuleLoad() {
+	// Ein Objekt der momentan eingeloggten nutzers wird als private Variable
+	// abgelegt und den einzelnen Panelen mitgesendet.
+	private User currentUser = null;
 	
+	public void onModuleLoad() {
+		// Prüfung ob der User eingeloggt ist wird hier eingefügt
+		// und anschließend die Oberfläche geladen
+		currentUser = new User();
+		currentUser.setEmail("sarikerim@googlemail.com");
+		currentUser.setFirstName("Kerim");
+		currentUser.setLastName("ks146@hdm-stuttgart.de");
+		currentUser.setId(5);
+		
+		loadMessenger(currentUser);
+	}
+	
+	private User getCurrentUser() {
+		return this.currentUser;
+	}
+	
+	private void loadMessenger(User currentUser) {
+		
 		Command test = new Command() {
 			public void execute() {
 				Window.alert("BANANAAAAA!!!");
@@ -30,7 +52,7 @@ public class HdmMsg extends VerticalPanel implements EntryPoint {
 		Command userOverview = new Command() {
 			public void execute() {
 				RootPanel.get("content_wrap").clear();
-				RootPanel.get("content_wrap").add(new UserOverview());
+				RootPanel.get("content_wrap").add(new UserOverview(getCurrentUser()));
 			}
 		};
 		
@@ -39,7 +61,7 @@ public class HdmMsg extends VerticalPanel implements EntryPoint {
 			@Override
 			public void execute() {
 				RootPanel.get("content_wrap").clear();
-				RootPanel.get("content_wrap").add(new ChatOverview());			
+				RootPanel.get("content_wrap").add(new ChatOverview(getCurrentUser()));			
 			}	
 		};
 		

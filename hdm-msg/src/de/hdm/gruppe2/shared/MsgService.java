@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
+import de.hdm.gruppe2.shared.bo.Chat;
 import de.hdm.gruppe2.shared.bo.User;
 
 /**
@@ -19,4 +20,8 @@ public interface MsgService extends RemoteService {
 	public User saveUser(User user);
 	
 	public ArrayList<User> findAllUser();
+	
+	public Chat createChat(ArrayList<User> participants);
+	
+	public ArrayList<Chat> findAllChats();
 }

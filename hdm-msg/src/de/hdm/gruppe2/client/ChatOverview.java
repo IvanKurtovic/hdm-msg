@@ -1,10 +1,14 @@
 package de.hdm.gruppe2.client;
 
+import java.util.ArrayList;
+
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.Grid;
@@ -15,26 +19,37 @@ import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
+import de.hdm.gruppe2.shared.MsgService;
+import de.hdm.gruppe2.shared.MsgServiceAsync;
+import de.hdm.gruppe2.shared.bo.Chat;
+import de.hdm.gruppe2.shared.bo.User;
+import de.hdm.gruppe2.shared.bo.Message;
+
 public class ChatOverview extends VerticalPanel {
 
-	private String[] names = {"Chat1", "Chat2", "Chat3", "Chat4", "Chat5"};
-	private String[] contacts = {"Serkan", "Ivan", "Cem", "Kerim", "Marina"};
+	private MsgServiceAsync msgSvc = ClientsideSettings.getMsgService();
+	private User loggedInUser = null;
+	private ArrayList<Chat> chats = null;
+	private ArrayList<User> contacts = null;
+	
+	private final ListBox chatNames = new ListBox();
+	
+	public ChatOverview(User loggedInUser) {
+		this.loggedInUser = loggedInUser;
+	}
 	
 	@Override
 	public void onLoad() {
 		
+		this.getAllChats();
+		this.getAllContacts();
+		
 		final Grid mainGrid = new Grid(2,2);
 		
-		final ListBox chatNames = new ListBox();
 		chatNames.setStyleName("listbox");
 		chatNames.setVisibleItemCount(11);
 		
-		for(String s : names) {
-			chatNames.addItem(s);
-		}
-		
 		final Button btnCreateChat = new Button("Neuer Chat");
-//TODO setStyleName für Neuer Chat Button 
 		btnCreateChat.setStyleName("new-chat");
 		btnCreateChat.addClickHandler(new ClickHandler() {
 
@@ -45,19 +60,28 @@ public class ChatOverview extends VerticalPanel {
 				dialogBox.center();
 			}
 		});
-		final Button btnDeleteChat = new Button("Entfernen");
-//TODO setStyleName für Entfernen Button		
+		
+		final Button btnRefresh = new Button("Refresh");
+		btnRefresh.addStyleName("refresh-user");
+		btnRefresh.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				getAllChats();
+			}
+			
+		});
+		
+		final Button btnDeleteChat = new Button("Entfernen");	
 		btnDeleteChat.setStyleName("delete-chat");
 		final HorizontalPanel pnlCreateAndDeleteChat = new HorizontalPanel();
 		pnlCreateAndDeleteChat.add(btnCreateChat);
+		pnlCreateAndDeleteChat.add(btnRefresh);
 		pnlCreateAndDeleteChat.add(btnDeleteChat);
 		
 		final TextBox tbMessage = new TextBox();
-		
-//TODO setStyleName für TextBox	
 		tbMessage.setStyleName("textbox-chat");
-		final Button btnSendMessage = new Button("Senden");
-//TODO setStyleName für Senden Button 		
+		final Button btnSendMessage = new Button("Senden");	
 		btnSendMessage.setStyleName("send-chat");
 		
 		final HorizontalPanel pnlSendMessage = new HorizontalPanel();
@@ -92,8 +116,7 @@ public class ChatOverview extends VerticalPanel {
 		pnlRecipients.add(lblRecipients);
 		pnlRecipients.add(tbRecipients);
 		
-		final ListBox recipientList = new ListBox();
-//TODO setStyleName popup-listbox 		
+		final ListBox recipientList = new ListBox();	
 		recipientList.setStyleName("popup-listbox-chat");
 		recipientList.setMultipleSelect(true);
 		recipientList.setVisibleItemCount(11);
@@ -107,12 +130,40 @@ public class ChatOverview extends VerticalPanel {
 			}
 		});
 		
-		// TODO: Dynamisches laden aktueller Kontakte
-		for(String s : contacts) {
-			recipientList.addItem(s);
+		// Alle User in die Liste einfügen.
+		for(User u : contacts) {
+			recipientList.addItem(u.getFirstName() + " " + u.getLastName());
 		}	
 		
 		final Button btnCreateChat = new Button("Chat Anlegen");
+		btnCreateChat.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				
+				if(recipientList.getSelectedIndex() == -1 ) {
+					ClientsideSettings.getLogger().info("No Recipient selected.");
+					return;
+				}
+				
+				ArrayList<User> selectedRecipients = new ArrayList<User>();
+				
+				for(int i = 0; i <= recipientList.getItemCount() - 1; i++) {
+					if(recipientList.isItemSelected(i)) {
+						if(contacts.get(i).getEmail() != loggedInUser.getEmail()) {
+							selectedRecipients.add(contacts.get(i));
+						}
+					}
+				}
+				
+				// Der User selbst muss auch in der Empfängerliste eingetragen sein.
+				selectedRecipients.add(loggedInUser);
+				createChat(selectedRecipients);				
+				dialogBox.hide();
+			}
+			
+		});
+		
 		final Button btnCancel = new Button("Abbruch");
 		btnCancel.addClickHandler(new ClickHandler() {
 
@@ -134,6 +185,62 @@ public class ChatOverview extends VerticalPanel {
 		dialogBox.add(mainGrid);
 		
 		return dialogBox;
+	}
+	
+	private void getAllContacts() {
+		msgSvc.findAllUser(new AsyncCallback<ArrayList<User>>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				ClientsideSettings.getLogger().severe("User konnten nicht geladen werden.");
+			}
+
+			@Override
+			public void onSuccess(ArrayList<User> result) {
+				contacts = result;
+				
+				ClientsideSettings.getLogger().finest("User geladen.");
+			}
+		});
+	}
+	
+	private void createChat(ArrayList<User> selectedRecipients) {
+		msgSvc.createChat(selectedRecipients, new AsyncCallback<Chat>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				ClientsideSettings.getLogger().severe("Chat konnte nicht angelegt werden.");
+			}
+
+			@Override
+			public void onSuccess(Chat result) {
+				ClientsideSettings.getLogger().finest("Chat wurde angelegt.");
+			}
+		});
+	}
+	
+	private void getAllChats() {
+		msgSvc.findAllChats(new AsyncCallback<ArrayList<Chat>>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				ClientsideSettings.getLogger().severe("Chats konnten nicht geladen werden.");
+			}
+
+			@Override
+			public void onSuccess(ArrayList<Chat> result) {
+				chats = result;
+				
+				chatNames.clear();
+				
+				for(Chat c : chats) {
+					chatNames.addItem(c.getName());
+				}
+				
+				ClientsideSettings.getLogger().finest("Chats wurden geladen.");
+			}
+
+		});
 	}
 }
 

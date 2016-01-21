@@ -1,30 +1,30 @@
 package de.hdm.gruppe2.shared.bo;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 public class Chat extends BusinessObject {
 
 	private static final long serialVersionUID = 1L;
 	
-	private Vector<User> memberList;
+	private ArrayList<User> memberList;
 	
-	private Vector<Message> messageList;
+	private ArrayList<Message> messageList;
 	
 	private String name;
 
-	public Vector<User> getMemberList() {
+	public ArrayList<User> getMemberList() {
 		return memberList;
 	}
 
-	public void setMemberList(Vector<User> memberList) {
+	public void setMemberList(ArrayList<User> memberList) {
 		this.memberList = memberList;
 	}
 
-	public Vector<Message> getMessageList() {
+	public ArrayList<Message> getMessageList() {
 		return messageList;
 	}
 
-	public void setMessageList(Vector<Message> messageList) {
+	public void setMessageList(ArrayList<Message> messageList) {
 		this.messageList = messageList;
 	}
 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
+import de.hdm.gruppe2.shared.bo.Chat;
 import de.hdm.gruppe2.shared.bo.User;
 
 /**
@@ -17,4 +18,8 @@ public interface MsgServiceAsync {
 	void saveUser(User user, AsyncCallback<User> callback);
 
 	void findAllUser(AsyncCallback<ArrayList<User>> callback);
+
+	void createChat(ArrayList<User> participants, AsyncCallback<Chat> callback);
+
+	void findAllChats(AsyncCallback<ArrayList<Chat>> callback);
 }

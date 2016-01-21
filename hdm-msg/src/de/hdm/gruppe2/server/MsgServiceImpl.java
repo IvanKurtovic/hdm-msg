@@ -1,8 +1,10 @@
 package de.hdm.gruppe2.server;
 
+import de.hdm.gruppe2.server.db.ChatMapper;
 import de.hdm.gruppe2.server.db.UserMapper;
 import de.hdm.gruppe2.shared.FieldVerifier;
 import de.hdm.gruppe2.shared.MsgService;
+import de.hdm.gruppe2.shared.bo.Chat;
 import de.hdm.gruppe2.shared.bo.User;
 
 import java.util.ArrayList;
@@ -16,6 +18,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 public class MsgServiceImpl extends RemoteServiceServlet implements MsgService {
 
 	private UserMapper usermapper = UserMapper.usermapper();
+	private ChatMapper chatmapper = ChatMapper.chatMapper();
 	
 	
 	public String greetServer(String input) throws IllegalArgumentException {
@@ -76,5 +79,25 @@ public class MsgServiceImpl extends RemoteServiceServlet implements MsgService {
 	@Override
 	public ArrayList<User> findAllUser() {
 		return this.usermapper.findAllUsers();
+	}
+	
+	@Override
+	public Chat createChat(ArrayList<User> participants) {
+		
+		String chatName = "";
+		
+		for(User u : participants) {
+			chatName += u.getEmail() + " ";
+		}
+		
+		Chat c = new Chat();
+		c.setName(chatName);
+		c.setMemberList(participants);
+		return this.chatmapper.insert(c);		
+	}
+
+	@Override
+	public ArrayList<Chat> findAllChats() {
+		return this.chatmapper.getAllChats();
 	}
 }
