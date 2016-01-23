@@ -82,22 +82,44 @@ public class MsgServiceImpl extends RemoteServiceServlet implements MsgService {
 	}
 	
 	@Override
-	public Chat createChat(ArrayList<User> participants) {
+	public void deleteUser(User user) {
+		this.usermapper.delete(user);
+	}
+	
+	@Override
+	public Chat createChat(ArrayList<User> participants, boolean isPrivate) {
 		
 		String chatName = "";
 		
 		for(User u : participants) {
-			chatName += u.getEmail() + " ";
+			chatName += u.getFirstName() + " ";
 		}
 		
 		Chat c = new Chat();
 		c.setName(chatName);
 		c.setMemberList(participants);
+		c.setPrivate(isPrivate);
 		return this.chatmapper.insert(c);		
 	}
 
 	@Override
+	public void deleteChat(Chat chat) {
+		this.chatmapper.delete(chat);
+	}
+	
+	@Override
+	public void deleteChatParticipant(Chat chat, User participant) {
+		this.chatmapper.deleteChatParticipant(chat, participant);
+	}
+	
+	@Override
 	public ArrayList<Chat> findAllChats() {
 		return this.chatmapper.getAllChats();
 	}
+
+	@Override
+	public ArrayList<Chat> findAllChatsOfUser(int userId) {
+		return this.chatmapper.getAllPublicChatsOfUser(userId);
+	}
+
 }

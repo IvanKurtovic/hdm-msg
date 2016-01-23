@@ -41,7 +41,7 @@ public class ChatOverview extends VerticalPanel {
 	@Override
 	public void onLoad() {
 		
-		this.getAllChats();
+		this.getAllPublicChatsOfUser(loggedInUser.getId());
 		this.getAllContacts();
 		
 		final Grid mainGrid = new Grid(2,2);
@@ -67,13 +67,29 @@ public class ChatOverview extends VerticalPanel {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				getAllChats();
+				getAllPublicChatsOfUser(loggedInUser.getId());
 			}
 			
 		});
 		
 		final Button btnDeleteChat = new Button("Entfernen");	
 		btnDeleteChat.setStyleName("delete-chat");
+		btnDeleteChat.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				
+				if(chatNames.getSelectedIndex() == -1) {
+					ClientsideSettings.getLogger().severe("Kein Chat ausgewählt.");
+					return;
+				}
+				
+				// Jetzt erst wird der User aus der Datenbank entfernt
+				deleteChat(chats.get(chatNames.getSelectedIndex()), loggedInUser);
+			}
+			
+		});
+		
 		final HorizontalPanel pnlCreateAndDeleteChat = new HorizontalPanel();
 		pnlCreateAndDeleteChat.add(btnCreateChat);
 		pnlCreateAndDeleteChat.add(btnRefresh);
@@ -205,7 +221,7 @@ public class ChatOverview extends VerticalPanel {
 	}
 	
 	private void createChat(ArrayList<User> selectedRecipients) {
-		msgSvc.createChat(selectedRecipients, new AsyncCallback<Chat>() {
+		msgSvc.createChat(selectedRecipients, false, new AsyncCallback<Chat>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -242,5 +258,50 @@ public class ChatOverview extends VerticalPanel {
 
 		});
 	}
-}
 
+	private void getAllPublicChatsOfUser(int userId) {
+		msgSvc.findAllChatsOfUser(userId, new AsyncCallback<ArrayList<Chat>> () {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				ClientsideSettings.getLogger().severe("Chats konnten nicht geladen werden.");				
+			}
+
+			@Override
+			public void onSuccess(ArrayList<Chat> result) {
+				chats = result;
+				
+				chatNames.clear();
+				
+				for(Chat c : chats) {
+					chatNames.addItem(c.getName());
+				}
+				
+				ClientsideSettings.getLogger().finest("Chats wurden geladen.");
+			}
+			
+		});
+	}
+	
+	private void deleteChat(Chat chat, User currentUser) {
+		msgSvc.deleteChatParticipant(chat, currentUser,new AsyncCallback<Void>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				ClientsideSettings.getLogger().severe("Chat konnte nicht entfernt werden.");
+			}
+
+			@Override
+			public void onSuccess(Void result) {
+				
+				// Entfernen des Users aus der Liste
+				chatNames.removeItem(chatNames.getSelectedIndex());
+				// Entfernen des User-Objekts aus der users Liste
+				chats.remove(chatNames.getSelectedIndex());
+				
+				ClientsideSettings.getLogger().finest("Chat wurde entfernt.");				
+			}
+			
+		});
+	}
+}

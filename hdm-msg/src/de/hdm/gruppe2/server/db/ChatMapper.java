@@ -40,16 +40,22 @@ public class ChatMapper {
 	  
 		try {
 			Statement stmt = con.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT MAX(id) AS maxid FROM Chat ");
+			ResultSet rs = stmt.executeQuery("SELECT MAX(`id`) AS maxid FROM `chat` ");
   
   		  	if (rs.next()) {
 
+  		  		int isPrivate = 0;
   		  		chat.setId(rs.getInt("maxid") + 1);
+  		  		
+  		  		if(chat.isPrivate()) {
+  		  			isPrivate = 1;
+  		  		}
   		  		
   		  		stmt = con.createStatement();
   		  		int result = stmt.executeUpdate("INSERT INTO `chat`(`id`, `name`) VALUES (" 
   		  							+ chat.getId() + ",'" 
-  		  							+ chat.getName() + "')");
+  		  							+ chat.getName() + "' "
+  		  							+ isPrivate + ")");
   		  		
   		  		if(result != 0) {
   		  			// Chat Teilnehmer der Teilnehmertabelle zuweisen.
@@ -109,6 +115,20 @@ public class ChatMapper {
  	      e2.printStackTrace();
  	    }
 	}
+	
+	public void deleteChatParticipant(Chat chat, User participant) {
+		
+		Connection con = DBConnection.connection();
+		
+		try {
+			
+			Statement stmt = con.createStatement();
+			stmt.executeUpdate("DELETE FROM `chatparticipants` WHERE chatId=" + chat.getId() + " AND userId=" + participant.getId());
+			
+		} catch (SQLException e2) {
+			e2.printStackTrace();
+		}
+	}
 
 	public Chat findByID (int id) {
 		 			
@@ -154,6 +174,51 @@ public class ChatMapper {
 				chat.setMemberList(getAllParticipantsOfChat(chat));
 				chat.setMessageList(getAllMessagesOfChat(chat));
 
+				if(rs.getInt("isPrivat") == 1) {
+					chat.setPrivate(true);
+				} else {
+					chat.setPrivate(false);
+				}
+				
+				allChats.add(chat);
+			}
+			
+			stmt.close();
+			rs.close();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return allChats;
+	}
+	
+	public ArrayList<Chat> getAllPublicChatsOfUser(int userId) {
+		
+		Connection con = DBConnection.connection();
+		ArrayList<Chat> allChats = new ArrayList<Chat>();
+		
+		try {
+			
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT `chatparticipants`.`chatId`, `chat`.`name`, `chat`.`isPrivat`, `chat`.`creationDate` " +
+											"FROM `chatparticipants` INNER JOIN `chat` " +
+											"ON `chatparticipants`.`chatId` = `chat`.`id` " +
+											"WHERE `userId` = " + userId  + " AND `isPrivat` <> 1");
+			
+			while(rs.next()) {
+				Chat chat = new Chat();
+				chat.setId(rs.getInt("chatId"));
+				chat.setName(rs.getString("name"));
+				chat.setCreationDate(rs.getDate("creationDate"));
+				chat.setMemberList(getAllParticipantsOfChat(chat));
+				chat.setMessageList(getAllMessagesOfChat(chat));
+				
+				if(rs.getInt("isPrivat") == 1) {
+					chat.setPrivate(true);
+				} else {
+					chat.setPrivate(false);
+				}
+
 				allChats.add(chat);
 			}
 			
@@ -175,7 +240,7 @@ public class ChatMapper {
 			
 			Statement stmt = con.createStatement();
 			// TODO BESSERE QUERY ENTWICKELN --> VON ID ZUM USER OBJEKT!
-			ResultSet rs = stmt.executeQuery("SELECT `userid` FROM `chatparticipants` WHERE chatId=" + chat.getId());
+			ResultSet rs = stmt.executeQuery("SELECT `userId` FROM `chatparticipants` WHERE chatId=" + chat.getId());
 			
 			while(rs.next()) {
 				User user = new User();

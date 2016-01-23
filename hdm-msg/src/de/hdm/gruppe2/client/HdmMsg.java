@@ -27,14 +27,14 @@ public class HdmMsg extends VerticalPanel implements EntryPoint {
 		currentUser.setLastName("ks146@hdm-stuttgart.de");
 		currentUser.setId(5);
 		
-		loadMessenger(currentUser);
+		loadMessenger();
 	}
 	
 	private User getCurrentUser() {
 		return this.currentUser;
 	}
 	
-	private void loadMessenger(User currentUser) {
+	private void loadMessenger() {
 		
 		Command test = new Command() {
 			public void execute() {
@@ -45,7 +45,7 @@ public class HdmMsg extends VerticalPanel implements EntryPoint {
 		Command newPostOverview = new Command() {
 			public void execute() {
 				RootPanel.get("content_wrap").clear();
-				RootPanel.get("content_wrap").add(new NewPostOverview());
+				RootPanel.get("content_wrap").add(new NewPostOverview(getCurrentUser()));
 			}
 		};
 		

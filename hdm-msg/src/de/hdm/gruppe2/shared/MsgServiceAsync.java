@@ -17,9 +17,17 @@ public interface MsgServiceAsync {
 
 	void saveUser(User user, AsyncCallback<User> callback);
 
+	void deleteUser(User user, AsyncCallback<Void> callback);
+	
 	void findAllUser(AsyncCallback<ArrayList<User>> callback);
 
-	void createChat(ArrayList<User> participants, AsyncCallback<Chat> callback);
+	void createChat(ArrayList<User> participants, boolean isPrivate, AsyncCallback<Chat> callback);
 
+	void deleteChat(Chat chat, AsyncCallback<Void> callback);
+	
 	void findAllChats(AsyncCallback<ArrayList<Chat>> callback);
+
+	void deleteChatParticipant(Chat chat, User participant, AsyncCallback<Void> callback);
+
+	void findAllChatsOfUser(int userId, AsyncCallback<ArrayList<Chat>> callback);
 }

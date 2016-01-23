@@ -31,6 +31,11 @@ public class UserOverview extends VerticalPanel{
 	private User selectedUser = null;
 	private User loggedInUser = null;
 	
+	private final TextBox tbFirstName = new TextBox();
+	private final TextBox tbLastName = new TextBox();
+	private final TextBox tbEmail = new TextBox();
+	private final TextBox tbCreationDate = new TextBox();
+	
 	public UserOverview(User loggedInUser) {
 		this.loggedInUser = loggedInUser;
 	}
@@ -51,13 +56,11 @@ public class UserOverview extends VerticalPanel{
 		lblEmail.setStyleName("email-user");
 		final Label lblCreationDate = new Label("Angelegt am: ");
 		lblCreationDate.setStyleName("timestamp-user");
-		final TextBox tbFirstName = new TextBox();
+		
+		// Set Style-Names
 		tbFirstName.setStyleName("textbox-firstname-user");
-		final TextBox tbLastName = new TextBox();
 		tbLastName.setStyleName("textbox-lastname-user");
-		final TextBox tbEmail = new TextBox();
 		tbEmail.setStyleName("textbox-email-user");
-		final TextBox tbCreationDate = new TextBox();
 		tbCreationDate.setStyleName("textbox-timestamp-user");
 		tbCreationDate.setEnabled(false);
 		
@@ -138,12 +141,12 @@ public class UserOverview extends VerticalPanel{
 			public void onClick(ClickEvent event) {
 				
 				if(userList.getSelectedIndex() == -1) {
-					lblNotification.setText("Kein User ausgewaehlt.");
+					ClientsideSettings.getLogger().severe("Kein User ausgewählt.");
 					return;
 				}
 				
-				
-				userList.removeItem(userList.getSelectedIndex());
+				// Jetzt erst wird der User aus der Datenbank entfernt
+				deleteUser(users.get(userList.getSelectedIndex()));
 			}
 		});
 		
@@ -327,6 +330,33 @@ public class UserOverview extends VerticalPanel{
 			notification.setText("Änderungen erfolgreich eingetragen. Bitte refreshen.");			
 		}
 		
+	}
+	
+	private void deleteUser(User user) {
+		msgSvc.deleteUser(user, new AsyncCallback<Void>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				ClientsideSettings.getLogger().severe("User konnte nicht entfernt werden.");
+			}
+
+			@Override
+			public void onSuccess(Void result) {
+				// Aufräumen der Detailmaske
+				tbEmail.setText("");
+				tbFirstName.setText("");
+				tbLastName.setText("");
+				tbCreationDate.setText("");
+				
+				// Entfernen des Users aus der Liste
+				userList.removeItem(userList.getSelectedIndex());
+				// Entfernen des User-Objekts aus der users Liste
+				users.remove(userList.getSelectedIndex());
+				
+				ClientsideSettings.getLogger().finest("User wurde entfernt.");
+			}
+			
+		});
 	}
 
 }
