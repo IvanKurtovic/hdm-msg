@@ -1,25 +1,13 @@
 package de.hdm.gruppe2.server.db;
 
 import java.sql.Connection;
-
 import java.sql.ResultSet;
-
 import java.sql.SQLException;
-
 import java.sql.Statement;
-
-import java.text.DateFormat;
-
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-
-import java.util.Vector;
 
 import de.hdm.gruppe2.shared.bo.Chat;
-
 import de.hdm.gruppe2.shared.bo.Message;
-
 import de.hdm.gruppe2.shared.bo.User;
 
 public class ChatMapper {
@@ -124,7 +112,7 @@ public class ChatMapper {
 		}
 	}
 
-	public Chat findByID (int id) {
+	public Chat findAllChatsOfUser (int id) {
 		 			
 		Connection con = DBConnection.connection();
 		Chat chat = new Chat();
@@ -180,7 +168,7 @@ public class ChatMapper {
 		return allChats;
 	}
 	
-	public ArrayList<Chat> getAllPublicChatsOfUser(int userId) {
+	public ArrayList<Chat> getAllChatsOfUser(User user) {
 		
 		Connection con = DBConnection.connection();
 		ArrayList<Chat> allChats = new ArrayList<Chat>();
@@ -188,10 +176,10 @@ public class ChatMapper {
 		try {
 			
 			Statement stmt = con.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT `chatparticipants`.`chatId`, `chat`.`name`, `chat`.`isPrivat`, `chat`.`creationDate` " +
-											"FROM `chatparticipants` INNER JOIN `chat` " +
-											"ON `chatparticipants`.`chatId` = `chat`.`id` " +
-											"WHERE `userId` = " + userId  + " AND `isPrivat` <> 1");
+			ResultSet rs = stmt.executeQuery("SELECT `chatparticipants`.`chatId`, `chat`.`name`, `chat`.`creationDate` "
+											+ "FROM `chatparticipants` INNER JOIN `chat` "
+											+ "ON `chatparticipants`.`chatId` = `chat`.`id` "
+											+ "WHERE `userId` = " + user.getId());
 			
 			while(rs.next()) {
 				Chat chat = new Chat();
@@ -200,7 +188,7 @@ public class ChatMapper {
 				chat.setCreationDate(rs.getDate("creationDate"));
 				chat.setMemberList(getAllParticipantsOfChat(chat));
 				chat.setMessageList(getAllMessagesOfChat(chat));
-
+				
 				allChats.add(chat);
 			}
 			
@@ -221,12 +209,18 @@ public class ChatMapper {
 		try {
 			
 			Statement stmt = con.createStatement();
-			// TODO BESSERE QUERY ENTWICKELN --> VON ID ZUM USER OBJEKT!
-			ResultSet rs = stmt.executeQuery("SELECT `userId` FROM `chatparticipants` WHERE chatId=" + chat.getId());
+			ResultSet rs = stmt.executeQuery("SELECT `chatparticipants`.`userid`, `chatparticipants`.`chatId`, `user`.`email`, `user`.`firstName`, `user`.`lastName`, `user`.`creationDate` " 
+											+ "FROM `chatparticipants` INNER JOIN `user` "
+											+ "ON `chatparticipants`.`userId` = `user`.`id` "
+											+ "WHERE `chatparticipants`.`chatId` = " + chat.getId());
 			
 			while(rs.next()) {
 				User user = new User();
-				user.setId(rs.getInt("id"));
+				user.setId(rs.getInt("userId"));
+				user.setEmail(rs.getString("email"));
+				user.setFirstName(rs.getString("firstName"));
+				user.setLastName(rs.getString("lastName"));
+				user.setCreationDate(rs.getDate("creationDate"));
 				
 				participantsOfChat.add(user);
 			}

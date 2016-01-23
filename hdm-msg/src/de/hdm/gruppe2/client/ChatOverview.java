@@ -2,12 +2,10 @@ package de.hdm.gruppe2.client;
 
 import java.util.ArrayList;
 
-import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
@@ -15,15 +13,12 @@ import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-import de.hdm.gruppe2.shared.MsgService;
 import de.hdm.gruppe2.shared.MsgServiceAsync;
 import de.hdm.gruppe2.shared.bo.Chat;
 import de.hdm.gruppe2.shared.bo.User;
-import de.hdm.gruppe2.shared.bo.Message;
 
 public class ChatOverview extends VerticalPanel {
 
@@ -41,7 +36,7 @@ public class ChatOverview extends VerticalPanel {
 	@Override
 	public void onLoad() {
 		
-		this.getAllPublicChatsOfUser(loggedInUser.getId());
+		this.getAllChatsOfUser();
 		this.getAllContacts();
 		
 		final Grid mainGrid = new Grid(2,2);
@@ -67,7 +62,7 @@ public class ChatOverview extends VerticalPanel {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				getAllPublicChatsOfUser(loggedInUser.getId());
+				getAllChatsOfUser();
 			}
 			
 		});
@@ -258,13 +253,13 @@ public class ChatOverview extends VerticalPanel {
 
 		});
 	}
-
-	private void getAllPublicChatsOfUser(int userId) {
-		msgSvc.findAllChatsOfUser(userId, new AsyncCallback<ArrayList<Chat>> () {
+	
+	private void getAllChatsOfUser() {
+		msgSvc.findAllChatsOfUser(loggedInUser, new AsyncCallback<ArrayList<Chat>>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				ClientsideSettings.getLogger().severe("Chats konnten nicht geladen werden.");				
+				ClientsideSettings.getLogger().severe("Chats konnten nicht geladen werden.");
 			}
 
 			@Override
@@ -279,7 +274,7 @@ public class ChatOverview extends VerticalPanel {
 				
 				ClientsideSettings.getLogger().finest("Chats wurden geladen.");
 			}
-			
+
 		});
 	}
 	

@@ -117,8 +117,8 @@ public class MsgServiceImpl extends RemoteServiceServlet implements MsgService {
 	}
 
 	@Override
-	public ArrayList<Chat> findAllChatsOfUser(int userId) {
-		return this.chatmapper.getAllPublicChatsOfUser(userId);
+	public ArrayList<Chat> findAllChatsOfUser(User currentUser) {
+		return this.chatmapper.getAllChatsOfUser(currentUser);
 	}
 
 }

@@ -31,5 +31,6 @@ public interface MsgService extends RemoteService {
 	
 	public ArrayList<Chat> findAllChats();
 	
-	public ArrayList<Chat> findAllChatsOfUser(int userId);
+	public ArrayList<Chat> findAllChatsOfUser(User currentUser);
+
 }

@@ -29,5 +29,5 @@ public interface MsgServiceAsync {
 
 	void deleteChatParticipant(Chat chat, User participant, AsyncCallback<Void> callback);
 
-	void findAllChatsOfUser(int userId, AsyncCallback<ArrayList<Chat>> callback);
+	void findAllChatsOfUser(User currentUser, AsyncCallback<ArrayList<Chat>> callback);
 }
