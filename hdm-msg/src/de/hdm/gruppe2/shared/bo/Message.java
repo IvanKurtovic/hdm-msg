@@ -6,11 +6,14 @@ public class Message extends BusinessObject {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private String text; 	
+	private String text; 
+	
 	// Fremdschlüssel des Users - Verfasser
 	private int userId;
+	
 	// Fremdschlüssel des Chats - Empfänger
 	private int chatId;
+	
 	private ArrayList<Hashtag> hashtagList;
 	
 	public String getText() {

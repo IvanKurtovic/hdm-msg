@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import de.hdm.gruppe2.shared.bo.Chat;
+import de.hdm.gruppe2.shared.bo.Hashtag;
+import de.hdm.gruppe2.shared.bo.Message;
 import de.hdm.gruppe2.shared.bo.User;
 
 /**
@@ -30,4 +32,6 @@ public interface MsgServiceAsync {
 	void deleteChatParticipant(Chat chat, User participant, AsyncCallback<Void> callback);
 
 	void findAllChatsOfUser(User currentUser, AsyncCallback<ArrayList<Chat>> callback);
+
+	void createPost(String text, User author, ArrayList<Hashtag> hashtagList, AsyncCallback<Message> callback);
 }

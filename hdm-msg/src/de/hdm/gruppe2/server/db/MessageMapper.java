@@ -18,7 +18,7 @@ public class MessageMapper {
 		return messageMapper;
 	}
 	
-	public Message insert(Message message) {
+	public Message insertPost(Message message) {
 		
 		Connection con = DBConnection.connection();
 		
@@ -28,21 +28,20 @@ public class MessageMapper {
 			/*
 		     * Zunächst schauen wir nach, welches der momentan höchste
 		     * Primärschlüsselwert ist.
-		     * TODO: Queries definieren sobald die Datenbankstruktur steht.
 		     */
-			ResultSet rs = stmt.executeQuery("");
+			ResultSet rs = stmt.executeQuery("SELECT MAX(`id`) AS maxid FROM `message`");
 			// Wenn wir etwas zurückerhalten, kann dies nur einzeilig sein
 		      if (rs.next()) {
 		        /*
 		         * message erhält den bisher maximalen, nun um 1 inkrementierten
 		         * Primärschlüssel.
 		         */
-		        message.setId(rs.getInt("") + 1);
+		        message.setId(rs.getInt("maxid") + 1);
 
 		        stmt = con.createStatement();
 
 		        // Jetzt erst erfolgt die tatsächliche Einfügeoperation
-		        stmt.executeUpdate("");
+		        stmt.executeUpdate("INSERT INTO `message` (`id`, `text`, `autorId`) VALUES (" + message.getId() + ", '" + message.getText() + "', " + message.getUserId() + ")");
 		      }
 		    }
 		    catch (SQLException e) {

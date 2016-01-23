@@ -1,10 +1,13 @@
 package de.hdm.gruppe2.server;
 
 import de.hdm.gruppe2.server.db.ChatMapper;
+import de.hdm.gruppe2.server.db.MessageMapper;
 import de.hdm.gruppe2.server.db.UserMapper;
 import de.hdm.gruppe2.shared.FieldVerifier;
 import de.hdm.gruppe2.shared.MsgService;
 import de.hdm.gruppe2.shared.bo.Chat;
+import de.hdm.gruppe2.shared.bo.Hashtag;
+import de.hdm.gruppe2.shared.bo.Message;
 import de.hdm.gruppe2.shared.bo.User;
 
 import java.util.ArrayList;
@@ -19,6 +22,7 @@ public class MsgServiceImpl extends RemoteServiceServlet implements MsgService {
 
 	private UserMapper usermapper = UserMapper.usermapper();
 	private ChatMapper chatmapper = ChatMapper.chatMapper();
+	private MessageMapper messagemapper = MessageMapper.messageMapper();
 	
 	
 	public String greetServer(String input) throws IllegalArgumentException {
@@ -119,6 +123,17 @@ public class MsgServiceImpl extends RemoteServiceServlet implements MsgService {
 	@Override
 	public ArrayList<Chat> findAllChatsOfUser(User currentUser) {
 		return this.chatmapper.getAllChatsOfUser(currentUser);
+	}
+
+	@Override
+	public Message createPost(String text, User author, ArrayList<Hashtag> hashtagList) {
+		
+		Message message = new Message();
+		message.setText(text);
+		message.setUserId(author.getId());
+		message.setHashtagList(hashtagList);
+		
+		return this.messagemapper.insertPost(message);
 	}
 
 }
