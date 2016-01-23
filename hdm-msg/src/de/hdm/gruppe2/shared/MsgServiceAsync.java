@@ -21,7 +21,7 @@ public interface MsgServiceAsync {
 	
 	void findAllUser(AsyncCallback<ArrayList<User>> callback);
 
-	void createChat(ArrayList<User> participants, boolean isPrivate, AsyncCallback<Chat> callback);
+	void createChat(ArrayList<User> participants, AsyncCallback<Chat> callback);
 
 	void deleteChat(Chat chat, AsyncCallback<Void> callback);
 	

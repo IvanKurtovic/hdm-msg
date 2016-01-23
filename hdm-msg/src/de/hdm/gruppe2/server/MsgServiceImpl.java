@@ -87,7 +87,7 @@ public class MsgServiceImpl extends RemoteServiceServlet implements MsgService {
 	}
 	
 	@Override
-	public Chat createChat(ArrayList<User> participants, boolean isPrivate) {
+	public Chat createChat(ArrayList<User> participants) {
 		
 		String chatName = "";
 		
@@ -98,7 +98,6 @@ public class MsgServiceImpl extends RemoteServiceServlet implements MsgService {
 		Chat c = new Chat();
 		c.setName(chatName);
 		c.setMemberList(participants);
-		c.setPrivate(isPrivate);
 		return this.chatmapper.insert(c);		
 	}
 

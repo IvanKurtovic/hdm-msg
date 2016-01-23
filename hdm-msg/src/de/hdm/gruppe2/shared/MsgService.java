@@ -23,7 +23,7 @@ public interface MsgService extends RemoteService {
 	
 	public ArrayList<User> findAllUser();
 	
-	public Chat createChat(ArrayList<User> participants, boolean isPrivate);
+	public Chat createChat(ArrayList<User> participants);
 	
 	public void deleteChat(Chat chat);
 	

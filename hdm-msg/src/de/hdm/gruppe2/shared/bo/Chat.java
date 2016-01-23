@@ -11,17 +11,6 @@ public class Chat extends BusinessObject {
 	private ArrayList<Message> messageList;
 	
 	private String name;
-	
-	// Bei isPrivate = 1 entspricht es einem privaten Chat bzw. der Pinnwand eines Users.
-	private boolean isPrivate;
-
-	public boolean isPrivate() {
-		return isPrivate;
-	}
-
-	public void setPrivate(boolean isPrivate) {
-		this.isPrivate = isPrivate;
-	}
 
 	public ArrayList<User> getMemberList() {
 		return memberList;

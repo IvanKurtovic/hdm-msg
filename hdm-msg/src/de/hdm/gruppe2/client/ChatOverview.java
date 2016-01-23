@@ -221,7 +221,7 @@ public class ChatOverview extends VerticalPanel {
 	}
 	
 	private void createChat(ArrayList<User> selectedRecipients) {
-		msgSvc.createChat(selectedRecipients, false, new AsyncCallback<Chat>() {
+		msgSvc.createChat(selectedRecipients, new AsyncCallback<Chat>() {
 
 			@Override
 			public void onFailure(Throwable caught) {

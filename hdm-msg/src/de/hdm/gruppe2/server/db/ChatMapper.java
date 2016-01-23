@@ -44,18 +44,12 @@ public class ChatMapper {
   
   		  	if (rs.next()) {
 
-  		  		int isPrivate = 0;
   		  		chat.setId(rs.getInt("maxid") + 1);
-  		  		
-  		  		if(chat.isPrivate()) {
-  		  			isPrivate = 1;
-  		  		}
   		  		
   		  		stmt = con.createStatement();
   		  		int result = stmt.executeUpdate("INSERT INTO `chat`(`id`, `name`) VALUES (" 
   		  							+ chat.getId() + ",'" 
-  		  							+ chat.getName() + "' "
-  		  							+ isPrivate + ")");
+  		  							+ chat.getName() + "')");
   		  		
   		  		if(result != 0) {
   		  			// Chat Teilnehmer der Teilnehmertabelle zuweisen.
@@ -173,12 +167,6 @@ public class ChatMapper {
 				chat.setCreationDate(rs.getDate("creationDate"));
 				chat.setMemberList(getAllParticipantsOfChat(chat));
 				chat.setMessageList(getAllMessagesOfChat(chat));
-
-				if(rs.getInt("isPrivat") == 1) {
-					chat.setPrivate(true);
-				} else {
-					chat.setPrivate(false);
-				}
 				
 				allChats.add(chat);
 			}
@@ -212,12 +200,6 @@ public class ChatMapper {
 				chat.setCreationDate(rs.getDate("creationDate"));
 				chat.setMemberList(getAllParticipantsOfChat(chat));
 				chat.setMessageList(getAllMessagesOfChat(chat));
-				
-				if(rs.getInt("isPrivat") == 1) {
-					chat.setPrivate(true);
-				} else {
-					chat.setPrivate(false);
-				}
 
 				allChats.add(chat);
 			}
