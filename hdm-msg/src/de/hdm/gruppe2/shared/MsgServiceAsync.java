@@ -36,4 +36,6 @@ public interface MsgServiceAsync {
 	void createPost(String text, User author, ArrayList<Hashtag> hashtagList, AsyncCallback<Message> callback);
 
 	void findAllUserWithoutLoggedInUser(User user, AsyncCallback<ArrayList<User>> callback);
+
+	void findAllPostsOfUser(int userId, AsyncCallback<ArrayList<Message>> callback);
 }

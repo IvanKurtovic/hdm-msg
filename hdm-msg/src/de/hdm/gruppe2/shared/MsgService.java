@@ -38,5 +38,7 @@ public interface MsgService extends RemoteService {
 	public ArrayList<Chat> findAllChatsOfUser(User currentUser);
 	
 	public Message createPost(String text, User author, ArrayList<Hashtag> hashtagList);
+	
+	public ArrayList<Message> findAllPostsOfUser(int userId);
 
 }

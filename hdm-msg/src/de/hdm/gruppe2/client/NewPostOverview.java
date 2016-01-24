@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -32,7 +33,7 @@ public class NewPostOverview extends VerticalPanel {
 	
 	public void onLoad() {
 		
-		
+		this.getAllPosts(ftPosts, loggedInUser.getId());
 		
 		final Grid mainGrid = new Grid(3,1);
 		btnPost.addClickHandler(new ClickHandler() {
@@ -69,8 +70,52 @@ public class NewPostOverview extends VerticalPanel {
 		});		
 	}
 	
-	private void getAllPosts(FlexTable flexTable) {
-		
+	private void getAllPosts(FlexTable flexTable, int userId) {
+		msgSvc.findAllPostsOfUser(userId, new AsyncCallback<ArrayList<Message>> () {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				ClientsideSettings.getLogger().severe("Posts konnten nicht geladen werden.");
+			}
+
+			@Override
+			public void onSuccess(ArrayList<Message> result) {
+				ftPosts.clear();
+				
+				
+				for(Message m : result) {
+					final int numrows = ftPosts.getRowCount();
+					final Message message = m;
+					
+					ftPosts.setText(numrows + 1, 0, Integer.toString(m.getUserId()));
+					ftPosts.setText(numrows + 1, 1, m.getText());
+					ftPosts.setText(numrows + 1, 2, m.getCreationDate().toString());
+					
+					Button btnEdit = new Button("Edit");
+					btnEdit.addClickHandler(new ClickHandler() {
+
+						@Override
+						public void onClick(ClickEvent event) {
+							Window.alert("Edit: " + message.getId());
+						}
+						
+					});
+					Button btnRemove = new Button("Remove Post");
+					btnRemove.addClickHandler(new ClickHandler() {
+
+						@Override
+						public void onClick(ClickEvent event) {
+							Window.alert("Remove: " + message.getId());
+						}
+						
+					});
+					
+					ftPosts.setWidget(numrows + 1, 3, btnEdit);
+					ftPosts.setWidget(numrows + 1, 4, btnRemove);
+				}
+			}
+
+		});
 	}
 
 }

@@ -141,4 +141,9 @@ public class MsgServiceImpl extends RemoteServiceServlet implements MsgService {
 		return this.messagemapper.insertPost(message);
 	}
 
+	@Override
+	public ArrayList<Message> findAllPostsOfUser(int userId) {
+		return this.messagemapper.findAllPostsOfUser(userId);
+	}
+
 }
