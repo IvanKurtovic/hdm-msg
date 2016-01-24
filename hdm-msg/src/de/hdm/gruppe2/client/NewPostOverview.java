@@ -82,7 +82,6 @@ public class NewPostOverview extends VerticalPanel {
 			public void onSuccess(ArrayList<Message> result) {
 				ftPosts.clear();
 				
-				
 				for(Message m : result) {
 					final int numrows = ftPosts.getRowCount();
 					final Message message = m;
@@ -105,7 +104,7 @@ public class NewPostOverview extends VerticalPanel {
 
 						@Override
 						public void onClick(ClickEvent event) {
-							Window.alert("Remove: " + message.getId());
+							deletePost(message.getId(), numrows + 1);
 						}
 						
 					});
@@ -113,8 +112,29 @@ public class NewPostOverview extends VerticalPanel {
 					ftPosts.setWidget(numrows + 1, 3, btnEdit);
 					ftPosts.setWidget(numrows + 1, 4, btnRemove);
 				}
+				
+				ClientsideSettings.getLogger().finest("Posts erfolgreich geladen.");
 			}
 
+		});
+	}
+	
+	private void deletePost(int postId, final int flexTableRow) {
+
+		msgSvc.deleteMessage(postId, new AsyncCallback<Void>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				ClientsideSettings.getLogger().severe("Zeile erfolgreich entfernt.");
+			}
+
+			@Override
+			public void onSuccess(Void result) {
+				ftPosts.removeRow(flexTableRow);
+				
+				ClientsideSettings.getLogger().finest("Zeile erfolgreich entfernt.");
+			}
+			
 		});
 	}
 

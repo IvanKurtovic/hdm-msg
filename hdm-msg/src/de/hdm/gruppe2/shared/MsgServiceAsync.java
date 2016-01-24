@@ -38,4 +38,6 @@ public interface MsgServiceAsync {
 	void findAllUserWithoutLoggedInUser(User user, AsyncCallback<ArrayList<User>> callback);
 
 	void findAllPostsOfUser(int userId, AsyncCallback<ArrayList<Message>> callback);
+
+	void deleteMessage(int messageId, AsyncCallback<Void> callback);
 }

@@ -40,5 +40,7 @@ public interface MsgService extends RemoteService {
 	public Message createPost(String text, User author, ArrayList<Hashtag> hashtagList);
 	
 	public ArrayList<Message> findAllPostsOfUser(int userId);
+	
+	public void deleteMessage(int messageId);
 
 }

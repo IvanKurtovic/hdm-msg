@@ -70,14 +70,15 @@ public class MessageMapper {
 	    return message;
 	}
 	
-	public void delete(Message message) {
+	public void delete(int messageId) {
 		
 		Connection con = DBConnection.connection();
 
 	    try {
 	      Statement stmt = con.createStatement();
-	      // TODO Query einfügen sobald die Datenbankstruktur steht.
-	      stmt.executeUpdate("");
+	      
+	      stmt.executeUpdate("DELETE FROM `dbmessenger`.`message` WHERE `id` = " + messageId);
+	      stmt.close();
 	    }
 	    catch (SQLException e) {
 	      e.printStackTrace();
@@ -89,8 +90,30 @@ public class MessageMapper {
 		return null;
 	}
 	
-	public Vector<Message> findById(int id) {
-		// TODO Abfrage implementieren sobald die Datenbankstruktur steht.
+	public Message findMessageById(int messageId) {
+		
+		Connection con = DBConnection.connection();
+		
+		try {
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM `dbmessenger`.`message` WHERE `id` = " + messageId);
+			
+			if(rs.next()) {
+				Message message = new Message();
+				
+				message.setId(rs.getInt("id"));
+				message.setText(rs.getString("text"));
+				message.setUserId(rs.getInt("autorId"));
+				message.setChatId(rs.getInt("chatId"));
+				message.setHashtagList(getAllHashtagsOfMessage(rs.getInt("id")));
+				message.setCreationDate(rs.getDate("creationDate"));
+				
+				return message;
+			}
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 	

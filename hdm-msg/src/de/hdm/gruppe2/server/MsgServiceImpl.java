@@ -146,4 +146,9 @@ public class MsgServiceImpl extends RemoteServiceServlet implements MsgService {
 		return this.messagemapper.findAllPostsOfUser(userId);
 	}
 
+	@Override
+	public void deleteMessage(int messageId) {
+		this.messagemapper.delete(messageId);
+	}
+
 }
