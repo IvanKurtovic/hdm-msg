@@ -1,5 +1,6 @@
 package de.hdm.gruppe2.server.db;
 
+import java.util.ArrayList;
 import java.util.Vector;
 import java.sql.*;
 import de.hdm.gruppe2.shared.bo.*;
@@ -96,5 +97,59 @@ public class MessageMapper {
 	public Vector<Message> findByChat(int chatId) {
 		// TODO Abfrage implementieren sobald die Datenbankstruktur steht.
 		return null;
+	}
+	
+	public ArrayList<Message> findAllPostsOfUser(int userId) {
+		
+		Connection con = DBConnection.connection();
+		ArrayList<Message> result = new ArrayList<Message>();
+		
+		try {
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM `dbmessenger`.`message` WHERE `chatId` IS NULL AND `autorId` = " + userId);
+			
+			while(rs.next()) {
+				Message message = new Message();
+				message.setId(rs.getInt("id"));
+				message.setText(rs.getString("text"));
+				message.setUserId(rs.getInt("autorId"));
+				message.setChatId(-1);
+				message.setHashtagList(getAllHashtagsOfMessage(rs.getInt("id")));
+				message.setCreationDate(rs.getDate("creationDate"));
+				
+				result.add(message);
+			}
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	public ArrayList<Hashtag> getAllHashtagsOfMessage(int messageId) {
+		
+		Connection con = DBConnection.connection();
+		ArrayList<Hashtag> result = new ArrayList<Hashtag>();
+		
+		try {
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT `messagehashtags`.`hashtagId`, `hashtag`.`text`, `hashtag`.`creationDate` "
+											+ "FROM `hashtag` INNER JOIN `messagehashtags` "
+											+ "ON `hashtag`.`id` = `messagehashtags`.`hashtagId` "
+											+ "WHERE `messagehashtags`.`messageId` = " + messageId);
+			
+			while(rs.next()) {
+				Hashtag hashtag = new Hashtag();
+				hashtag.setId(rs.getInt("hashtagid"));
+				hashtag.setKeyword(rs.getString("text"));
+				hashtag.setCreationDate(rs.getDate("creationDate"));
+				
+				result.add(hashtag);
+			}
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 }

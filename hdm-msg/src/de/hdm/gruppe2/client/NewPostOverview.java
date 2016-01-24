@@ -32,7 +32,9 @@ public class NewPostOverview extends VerticalPanel {
 	
 	public void onLoad() {
 		
-		final Grid mainGrid = new Grid(2,1);
+		
+		
+		final Grid mainGrid = new Grid(3,1);
 		btnPost.addClickHandler(new ClickHandler() {
 
 			@Override
@@ -42,8 +44,9 @@ public class NewPostOverview extends VerticalPanel {
 			
 		});
 		
-		mainGrid.setWidget(0, 0, taPost);
-		mainGrid.setWidget(1, 0, btnPost);
+		mainGrid.setWidget(0, 0, ftPosts);
+		mainGrid.setWidget(1, 0, taPost);
+		mainGrid.setWidget(2, 0, btnPost);
 		
 		this.add(mainGrid);
 	}
@@ -64,6 +67,10 @@ public class NewPostOverview extends VerticalPanel {
 			}
 			
 		});		
+	}
+	
+	private void getAllPosts(FlexTable flexTable) {
+		
 	}
 
 }
