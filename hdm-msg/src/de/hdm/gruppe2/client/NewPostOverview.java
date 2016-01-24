@@ -6,6 +6,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextArea;
@@ -21,6 +22,7 @@ public class NewPostOverview extends VerticalPanel {
 	private MsgServiceAsync msgSvc = ClientsideSettings.getMsgService();
 	private User loggedInUser = null;
 	
+	private final FlexTable ftPosts = new FlexTable();
 	private final TextArea taPost = new TextArea();
 	private final Button btnPost = new Button("Posten!");
 	
