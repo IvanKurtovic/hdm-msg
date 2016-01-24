@@ -147,6 +147,35 @@ public class UserMapper {
 		}
 		return allUsers;
 	}
+	
+	public ArrayList<User> findAllUsersWithoutLoggedInUser(User loggedInUser) throws IllegalArgumentException {
+		Connection con = DBConnection.connection();
+		ArrayList<User> allUsers = new ArrayList<User>();
+		try {
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM `user` WHERE `id` <> " + loggedInUser.getId());
+	
+			while (rs.next()) {
+				User user = new User();
+				
+				user.setId(rs.getInt("id"));
+				user.setFirstName(rs.getString("firstName"));
+				user.setLastName(rs.getString("lastName"));
+				user.setEmail(rs.getString("email"));
+				user.setCreationDate(rs.getDate("creationDate"));
+	
+				allUsers.add(user);
+			}
+			stmt.close();
+			rs.close();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new IllegalArgumentException("Error with Database or Connection failed"
+					+ e.toString());
+		}
+		return allUsers;
+	}
 
 	/**
 	 * Diese Methode ermöglicht einen Nutzer anhand seines Nachnamens zu finden

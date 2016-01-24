@@ -86,6 +86,11 @@ public class MsgServiceImpl extends RemoteServiceServlet implements MsgService {
 	}
 	
 	@Override
+	public ArrayList<User> findAllUserWithoutLoggedInUser(User user) {
+		return this.usermapper.findAllUsersWithoutLoggedInUser(user);
+	}
+	
+	@Override
 	public void deleteUser(User user) {
 		this.usermapper.delete(user);
 	}
@@ -111,7 +116,7 @@ public class MsgServiceImpl extends RemoteServiceServlet implements MsgService {
 	}
 	
 	@Override
-	public void deleteChatParticipant(Chat chat, User participant) {
+	public void removeChatParticipant(Chat chat, User participant) {
 		this.chatmapper.deleteChatParticipant(chat, participant);
 	}
 	

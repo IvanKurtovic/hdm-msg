@@ -25,11 +25,13 @@ public interface MsgService extends RemoteService {
 	
 	public ArrayList<User> findAllUser();
 	
+	public ArrayList<User> findAllUserWithoutLoggedInUser(User user);
+	
 	public Chat createChat(ArrayList<User> participants);
 	
 	public void deleteChat(Chat chat);
 	
-	public void deleteChatParticipant(Chat chat, User participant);
+	public void removeChatParticipant(Chat chat, User participant);
 	
 	public ArrayList<Chat> findAllChats();
 	

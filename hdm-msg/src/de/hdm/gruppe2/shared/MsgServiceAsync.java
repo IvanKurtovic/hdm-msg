@@ -29,9 +29,11 @@ public interface MsgServiceAsync {
 	
 	void findAllChats(AsyncCallback<ArrayList<Chat>> callback);
 
-	void deleteChatParticipant(Chat chat, User participant, AsyncCallback<Void> callback);
+	void removeChatParticipant(Chat chat, User participant, AsyncCallback<Void> callback);
 
 	void findAllChatsOfUser(User currentUser, AsyncCallback<ArrayList<Chat>> callback);
 
 	void createPost(String text, User author, ArrayList<Hashtag> hashtagList, AsyncCallback<Message> callback);
+
+	void findAllUserWithoutLoggedInUser(User user, AsyncCallback<ArrayList<User>> callback);
 }

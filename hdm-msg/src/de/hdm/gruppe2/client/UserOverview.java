@@ -85,7 +85,7 @@ public class UserOverview extends VerticalPanel{
 		});
 		
 		// Alle User aus der Datenbank laden und in die Liste speichern.
-		this.getAllUsers();
+		this.getAllUsersWithoutLoggedInUser(loggedInUser);
 		
 		//final HorizontalPanel pnlFunctions = new HorizontalPanel();		
 		final Button btnCreateUser = new Button("Neuer User");
@@ -156,7 +156,7 @@ public class UserOverview extends VerticalPanel{
 
 			@Override
 			public void onClick(ClickEvent event) {
-				getAllUsers();
+				getAllUsersWithoutLoggedInUser(loggedInUser);
 			}
 			
 		});
@@ -359,4 +359,29 @@ public class UserOverview extends VerticalPanel{
 		});
 	}
 
+	private void getAllUsersWithoutLoggedInUser(User user) {
+		msgSvc.findAllUserWithoutLoggedInUser(loggedInUser, new AsyncCallback<ArrayList<User>> () {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				ClientsideSettings.getLogger().severe("User konnten nicht geladen werden!");
+			}
+
+			@Override
+			public void onSuccess(ArrayList<User> result) {
+				users = result;
+				
+				// Da wir nur ein Listobjekt weiter reichen, säubern wir zunächst alle vorhandenen
+				// Einträge.
+				userList.clear();
+				
+				for(User u : users) {
+					userList.addItem(u.getFirstName() + " " + u.getLastName());
+				}
+				
+				ClientsideSettings.getLogger().finest("Alle User wurden geladen!");
+			}
+			
+		});
+	}
 }
