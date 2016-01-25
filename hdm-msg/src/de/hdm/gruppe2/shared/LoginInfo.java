@@ -7,7 +7,6 @@ import de.hdm.gruppe2.shared.bo.User;
  * Loginklasse mit allen Daten über die 
  * aktuelle Nutzersession
  * 
- * @author Marina Ioannidou
  */
 public class LoginInfo implements Serializable {
 	private static final long serialVersionUID = -5207880593956618550L;
