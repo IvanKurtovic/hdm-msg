@@ -42,8 +42,8 @@ public class DBConnection {
      * mitgegeben, um bei einer Veränderung dieser URL nicht die gesamte
      * Software neu komilieren zu müssen.
      */
-    private static String googleUrl = "jdbc:google:mysql://xenon-pager-119222:hdmmsg/dbmessenger?user=ks146&password=123456";
-    private static String localUrl = "jdbc:mysql://173.194.110.4:3306/dbmessenger?user=ks146&password=123456";
+    private static String googleUrl = "jdbc:google:mysql://xenon-pager-119222:hdmmsg/dbmessenger?user=root&password=123456";
+    private static String localUrl = "jdbc:mysql://127.0.0.1:3306/dbmessenger?user=root&password=123456";
 
     /**
      * Diese statische Methode kann aufgrufen werden durch

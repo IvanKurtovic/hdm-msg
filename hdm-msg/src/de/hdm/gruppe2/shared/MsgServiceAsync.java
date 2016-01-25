@@ -40,4 +40,6 @@ public interface MsgServiceAsync {
 	void findAllPostsOfUser(int userId, AsyncCallback<ArrayList<Message>> callback);
 
 	void deleteMessage(int messageId, AsyncCallback<Void> callback);
+
+	void saveMessage(Message message, AsyncCallback<Message> callback);
 }

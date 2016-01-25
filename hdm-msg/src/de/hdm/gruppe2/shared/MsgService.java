@@ -42,5 +42,7 @@ public interface MsgService extends RemoteService {
 	public ArrayList<Message> findAllPostsOfUser(int userId);
 	
 	public void deleteMessage(int messageId);
+	
+	public Message saveMessage(Message message);
 
 }

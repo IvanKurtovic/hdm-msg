@@ -30,19 +30,19 @@ public class HashtagMapper {
 		     * Primärschlüsselwert ist.
 		     * TODO: Queries definieren sobald die Datenbankstruktur steht.
 		     */
-			ResultSet rs = stmt.executeQuery("");
+			ResultSet rs = stmt.executeQuery("SELECT MAX(`id`) AS maxid FROM `dbmessenger`.`hashtag`");
 			// Wenn wir etwas zurückerhalten, kann dies nur einzeilig sein
 		      if (rs.next()) {
 		        /*
 		         * hashtag erhält den bisher maximalen, nun um 1 inkrementierten
 		         * Primärschlüssel.
 		         */
-		    	 hashtag.setId(rs.getInt("") + 1);
+		    	 hashtag.setId(rs.getInt("maxid") + 1);
 
 		        stmt = con.createStatement();
 
 		        // Jetzt erst erfolgt die tatsächliche Einfügeoperation
-		        stmt.executeUpdate("");
+		        stmt.executeUpdate("INSERT INTO `dbmessenger`.`hashtag` (`id`, `text`) VALUES (" + hashtag.getId() + ", '" + hashtag.getKeyword() + "')");
 		      }
 		    }
 		    catch (SQLException e) {
@@ -86,6 +86,29 @@ public class HashtagMapper {
 	
 	public Hashtag findById(int id) {
 		// TODO Abfrage implementieren sobald die Datenbankstruktur steht.
+		return null;
+	}
+	
+	public Hashtag findHashtagByKeyword(String keyword) {
+		Connection con = DBConnection.connection();
+		
+		try {
+	      Statement stmt = con.createStatement();
+	      ResultSet rs = stmt.executeQuery("SELECT * FROM `dbmessenger`.`hashtag` WHERE `text` = '" + keyword + "'");
+	      
+	      if(rs.next()) {
+	    	  Hashtag hashtag = new Hashtag();
+	    	  
+	    	  hashtag.setId(rs.getInt("id"));
+	    	  hashtag.setKeyword(rs.getString("text"));
+	    	  hashtag.setCreationDate(rs.getDate("creationDate"));
+	    	  
+	    	  return hashtag;
+	      }
+	    }
+	    catch (SQLException e) {
+	      e.printStackTrace();
+	    }
 		return null;
 	}
 	

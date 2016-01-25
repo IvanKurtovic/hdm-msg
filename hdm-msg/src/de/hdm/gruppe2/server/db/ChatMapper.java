@@ -57,7 +57,6 @@ public class ChatMapper {
 		  
 		try {
 			Statement stmt = con.createStatement();
-  		  	stmt = con.createStatement();
   		  	
   		  	stmt.executeUpdate("INSERT INTO `chatparticipants`(`chatid`, `userid`) VALUES (" 
   		  							+ chat.getId() + "," 

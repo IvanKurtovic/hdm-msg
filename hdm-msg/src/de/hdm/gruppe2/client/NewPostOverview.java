@@ -7,12 +7,17 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextArea;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.regexp.shared.*;
 
+import de.hdm.gruppe2.shared.HashtagParser;
 import de.hdm.gruppe2.shared.MsgServiceAsync;
 import de.hdm.gruppe2.shared.bo.Hashtag;
 import de.hdm.gruppe2.shared.bo.Message;
@@ -21,6 +26,7 @@ import de.hdm.gruppe2.shared.bo.User;
 public class NewPostOverview extends VerticalPanel {
 	
 	private MsgServiceAsync msgSvc = ClientsideSettings.getMsgService();
+	private ArrayList<Message> userPosts = new ArrayList<Message>();
 	private User loggedInUser = null;
 	
 	private final FlexTable ftPosts = new FlexTable();
@@ -80,9 +86,12 @@ public class NewPostOverview extends VerticalPanel {
 
 			@Override
 			public void onSuccess(ArrayList<Message> result) {
+				userPosts = result;
+				
 				ftPosts.clear();
 				
-				for(Message m : result) {
+				for(Message m : userPosts) {
+					
 					final int numrows = ftPosts.getRowCount();
 					final Message message = m;
 					
@@ -95,7 +104,9 @@ public class NewPostOverview extends VerticalPanel {
 
 						@Override
 						public void onClick(ClickEvent event) {
-							Window.alert("Edit: " + message.getId());
+							DialogBox dialogBox = editPostDialog(message);
+							dialogBox.show();
+							dialogBox.center();
 						}
 						
 					});
@@ -119,6 +130,55 @@ public class NewPostOverview extends VerticalPanel {
 		});
 	}
 	
+	private DialogBox editPostDialog(final Message post) {
+
+		final DialogBox dialogBox = new DialogBox();
+		dialogBox.setStyleName("dialogbox-user");
+		dialogBox.setGlassEnabled(true);
+		dialogBox.setAnimationEnabled(true);
+		
+		final Grid mainGrid = new Grid(3, 2);
+		
+		final Label lblTitle = new Label("Post bearbeiten");
+		final Label lblText = new Label("Text:");
+		final TextBox tbText = new TextBox();
+		
+		final Button btnSave = new Button("Speichern");
+		btnSave.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				
+				post.setText(tbText.getText());
+				
+				savePost(post);
+				
+				dialogBox.hide();
+			}
+			
+		});
+		
+		final Button btnCancel = new Button("Abbrechen");
+		btnCancel.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				dialogBox.hide();
+			}
+			
+		});
+		
+		mainGrid.setWidget(0, 0, lblTitle);
+		mainGrid.setWidget(1, 0, lblText);
+		mainGrid.setWidget(1, 1, tbText);
+		mainGrid.setWidget(2, 0, btnSave);
+		mainGrid.setWidget(2, 1, btnCancel);
+		
+		dialogBox.add(mainGrid);
+		
+		return dialogBox;
+	}
+	
 	private void deletePost(int postId, final int flexTableRow) {
 
 		msgSvc.deleteMessage(postId, new AsyncCallback<Void>() {
@@ -138,4 +198,28 @@ public class NewPostOverview extends VerticalPanel {
 		});
 	}
 
+	private void savePost(Message post) {
+		
+		// Hashtag Liste des neuen Posts aktualisieren.
+		post.setHashtagList(HashtagParser.checkForHashtags(post));
+		
+		// Änderungen in die Datenbank schreiben.
+		msgSvc.saveMessage(post, new AsyncCallback<Message> () {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				ClientsideSettings.getLogger().severe("Aenderungen konnten nicht gespeichert werden.");
+			}
+
+			@Override
+			public void onSuccess(Message result) {
+				ftPosts.clear();
+				
+				getAllPosts(ftPosts, loggedInUser.getId());
+				
+				ClientsideSettings.getLogger().finest("Aenderungen gespeichert.");
+			}
+			
+		});
+	}
 }

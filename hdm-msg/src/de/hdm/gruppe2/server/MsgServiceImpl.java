@@ -151,4 +151,10 @@ public class MsgServiceImpl extends RemoteServiceServlet implements MsgService {
 		this.messagemapper.delete(messageId);
 	}
 
+	@Override
+	public Message saveMessage(Message message) {
+		return this.messagemapper.update(message);
+	}
+
+
 }
