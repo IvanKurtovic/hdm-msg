@@ -74,30 +74,48 @@ public class HashtagMapper {
 
 		Connection con = DBConnection.connection();
 
-	    try {
+		try {
 	      Statement stmt = con.createStatement();
-	      // TODO Query einfügen sobald die Datenbankstruktur steht.
-	      stmt.executeUpdate("");
+	      
+	      stmt.executeUpdate("DELETE FROM `dbmessenger`.`hashtag` WHERE `id` = " + hashtag.getId());
+	      stmt.close();
 	    }
 	    catch (SQLException e) {
 	      e.printStackTrace();
 	    }
 	}
 	
-	public Hashtag findById(int id) {
-		// TODO Abfrage implementieren sobald die Datenbankstruktur steht.
-		return null;
-	}
-	
-	public Hashtag findHashtagByKeyword(String keyword) {
+	public Hashtag findById(int hashtagId) {
 		Connection con = DBConnection.connection();
 		
 		try {
 	      Statement stmt = con.createStatement();
-	      ResultSet rs = stmt.executeQuery("SELECT * FROM `dbmessenger`.`hashtag` WHERE `text` = '" + keyword + "'");
+	      ResultSet rs = stmt.executeQuery("SELECT * FROM `dbmessenger`.`hashtag` WHERE `text` = " + hashtagId);
 	      
 	      if(rs.next()) {
 	    	  Hashtag hashtag = new Hashtag();
+	    	  
+	    	  hashtag.setId(rs.getInt("id"));
+	    	  hashtag.setKeyword(rs.getString("text"));
+	    	  hashtag.setCreationDate(rs.getDate("creationDate"));
+	    	  
+	    	  return hashtag;
+	      }
+	    }
+	    catch (SQLException e) {
+	      e.printStackTrace();
+	    }
+		return null;
+	}
+	
+	public Hashtag findHashtagByKeyword(Hashtag hashtag) {
+		Connection con = DBConnection.connection();
+		
+		try {
+	      Statement stmt = con.createStatement();
+	      ResultSet rs = stmt.executeQuery("SELECT * FROM `dbmessenger`.`hashtag` WHERE `text` = '" + hashtag.getKeyword() + "'");
+	      
+	      if(rs.next()) {
 	    	  
 	    	  hashtag.setId(rs.getInt("id"));
 	    	  hashtag.setKeyword(rs.getString("text"));

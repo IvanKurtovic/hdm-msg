@@ -44,7 +44,7 @@ public class MessageMapper {
 	        // Jetzt erst erfolgt die tatsächliche Einfügeoperation
 	        int result = stmt.executeUpdate("INSERT INTO `message` (`id`, `text`, `autorId`) VALUES (" + message.getId() + ", '" + message.getText() + "', " + message.getUserId() + ")");
 	        
-	        if (result != 0) {
+	        if (result != 0 && message.getHashtagList() != null) {
 				// Hashtags der Message in der messagehashtags Tabelle zuordnen
 	        	for(Hashtag h : message.getHashtagList()) {
 	        		// Wenn das Hashtag bereits der Message zugeordnet wurde 
@@ -72,7 +72,7 @@ public class MessageMapper {
 		
 		try {
 			// Zunächst überprüfen ob der Hashtag existiert.
-			if(hashtagmapper.findHashtagByKeyword(hashtag.getKeyword()) == null) {
+			if(hashtagmapper.findHashtagByKeyword(hashtag) == null) {
 				// Wenn nicht wird dieser zunächst eingefügt.
 				hashtagmapper.insert(hashtag);
 			}
@@ -163,9 +163,30 @@ public class MessageMapper {
 	    }
 	}
 	
-	public Vector<Message> findByUser(User user) {
-		// TODO Abfrage implementieren sobald die Datenbankstruktur steht.
-		return null;
+	public ArrayList<Message> findByAuthor(User user) {
+		Connection con = DBConnection.connection();
+		ArrayList<Message> result = new ArrayList<Message>();
+		
+		try {
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM `dbmessenger`.`message` WHERE `chatId` IS NOT NULL AND `autorId` = " + user.getId());
+			
+			while(rs.next()) {
+				Message message = new Message();
+				message.setId(rs.getInt("id"));
+				message.setText(rs.getString("text"));
+				message.setUserId(rs.getInt("autorId"));
+				message.setChatId(rs.getInt("chatId"));
+				message.setHashtagList(getAllHashtagsOfMessage(rs.getInt("id")));
+				message.setCreationDate(rs.getDate("creationDate"));
+				
+				result.add(message);
+			}
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 	
 	public Message findMessageById(int messageId) {

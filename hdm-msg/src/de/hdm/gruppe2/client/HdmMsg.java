@@ -1,12 +1,17 @@
 package de.hdm.gruppe2.client;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
+import de.hdm.gruppe2.shared.LoginInfo;
+import de.hdm.gruppe2.shared.LoginServiceAsync;
 import de.hdm.gruppe2.shared.bo.User;
 
 /**
@@ -18,16 +23,48 @@ public class HdmMsg extends VerticalPanel implements EntryPoint {
 	// abgelegt und den einzelnen Panelen mitgesendet.
 	private User currentUser = null;
 	
+	private LoginInfo loginInfo = null;
+	private VerticalPanel loginPanel = new VerticalPanel();
+	private Label loginLabel = new Label(
+			"Please sign in to your Google Account to access the StockWatcher application.");
+	private Anchor signInLink = new Anchor("Sign In");
+	
 	public void onModuleLoad() {
-		// Prüfung ob der User eingeloggt ist wird hier eingefügt
-		// und anschließend die Oberfläche geladen
-		currentUser = new User();
-		currentUser.setEmail("sarikerim@googlemail.com");
-		currentUser.setFirstName("Kerim");
-		currentUser.setLastName("ks146@hdm-stuttgart.de");
-		currentUser.setId(5);
 		
-		loadMessenger();
+		LoginServiceAsync loginSvc = ClientsideSettings.getLoginService();
+		loginSvc.login(GWT.getHostPageBaseURL(), new AsyncCallback<LoginInfo> () {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				ClientsideSettings.getLogger().severe("Login fehlgeschlagen!");
+			}
+
+			@Override
+			public void onSuccess(LoginInfo result) {
+				loginInfo = result;
+				if(loginInfo.isLoggedIn() == true) {
+					// Prüfung ob der User eingeloggt ist wird hier eingefügt
+					// und anschließend die Oberfläche geladen
+					currentUser = new User();
+					currentUser.setEmail("sarikerim@googlemail.com");
+					currentUser.setFirstName("Kerim");
+					currentUser.setLastName("Sari");
+					currentUser.setId(5);
+					
+					loadMessenger();
+				} else {
+					loadLogin();
+				}
+			}
+		});		
+	}
+	
+	private void loadLogin() {
+		// Assemble login panel
+		signInLink.setHref(loginInfo.getLoginUrl());
+		loginPanel.add(loginLabel);
+		loginPanel.add(signInLink);
+		RootPanel.get("content_wrap").add(loginPanel);
 	}
 	
 	private User getCurrentUser() {
@@ -35,12 +72,6 @@ public class HdmMsg extends VerticalPanel implements EntryPoint {
 	}
 	
 	private void loadMessenger() {
-		
-		Command test = new Command() {
-			public void execute() {
-				Window.alert("BANANAAAAA!!!");
-			}
-		};
 		
 		Command newPostOverview = new Command() {
 			public void execute() {
@@ -92,8 +123,8 @@ public class HdmMsg extends VerticalPanel implements EntryPoint {
 			}
 		};
 
-		MenuBar messageMenu = new MenuBar(true);
-		messageMenu.addItem("Neuer Post", newPostOverview);
+		MenuBar homeMenu = new MenuBar(true);
+		homeMenu.addItem("Startseite", newPostOverview);
 		
 		MenuBar userMenu = new MenuBar(true);
 		userMenu.addItem("Alle User anzeigen", userOverview);
@@ -107,8 +138,7 @@ public class HdmMsg extends VerticalPanel implements EntryPoint {
 		
 		MenuBar mainMenu = new MenuBar();
 		mainMenu.setAutoOpen(true);
-		mainMenu.addItem("Home", test);
-		mainMenu.addItem("Neuer Post", messageMenu);
+		mainMenu.addItem("Startseite", homeMenu);
 		mainMenu.addItem("Chats", chatMenu);
 		mainMenu.addItem("Users", userMenu);
 		mainMenu.addItem("Abos", aboMenu);
@@ -116,7 +146,6 @@ public class HdmMsg extends VerticalPanel implements EntryPoint {
 		
 		//RootPanel.get("content_wrap").add(welcomeImage);
 	    RootPanel.get("header_wrap").add(mainMenu);
-		RootPanel.get("footer_wrap").add(new Impressum());
 		
 	}
 	

@@ -40,7 +40,7 @@ public class NewPostOverview extends VerticalPanel {
 	public void onLoad() {
 		
 		this.getAllPosts(ftPosts, loggedInUser.getId());
-		
+
 		final Grid mainGrid = new Grid(3,1);
 		btnPost.addClickHandler(new ClickHandler() {
 
@@ -69,7 +69,7 @@ public class NewPostOverview extends VerticalPanel {
 			@Override
 			public void onSuccess(Message result) {
 				taPost.setText("");
-				
+				getAllPosts(ftPosts, loggedInUser.getId());
 				ClientsideSettings.getLogger().finest("Post wurde angelegt.");				
 			}
 			
@@ -88,16 +88,17 @@ public class NewPostOverview extends VerticalPanel {
 			public void onSuccess(ArrayList<Message> result) {
 				userPosts = result;
 				
-				ftPosts.clear();
+				ftPosts.clear(true);
+				ftPosts.removeAllRows();
 				
 				for(Message m : userPosts) {
 					
-					final int numrows = ftPosts.getRowCount();
+					int numOfRows = ftPosts.getRowCount();
 					final Message message = m;
 					
-					ftPosts.setText(numrows + 1, 0, Integer.toString(m.getUserId()));
-					ftPosts.setText(numrows + 1, 1, m.getText());
-					ftPosts.setText(numrows + 1, 2, m.getCreationDate().toString());
+					ftPosts.setText(numOfRows + 1, 0, Integer.toString(m.getUserId()));
+					ftPosts.setText(numOfRows + 1, 1, m.getText());
+					ftPosts.setText(numOfRows + 1, 2, m.getCreationDate().toString());
 					
 					Button btnEdit = new Button("Edit");
 					btnEdit.addClickHandler(new ClickHandler() {
@@ -115,13 +116,13 @@ public class NewPostOverview extends VerticalPanel {
 
 						@Override
 						public void onClick(ClickEvent event) {
-							deletePost(message.getId(), numrows + 1);
+							deletePost(message.getId(), ftPosts.getCellForEvent(event).getRowIndex());
 						}
 						
 					});
 					
-					ftPosts.setWidget(numrows + 1, 3, btnEdit);
-					ftPosts.setWidget(numrows + 1, 4, btnRemove);
+					ftPosts.setWidget(numOfRows + 1, 3, btnEdit);
+					ftPosts.setWidget(numOfRows + 1, 4, btnRemove);
 				}
 				
 				ClientsideSettings.getLogger().finest("Posts erfolgreich geladen.");
@@ -148,11 +149,8 @@ public class NewPostOverview extends VerticalPanel {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				
 				post.setText(tbText.getText());
-				
 				savePost(post);
-				
 				dialogBox.hide();
 			}
 			
@@ -213,10 +211,8 @@ public class NewPostOverview extends VerticalPanel {
 
 			@Override
 			public void onSuccess(Message result) {
-				ftPosts.clear();
-				
+				ftPosts.clear(true);
 				getAllPosts(ftPosts, loggedInUser.getId());
-				
 				ClientsideSettings.getLogger().finest("Aenderungen gespeichert.");
 			}
 			
