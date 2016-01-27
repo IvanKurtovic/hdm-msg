@@ -15,8 +15,7 @@ import de.hdm.gruppe2.shared.bo.User;
  */
 @RemoteServiceRelativePath("msgServlet")
 public interface MsgService extends RemoteService {
-	String greetServer(String name) throws IllegalArgumentException;
-	
+
 	public User createUser(String email, String nickname);
 	
 	public User saveUser(User user);
@@ -46,5 +45,10 @@ public interface MsgService extends RemoteService {
 	public void deleteMessage(int messageId);
 	
 	public Message saveMessage(Message message);
+	
+	public Message sendMessage(String text, User author, Chat receiver, ArrayList<Hashtag> hashtagList);
 
+	public ArrayList<Message> findAllMessagesOfChat(Chat selectedChat);
+	
+	public ArrayList<User> findAllParticipantsOfChat(Chat selectedChat);
 }

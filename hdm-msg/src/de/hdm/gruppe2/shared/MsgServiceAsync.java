@@ -13,7 +13,6 @@ import de.hdm.gruppe2.shared.bo.User;
  * The async counterpart of <code>MsgService</code>.
  */
 public interface MsgServiceAsync {
-	void greetServer(String input, AsyncCallback<String> callback) throws IllegalArgumentException;
 
 	void createUser(String email, String nickname, AsyncCallback<User> callback);
 
@@ -44,4 +43,11 @@ public interface MsgServiceAsync {
 	void saveMessage(Message message, AsyncCallback<Message> callback);
 
 	void findUserByEmail(String email, AsyncCallback<User> callback);
+
+	void sendMessage(String text, User author, Chat receiver, ArrayList<Hashtag> hashtagList,
+			AsyncCallback<Message> callback);
+
+	void findAllMessagesOfChat(Chat selectedChat, AsyncCallback<ArrayList<Message>> callback);
+
+	void findAllParticipantsOfChat(Chat selectedChat, AsyncCallback<ArrayList<User>> callback);
 }

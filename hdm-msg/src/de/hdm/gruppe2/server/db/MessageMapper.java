@@ -19,6 +19,52 @@ public class MessageMapper {
 		return messageMapper;
 	}
 	
+	public Message insertMessage(Message message) {
+		Connection con = DBConnection.connection();
+		
+		try {
+			Statement stmt = con.createStatement();
+			
+			/*
+		     * Zunächst schauen wir nach, welches der momentan höchste
+		     * Primärschlüsselwert ist.
+		     */
+			ResultSet rs = stmt.executeQuery("SELECT MAX(`id`) AS maxid FROM `message`");
+			// Wenn wir etwas zurückerhalten, kann dies nur einzeilig sein
+	      if (rs.next()) {
+	        /*
+	         * message erhält den bisher maximalen, nun um 1 inkrementierten
+	         * Primärschlüssel.
+	         */
+	        message.setId(rs.getInt("maxid") + 1);
+
+	        stmt = con.createStatement();
+
+	        // Jetzt erst erfolgt die tatsächliche Einfügeoperation
+	        int result = stmt.executeUpdate("INSERT INTO `message` (`id`, `text`, `autorId`, `chatId`) VALUES (" + message.getId() + ", '" + message.getText() + "', " + message.getUserId() + ", " + message.getChatId() + ")");
+	        
+	        // Nur wenn Hashtags vorhanden sind und die Einfügeoperation erfolgreich war sollen
+	        // vorhandene Hashtags angelegt / verlinkt werden.
+	        if (result != 0 && message.getHashtagList() != null) {
+				// Hashtags der Message in der messagehashtags Tabelle zuordnen
+	        	for(Hashtag h : message.getHashtagList()) {
+	        		// Wenn das Hashtag bereits der Message zugeordnet wurde 
+	        		// soll das nächste hashtag überprüft werden
+					if(messageContainsHashtag(message, h)) {
+						continue;
+					} else {
+		        		insertMessageHashtag(message, h);
+					}
+	  			}
+	        }
+	      }
+	    }
+	    catch (SQLException e) {
+	      e.printStackTrace();
+	    }
+		return message;
+	}
+	
 	public Message insertPost(Message message) {
 		
 		Connection con = DBConnection.connection();

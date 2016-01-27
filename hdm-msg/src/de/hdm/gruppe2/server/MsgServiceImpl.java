@@ -23,40 +23,6 @@ public class MsgServiceImpl extends RemoteServiceServlet implements MsgService {
 	private UserMapper usermapper = UserMapper.usermapper();
 	private ChatMapper chatmapper = ChatMapper.chatMapper();
 	private MessageMapper messagemapper = MessageMapper.messageMapper();
-	
-	
-	public String greetServer(String input) throws IllegalArgumentException {
-		// Verify that the input is valid. 
-		if (!FieldVerifier.isValidName(input)) {
-			// If the input is not valid, throw an IllegalArgumentException back to
-			// the client.
-			throw new IllegalArgumentException("Name must be at least 4 characters long");
-		}
-
-		String serverInfo = getServletContext().getServerInfo();
-		String userAgent = getThreadLocalRequest().getHeader("User-Agent");
-
-		// Escape data from the client to avoid cross-site script vulnerabilities.
-		input = escapeHtml(input);
-		userAgent = escapeHtml(userAgent);
-
-		return "Hello, " + input + "!<br><br>I am running " + serverInfo + ".<br><br>It looks like you are using:<br>"
-				+ userAgent;
-	}
-
-	/**
-	 * Escape an html string. Escaping data received from the client helps to
-	 * prevent cross-site script vulnerabilities.
-	 * 
-	 * @param html the html string to escape
-	 * @return the escaped string
-	 */
-	private String escapeHtml(String html) {
-		if (html == null) {
-			return null;
-		}
-		return html.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
-	}
 
 	@Override
 	public User createUser(String email, String nickname) {
@@ -144,6 +110,17 @@ public class MsgServiceImpl extends RemoteServiceServlet implements MsgService {
 		
 		return this.messagemapper.insertPost(message);
 	}
+	
+	@Override
+	public Message sendMessage(String text, User author, Chat receiver, ArrayList<Hashtag> hashtagList) {
+		Message message = new Message();
+		message.setText(text);
+		message.setUserId(author.getId());
+		message.setChatId(receiver.getId());
+		message.setHashtagList(hashtagList);
+		
+		return this.messagemapper.insertMessage(message);
+	}
 
 	@Override
 	public ArrayList<Message> findAllPostsOfUser(int userId) {
@@ -158,5 +135,15 @@ public class MsgServiceImpl extends RemoteServiceServlet implements MsgService {
 	@Override
 	public Message saveMessage(Message message) {
 		return this.messagemapper.update(message);
+	}
+
+	@Override
+	public ArrayList<Message> findAllMessagesOfChat(Chat selectedChat) {
+		return this.chatmapper.getAllMessagesOfChat(selectedChat);
+	}
+
+	@Override
+	public ArrayList<User> findAllParticipantsOfChat(Chat selectedChat) {
+		return this.chatmapper.getAllParticipantsOfChat(selectedChat);
 	}
 }

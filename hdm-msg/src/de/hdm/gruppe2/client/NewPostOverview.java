@@ -199,7 +199,7 @@ public class NewPostOverview extends VerticalPanel {
 	private void savePost(Message post) {
 		
 		// Hashtag Liste des neuen Posts aktualisieren.
-		post.setHashtagList(HashtagParser.checkForHashtags(post));
+		post.setHashtagList(HashtagParser.checkForHashtags(post.getText()));
 		
 		// Änderungen in die Datenbank schreiben.
 		msgSvc.saveMessage(post, new AsyncCallback<Message> () {

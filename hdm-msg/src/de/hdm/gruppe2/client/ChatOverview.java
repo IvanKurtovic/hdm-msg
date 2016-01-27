@@ -9,6 +9,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -16,8 +17,11 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
+import de.hdm.gruppe2.shared.HashtagParser;
 import de.hdm.gruppe2.shared.MsgServiceAsync;
 import de.hdm.gruppe2.shared.bo.Chat;
+import de.hdm.gruppe2.shared.bo.Hashtag;
+import de.hdm.gruppe2.shared.bo.Message;
 import de.hdm.gruppe2.shared.bo.User;
 
 public class ChatOverview extends VerticalPanel {
@@ -25,9 +29,15 @@ public class ChatOverview extends VerticalPanel {
 	private MsgServiceAsync msgSvc = ClientsideSettings.getMsgService();
 	private User loggedInUser = null;
 	private ArrayList<Chat> chats = null;
+	private ArrayList<Message> chatMessages = null;
 	private ArrayList<User> contacts = null;
+	private ArrayList<User> chatParticipants = null;
+	private Chat selectedChat = null;
 	
+	private final TextBox tbMessage = new TextBox();
 	private final ListBox chatNames = new ListBox();
+	private final FlexTable ftChatMessages = new FlexTable();
+
 	
 	public ChatOverview(User loggedInUser) {
 		this.loggedInUser = loggedInUser;
@@ -43,6 +53,20 @@ public class ChatOverview extends VerticalPanel {
 		
 		chatNames.setStyleName("listbox");
 		chatNames.setVisibleItemCount(11);
+		chatNames.addChangeHandler(new ChangeHandler() {
+
+			@Override
+			public void onChange(ChangeEvent event) {
+				if(chatNames.getSelectedIndex() == -1) {
+					ClientsideSettings.getLogger().severe("Kein Chat ausgewählt.");
+					return;
+				}
+				
+				selectedChat = chats.get(chatNames.getSelectedIndex());
+				getAllChatParticipants();
+				getAllMessagesOfChat();
+			}
+		});
 		
 		final Button btnCreateChat = new Button("Neuer Chat");
 		btnCreateChat.setStyleName("new-chat");
@@ -119,10 +143,25 @@ public class ChatOverview extends VerticalPanel {
 		pnlChatControls.add(btnLeaveChat);
 		pnlChatControls.add(btnDeleteChat);
 		
-		final TextBox tbMessage = new TextBox();
+		
 		tbMessage.setStyleName("textbox-chat");
-		final Button btnSendMessage = new Button("Senden");	
+		
+		final Button btnSendMessage = new Button("Senden");
 		btnSendMessage.setStyleName("send-chat");
+		btnSendMessage.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				if(chatNames.getSelectedIndex() == -1 && tbMessage.getText() != null && !tbMessage.getText().isEmpty()) {
+					ClientsideSettings.getLogger().severe("Kein Chat ausgewählt.");
+					return;
+				}
+				
+				sendMessage(tbMessage.getText(), loggedInUser, selectedChat);
+			}
+			
+		});
+
 		
 		final HorizontalPanel pnlSendMessage = new HorizontalPanel();
 		pnlSendMessage.add(tbMessage);
@@ -130,6 +169,7 @@ public class ChatOverview extends VerticalPanel {
 		
 		mainGrid.setWidget(0, 0, chatNames);
 		mainGrid.setWidget(1, 0, pnlChatControls);
+		mainGrid.setWidget(0, 1, ftChatMessages);
 		mainGrid.setWidget(1, 1, pnlSendMessage);		
 		
 		this.add(mainGrid);
@@ -346,6 +386,86 @@ public class ChatOverview extends VerticalPanel {
 				chats.remove(chatNames.getSelectedIndex());
 				
 				ClientsideSettings.getLogger().finest("Der Chat wurde gelöscht.");
+			}
+			
+		});
+	}
+	
+	private void sendMessage(String text, User author, Chat receiver) {
+		
+		ArrayList<Hashtag> hashtagList = HashtagParser.checkForHashtags(text);
+		
+		msgSvc.sendMessage(text, author, receiver, hashtagList, new AsyncCallback<Message> () {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				ClientsideSettings.getLogger().severe("Nachricht konnte nicht gesendet werden.");
+			}
+
+			@Override
+			public void onSuccess(Message result) {
+				tbMessage.setText("");
+				getAllMessagesOfChat();
+				
+				ClientsideSettings.getLogger().finest("Nachricht versendet.");
+			}
+			
+		});
+	}
+	
+	private void getAllMessagesOfChat() {
+		msgSvc.findAllMessagesOfChat(selectedChat, new AsyncCallback<ArrayList<Message>> () {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				ClientsideSettings.getLogger().severe("Nachrichten konnten nicht geladen werden.");
+			}
+
+			@Override
+			public void onSuccess(ArrayList<Message> result) {				
+				chatMessages = result;
+				
+				ftChatMessages.clear(true);
+				ftChatMessages.removeAllRows();
+				
+				for(Message m : chatMessages) {
+					
+					int numOfRows = ftChatMessages.getRowCount();
+					String userName = "";
+					
+					for(User u : chatParticipants) {
+						if(m.getUserId() == u.getId()) {
+							userName = u.getNickname();
+						} else {
+							userName = "";
+						}
+					}
+					
+					ftChatMessages.setText(numOfRows + 1, 0, userName);
+					ftChatMessages.setText(numOfRows + 1, 1, m.getText());
+					ftChatMessages.setText(numOfRows + 1, 2, m.getCreationDate().toString());
+
+				}
+				
+				ClientsideSettings.getLogger().finest("ChatMessages erfolgreich geladen.");
+			}
+			
+		});
+	}
+	
+	private void getAllChatParticipants() {
+		msgSvc.findAllParticipantsOfChat(selectedChat, new AsyncCallback<ArrayList<User>> () {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				ClientsideSettings.getLogger().severe("Teilnehmer konnten nicht geladen werden.");
+			}
+
+			@Override
+			public void onSuccess(ArrayList<User> result) {
+				chatParticipants = result;
+				
+				ClientsideSettings.getLogger().finest("ChatMessages erfolgreich geladen.");
 			}
 			
 		});
