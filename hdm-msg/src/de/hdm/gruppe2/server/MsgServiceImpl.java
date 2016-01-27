@@ -59,12 +59,11 @@ public class MsgServiceImpl extends RemoteServiceServlet implements MsgService {
 	}
 
 	@Override
-	public User createUser(String email, String firstName, String lastName) {
+	public User createUser(String email, String nickname) {
 		
 		User u = new User();
 		u.setEmail(email);
-		u.setFirstName(firstName);
-		u.setLastName(lastName);
+		u.setNickname(nickname);
 		
 		/*
 	     * Setzen einer vorläufigen User-Id Der insert-Aufruf liefert dann ein
@@ -91,6 +90,11 @@ public class MsgServiceImpl extends RemoteServiceServlet implements MsgService {
 	}
 	
 	@Override
+	public User findUserByEmail(String email) {
+		return this.usermapper.findUserByEmail(email);
+	}
+	
+	@Override
 	public void deleteUser(User user) {
 		this.usermapper.delete(user);
 	}
@@ -101,7 +105,7 @@ public class MsgServiceImpl extends RemoteServiceServlet implements MsgService {
 		String chatName = "";
 		
 		for(User u : participants) {
-			chatName += u.getFirstName() + " ";
+			chatName += u.getNickname() + " ";
 		}
 		
 		Chat c = new Chat();
@@ -155,6 +159,4 @@ public class MsgServiceImpl extends RemoteServiceServlet implements MsgService {
 	public Message saveMessage(Message message) {
 		return this.messagemapper.update(message);
 	}
-
-
 }

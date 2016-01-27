@@ -31,8 +31,7 @@ public class UserOverview extends VerticalPanel{
 	private User selectedUser = null;
 	private User loggedInUser = null;
 	
-	private final TextBox tbFirstName = new TextBox();
-	private final TextBox tbLastName = new TextBox();
+	private final TextBox tbNickname = new TextBox();
 	private final TextBox tbEmail = new TextBox();
 	private final TextBox tbCreationDate = new TextBox();
 	
@@ -45,27 +44,24 @@ public class UserOverview extends VerticalPanel{
 
 		// User Details
 		final Grid mainGrid = new Grid(5,3);
-		final Grid detailsGrid = new Grid(5,2);
-		detailsGrid.setStyleName("detailsgrid-user");
+		final Grid detailsGrid = new Grid(4,2);
 		
-		final Label lblFirstName = new Label("Vorname: ");
-		lblFirstName.setStyleName("firstname-user");
-		final Label lblLastName = new Label("Nachname: ");
-		lblLastName.setStyleName("lastname-user");
+		final Label lblNickname = new Label("Nickname: ");
 		final Label lblEmail = new Label("Email: ");
-		lblEmail.setStyleName("email-user");
 		final Label lblCreationDate = new Label("Angelegt am: ");
-		lblCreationDate.setStyleName("timestamp-user");
-		
-		// Set Style-Names
-		tbFirstName.setStyleName("textbox-firstname-user");
-		tbLastName.setStyleName("textbox-lastname-user");
-		tbEmail.setStyleName("textbox-email-user");
-		tbCreationDate.setStyleName("textbox-timestamp-user");
 		tbCreationDate.setEnabled(false);
 		
-		// User List links
+		// Set Style-Names
+		detailsGrid.setStyleName("detailsgrid-user");
+		lblNickname.setStyleName("nickname-user");
+		lblEmail.setStyleName("email-user");
+		lblCreationDate.setStyleName("timestamp-user");
+		tbNickname.setStyleName("textbox-nickname-user");
+		tbEmail.setStyleName("textbox-email-user");
+		tbCreationDate.setStyleName("textbox-timestamp-user");
 		userList.setStyleName("listbox");
+		
+		// User List links
 		userList.setVisibleItemCount(11);
 		userList.addChangeHandler(new ChangeHandler() {
 			
@@ -77,8 +73,7 @@ public class UserOverview extends VerticalPanel{
 				
 				selectedUser = users.get(userList.getSelectedIndex());
 				
-				tbFirstName.setText(selectedUser.getFirstName());
-				tbLastName.setText(selectedUser.getLastName());
+				tbNickname.setText(selectedUser.getNickname());
 				tbEmail.setText(selectedUser.getEmail());
 				tbCreationDate.setText(selectedUser.getCreationDate().toString());
 			}
@@ -107,8 +102,7 @@ public class UserOverview extends VerticalPanel{
 			@Override
 			public void onClick(ClickEvent event) {
 				
-				String firstName = tbFirstName.getText();
-				String lastName = tbLastName.getText();
+				String nickname = tbNickname.getText();
 				String email = tbEmail.getText();
 				
 				if(userList.getSelectedIndex() == -1) {
@@ -116,15 +110,13 @@ public class UserOverview extends VerticalPanel{
 					return;
 				}
 				
-				if(selectedUser.getFirstName() == firstName && selectedUser.getLastName() == lastName 
-						&& selectedUser.getEmail() == email) {
+				if(selectedUser.getNickname() == nickname && selectedUser.getEmail() == email) {
 					
 					lblNotification.setText("Keine Aenderung vorgenommen.");
 					return;	
 					
 				} else {
-					selectedUser.setFirstName(firstName);
-					selectedUser.setLastName(lastName);
+					selectedUser.setNickname(nickname);
 					selectedUser.setEmail(email);
 					
 					msgSvc.saveUser(selectedUser, new SaveUserCallback(lblNotification));
@@ -168,15 +160,13 @@ public class UserOverview extends VerticalPanel{
 		pnlSaveDeleteRefresh.add(btnRefresh);
 		pnlSaveDeleteRefresh.add(btnDeleteUser);
 
-		detailsGrid.setWidget(0, 0, lblFirstName);
-		detailsGrid.setWidget(0, 1, tbFirstName);
-		detailsGrid.setWidget(1, 0, lblLastName);
-		detailsGrid.setWidget(1, 1, tbLastName);
-		detailsGrid.setWidget(2, 0, lblEmail);
-		detailsGrid.setWidget(2, 1, tbEmail);
-		detailsGrid.setWidget(3, 0, lblCreationDate);
-		detailsGrid.setWidget(3, 1, tbCreationDate);
-		detailsGrid.setWidget(4, 0, btnSaveUser);
+		detailsGrid.setWidget(0, 0, lblNickname);
+		detailsGrid.setWidget(0, 1, tbNickname);
+		detailsGrid.setWidget(1, 0, lblEmail);
+		detailsGrid.setWidget(1, 1, tbEmail);
+		detailsGrid.setWidget(2, 0, lblCreationDate);
+		detailsGrid.setWidget(2, 1, tbCreationDate);
+		detailsGrid.setWidget(3, 0, btnSaveUser);
 		
 		
 		mainGrid.setWidget(0, 0, userList);
@@ -199,14 +189,11 @@ public class UserOverview extends VerticalPanel{
 		
 		final Label lblTitle = new Label("Neuer User");
 		lblTitle.setStyleName("popup-title-user");
-		final Label lblFirstName = new Label("Vorname: ");
-		lblFirstName.setStyleName("popup-firstname-user");
-		final Label lblLastName = new Label("Nachname: ");
-		lblLastName.setStyleName("popup-lastname-user");
+		final Label lblNickname = new Label("Nickname: ");
+		lblNickname.setStyleName("popup-nickname-user");
 		final Label lblEmail = new Label("Email: ");
 		lblEmail.setStyleName("popup-email-user");
-		final TextBox tbFirstNameDialog = new TextBox();
-		final TextBox tbLastNameDialog = new TextBox();
+		final TextBox tbNicknameDialog = new TextBox();
 		final TextBox tbEmailDialog = new TextBox();
 		
 		final Button btnCreate = new Button("Anlegen");
@@ -217,16 +204,12 @@ public class UserOverview extends VerticalPanel{
 				// Der folgende reguläre Ausdruck entspricht einer standard Email Adresse.
 				String regEx = "^\\w+([-+.']\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$";
 				String email = tbEmailDialog.getText();
-				String firstName = tbFirstNameDialog.getText();
-				String lastName = tbLastNameDialog.getText();
+				String nickname = tbNicknameDialog.getText();
 				
 				// Nur wenn die Eingaben des Nutzers sinnvoll sind soll ein Eintrag in
 				// die Datenbank erfolgen.
-				if(firstName == null || firstName.isEmpty()) {
-					lblNotification.setText("Keinen Vornamen eingetragen.");
-					return;
-				} else if (lastName == null || lastName.isEmpty()){
-					lblNotification.setText("Keinen Nachnamen eingetragen.");
+				if(nickname == null || nickname.isEmpty()) {
+					lblNotification.setText("Keinen Nickname eingetragen.");
 					return;
 				} else if(email == null || email.isEmpty()) {
 					lblNotification.setText("Keine Email eingetragen.");
@@ -236,7 +219,7 @@ public class UserOverview extends VerticalPanel{
 					return;
 				}
 				
-				msgSvc.createUser(tbEmailDialog.getText(), tbFirstNameDialog.getText(), tbLastNameDialog.getText(), new CreateUserCallback(lblNotification));
+				msgSvc.createUser(email, nickname, new CreateUserCallback(lblNotification));
 				dialogBox.hide();
 			}	
 		});
@@ -251,14 +234,12 @@ public class UserOverview extends VerticalPanel{
 		});
 		
 		mainGrid.setWidget(0, 0, lblTitle);
-		mainGrid.setWidget(1, 0, lblFirstName);
-		mainGrid.setWidget(2, 0, lblLastName);
-		mainGrid.setWidget(3, 0, lblEmail);
-		mainGrid.setWidget(4, 0, btnCreate);
-		mainGrid.setWidget(1, 1, tbFirstNameDialog);
-		mainGrid.setWidget(2, 1, tbLastNameDialog);
-		mainGrid.setWidget(3, 1, tbEmailDialog);
-		mainGrid.setWidget(4, 1, btnCancel);
+		mainGrid.setWidget(1, 0, lblNickname);
+		mainGrid.setWidget(2, 0, lblEmail);
+		mainGrid.setWidget(3, 0, btnCreate);
+		mainGrid.setWidget(1, 1, tbNicknameDialog);
+		mainGrid.setWidget(2, 1, tbEmailDialog);
+		mainGrid.setWidget(3, 1, btnCancel);
 		
 		dialogBox.add(mainGrid);
 		
@@ -303,7 +284,7 @@ public class UserOverview extends VerticalPanel{
 				userList.clear();
 				
 				for(User u : users) {
-					userList.addItem(u.getFirstName() + " " + u.getLastName());
+					userList.addItem(u.getNickname());
 				}
 				
 				ClientsideSettings.getLogger().finest("Alle User wurden geladen!");
@@ -344,8 +325,7 @@ public class UserOverview extends VerticalPanel{
 			public void onSuccess(Void result) {
 				// Aufräumen der Detailmaske
 				tbEmail.setText("");
-				tbFirstName.setText("");
-				tbLastName.setText("");
+				tbNickname.setText("");
 				tbCreationDate.setText("");
 				
 				// Entfernen des Users aus der Liste
@@ -376,7 +356,7 @@ public class UserOverview extends VerticalPanel{
 				userList.clear();
 				
 				for(User u : users) {
-					userList.addItem(u.getFirstName() + " " + u.getLastName());
+					userList.addItem(u.getNickname());
 				}
 				
 				ClientsideSettings.getLogger().finest("Alle User wurden geladen!");

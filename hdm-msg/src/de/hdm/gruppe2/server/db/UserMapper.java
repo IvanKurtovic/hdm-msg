@@ -38,30 +38,36 @@ public class UserMapper {
 		// DB-Verbindung herstellen
 		Connection con = DBConnection.connection();
 		try {
-			// Insert-Statement erzeugen
-			Statement stmt = con.createStatement();
-			// Zunächst wird geschaut welches der momentan höchste
-			// Primärschlüssel ist.
-			ResultSet rs = stmt.executeQuery("SELECT MAX(id) AS maxid FROM user");
-	
-			// Wenn ein Datensatz gefunden wurde, wird auf diesen zugegriffen
-			if(rs.next()) {
-				// Die gefundene id wird um 1 inkrementiert und in das neue User-Objekt geschrieben.
-				user.setId(rs.getInt("maxid") + 1);
-			}
 			
-			String sql = "INSERT INTO `user`(`id`, `email`, `firstName`, `lastName`) "
-					+ "VALUES (?, ?, ?, ?)";
+			User tmpUser = findUserByEmail(user.getEmail());
+			
+			if(tmpUser == null) {
+				
+				// Insert-Statement erzeugen
+				Statement stmt = con.createStatement();
+				// Zunächst wird geschaut welches der momentan höchste
+				// Primärschlüssel ist.
+				ResultSet rs = stmt.executeQuery("SELECT MAX(id) AS maxid FROM user");
+		
+				// Wenn ein Datensatz gefunden wurde, wird auf diesen zugegriffen
+				if(rs.next()) {
+					// Die gefundene id wird um 1 inkrementiert und in das neue User-Objekt geschrieben.
+					user.setId(rs.getInt("maxid") + 1);
+				}
+				
+				String sql = "INSERT INTO `user`(`id`, `email`, `nickname`) "
+						+ "VALUES (?, ?, ?)";
 
-			PreparedStatement preStmt;
-			preStmt = con.prepareStatement(sql);
-			preStmt.setString(1, Integer.toString(user.getId()));
-			preStmt.setString(2, user.getEmail());
-			preStmt.setString(3, user.getFirstName());
-			preStmt.setString(4, user.getLastName());
-			preStmt.executeUpdate();
-			preStmt.close();
-
+				PreparedStatement preStmt;
+				preStmt = con.prepareStatement(sql);
+				preStmt.setString(1, Integer.toString(user.getId()));
+				preStmt.setString(2, user.getEmail());
+				preStmt.setString(3, user.getNickname());
+				preStmt.executeUpdate();
+				preStmt.close();
+			} else {
+				return tmpUser;
+			}
 		} catch (SQLException e) {
 
 			e.printStackTrace();
@@ -75,10 +81,9 @@ public class UserMapper {
 		Connection con = DBConnection.connection();
 		try {
 			PreparedStatement preStmt;
-			preStmt = con.prepareStatement("UPDATE `user` SET firstName=?, lastName=?, email=? WHERE id=" + user.getId());
-			preStmt.setString(1, user.getFirstName());
-			preStmt.setString(2, user.getLastName());
-			preStmt.setString(3, user.getEmail());
+			preStmt = con.prepareStatement("UPDATE `user` SET nickname=?, email=? WHERE id=" + user.getId());
+			preStmt.setString(1, user.getNickname());
+			preStmt.setString(2, user.getEmail());
 			preStmt.executeUpdate();
 			preStmt.close();		
 		} catch (SQLException e) {
@@ -130,8 +135,7 @@ public class UserMapper {
 				User user = new User();
 				
 				user.setId(rs.getInt("id"));
-				user.setFirstName(rs.getString("firstName"));
-				user.setLastName(rs.getString("lastName"));
+				user.setNickname(rs.getString("nickname"));
 				user.setEmail(rs.getString("email"));
 				user.setCreationDate(rs.getDate("creationDate"));
 	
@@ -159,8 +163,7 @@ public class UserMapper {
 				User user = new User();
 				
 				user.setId(rs.getInt("id"));
-				user.setFirstName(rs.getString("firstName"));
-				user.setLastName(rs.getString("lastName"));
+				user.setNickname(rs.getString("nickname"));
 				user.setEmail(rs.getString("email"));
 				user.setCreationDate(rs.getDate("creationDate"));
 	
@@ -185,18 +188,17 @@ public class UserMapper {
 	 * @author Thies
 	 * @author Serkan
 	 */
-	public User findUserByLastName(String lastName) throws IllegalArgumentException {
+	public User findUserByNickname(String nickname) throws IllegalArgumentException {
 		Connection con = DBConnection.connection();
 		try {
 			Statement stmt = con.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM `user` WHERE lastname=`" + lastName + "`");
+			ResultSet rs = stmt.executeQuery("SELECT * FROM `user` WHERE `nickname`='" + nickname + "'");
 	
 			if (rs.next()) {
 				User user = new User();
 				
 				user.setId(rs.getInt("id"));	
-				user.setFirstName(rs.getString("firstName"));
-				user.setLastName(rs.getString("lastName"));
+				user.setNickname(rs.getString("nickname"));
 				user.setEmail(rs.getString("email"));
 				user.setCreationDate(rs.getDate("creationDate"));
 	
@@ -223,14 +225,13 @@ public class UserMapper {
 		Connection con = DBConnection.connection();
 		try {
 			Statement stmt = con.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM `user` WHERE email=`"	+ email + "`");
+			ResultSet rs = stmt.executeQuery("SELECT * FROM `user` WHERE email='"	+ email + "'");
 	
 			if (rs.next()) {
 				User user = new User();
 				
 				user.setId(rs.getInt("id"));
-				user.setFirstName(rs.getString("firstName"));
-				user.setLastName(rs.getString("lastName"));
+				user.setNickname(rs.getString("nickname"));
 				user.setEmail(rs.getString("email"));
 				user.setCreationDate(rs.getDate("creationDate"));
 	
@@ -264,8 +265,7 @@ public class UserMapper {
 				User user = new User();
 				
 				user.setId(rs.getInt("id"));
-				user.setFirstName(rs.getString("firstName"));
-				user.setLastName(rs.getString("lastName"));
+				user.setNickname(rs.getString("nickname"));
 				user.setEmail(rs.getString("email"));
 				user.setCreationDate(rs.getDate("creationDate"));
 				

@@ -17,7 +17,7 @@ import de.hdm.gruppe2.shared.bo.User;
 public interface MsgService extends RemoteService {
 	String greetServer(String name) throws IllegalArgumentException;
 	
-	public User createUser(String email, String firstName, String lastName);
+	public User createUser(String email, String nickname);
 	
 	public User saveUser(User user);
 	
@@ -26,6 +26,8 @@ public interface MsgService extends RemoteService {
 	public ArrayList<User> findAllUser();
 	
 	public ArrayList<User> findAllUserWithoutLoggedInUser(User user);
+	
+	public User findUserByEmail(String email);
 	
 	public Chat createChat(ArrayList<User> participants);
 	

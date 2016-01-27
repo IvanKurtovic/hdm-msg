@@ -208,7 +208,7 @@ public class ChatMapper {
 		try {
 			
 			Statement stmt = con.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT `chatparticipants`.`userid`, `chatparticipants`.`chatId`, `user`.`email`, `user`.`firstName`, `user`.`lastName`, `user`.`creationDate` " 
+			ResultSet rs = stmt.executeQuery("SELECT `chatparticipants`.`userid`, `chatparticipants`.`chatId`, `user`.`email`, `user`.`nickname`, `user`.`creationDate` " 
 											+ "FROM `chatparticipants` INNER JOIN `user` "
 											+ "ON `chatparticipants`.`userId` = `user`.`id` "
 											+ "WHERE `chatparticipants`.`chatId` = " + chat.getId());
@@ -217,8 +217,7 @@ public class ChatMapper {
 				User user = new User();
 				user.setId(rs.getInt("userId"));
 				user.setEmail(rs.getString("email"));
-				user.setFirstName(rs.getString("firstName"));
-				user.setLastName(rs.getString("lastName"));
+				user.setNickname(rs.getString("nickname"));
 				user.setCreationDate(rs.getDate("creationDate"));
 				
 				participantsOfChat.add(user);

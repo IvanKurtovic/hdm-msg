@@ -16,6 +16,10 @@ public class HashtagParser {
 		for(String s : substrings) {
 			Hashtag h = new Hashtag();
 			
+			if(substrings[0] == s) {
+				continue;
+			}
+			
 			if(s.charAt(s.length() - 1) == ' ') {
 				h.setKeyword(s.subSequence(0, s.indexOf(" ")).toString());
 			} else {

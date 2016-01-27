@@ -172,7 +172,7 @@ public class ChatOverview extends VerticalPanel {
 		
 		// Alle User in die Liste einfügen.
 		for(User u : contacts) {
-			recipientList.addItem(u.getFirstName() + " " + u.getLastName());
+			recipientList.addItem(u.getNickname());
 		}	
 		
 		final Button btnCreateChat = new Button("Chat Anlegen");

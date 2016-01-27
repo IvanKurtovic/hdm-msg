@@ -12,12 +12,15 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 import de.hdm.gruppe2.shared.LoginInfo;
 import de.hdm.gruppe2.shared.LoginServiceAsync;
+import de.hdm.gruppe2.shared.MsgServiceAsync;
 import de.hdm.gruppe2.shared.bo.User;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
 public class HdmMsg extends VerticalPanel implements EntryPoint {
+	
+	private MsgServiceAsync msgSvc = ClientsideSettings.getMsgService();
 	
 	// Ein Objekt der momentan eingeloggten nutzers wird als private Variable
 	// abgelegt und den einzelnen Panelen mitgesendet.
@@ -43,20 +46,40 @@ public class HdmMsg extends VerticalPanel implements EntryPoint {
 			public void onSuccess(LoginInfo result) {
 				loginInfo = result;
 				if(loginInfo.isLoggedIn() == true) {
-					// Prüfung ob der User eingeloggt ist wird hier eingefügt
-					// und anschließend die Oberfläche geladen
-					currentUser = new User();
-					currentUser.setEmail("sarikerim@googlemail.com");
-					currentUser.setFirstName("Kerim");
-					currentUser.setLastName("Sari");
-					currentUser.setId(5);
-					
-					loadMessenger();
+					registerUser();	
 				} else {
 					loadLogin();
 				}
 			}
 		});		
+	}
+	
+	private void registerUser() {
+		msgSvc.createUser(loginInfo.getEmailAddress(), loginInfo.getNickname(), new AsyncCallback<User>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				loadLogin();
+				
+				ClientsideSettings.getLogger().severe("User konnte nicht registriert werden.");
+			}
+
+			@Override
+			public void onSuccess(User result) {
+				if(result != null) {
+					currentUser = result;
+				}
+
+				loadMessenger();
+				
+				ClientsideSettings.getLogger().finest("User in Datenbank registriert.");
+			}
+			
+		});
+	}
+	
+	private User getCurrentUser() {
+		return this.currentUser;
 	}
 	
 	private void loadLogin() {
@@ -65,10 +88,6 @@ public class HdmMsg extends VerticalPanel implements EntryPoint {
 		loginPanel.add(loginLabel);
 		loginPanel.add(signInLink);
 		RootPanel.get("content_wrap").add(loginPanel);
-	}
-	
-	private User getCurrentUser() {
-		return this.currentUser;
 	}
 	
 	private void loadMessenger() {
@@ -148,5 +167,4 @@ public class HdmMsg extends VerticalPanel implements EntryPoint {
 	    RootPanel.get("header_wrap").add(mainMenu);
 		
 	}
-	
 }

@@ -15,7 +15,7 @@ import de.hdm.gruppe2.shared.bo.User;
 public interface MsgServiceAsync {
 	void greetServer(String input, AsyncCallback<String> callback) throws IllegalArgumentException;
 
-	void createUser(String email, String firstName, String lastName, AsyncCallback<User> callback);
+	void createUser(String email, String nickname, AsyncCallback<User> callback);
 
 	void saveUser(User user, AsyncCallback<User> callback);
 
@@ -42,4 +42,6 @@ public interface MsgServiceAsync {
 	void deleteMessage(int messageId, AsyncCallback<Void> callback);
 
 	void saveMessage(Message message, AsyncCallback<Message> callback);
+
+	void findUserByEmail(String email, AsyncCallback<User> callback);
 }

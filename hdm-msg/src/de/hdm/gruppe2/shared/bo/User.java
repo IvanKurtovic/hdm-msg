@@ -19,21 +19,14 @@ public class User extends BusinessObject {
 	 * wird die Google Account API verwendet
 	 * hierzu brauchen wir eine Google ID
 	 */
-	private String firstName;
-	private String lastName;
+	private String nickname;
 	private String email;
 	
-	public String getFirstName() {
-		return firstName;
+	public String getNickname() {
+		return nickname;
 	}
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-	public String getLastName() {
-		return lastName;
-	}
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
 	}
 	public String getEmail() {
 		return email;
