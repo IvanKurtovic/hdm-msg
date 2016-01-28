@@ -1,7 +1,10 @@
 package de.hdm.gruppe2.client;
 
+import java.util.ArrayList;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.Grid;
@@ -11,22 +14,31 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
+import de.hdm.gruppe2.shared.MsgServiceAsync;
+import de.hdm.gruppe2.shared.bo.User;
+
 public class UserSubscriptionOverview extends VerticalPanel {
 	
-private String[] users = {"cem", "ivan", "serkan", "marina", "kerim", "thies"};
+	private MsgServiceAsync msgSvc = ClientsideSettings.getMsgService();
+	private ArrayList<User> allUsers = null;
+	private User loggedInUser = null;
+	
+	private final ListBox userList = new ListBox();
+	private final ListBox userSubscriptionList = new ListBox();
+	
+	public UserSubscriptionOverview(User currentUser) {
+		this.loggedInUser = currentUser;
+	}
 	
 	@Override
 	public void onLoad() {
 		
+		this.getAllUsers();
+		
 		final Grid mainGrid = new Grid(2, 2);
 		
-		final ListBox userList = new ListBox();
-		userList.setStyleName("listbox");
-		userList.setVisibleItemCount(11);
-		
-		for(String s : users) {
-			userList.addItem(s);
-		}
+		userSubscriptionList.setStyleName("listbox");
+		userSubscriptionList.setVisibleItemCount(11);
 		
 		final Button btnNewSubscription = new Button("Neues Abonnement");
 		btnNewSubscription.setStyleName("newsubs-usersubs");
@@ -47,7 +59,7 @@ private String[] users = {"cem", "ivan", "serkan", "marina", "kerim", "thies"};
 		pnlSubscribeAndUnsubscribe.add(btnNewSubscription);
 		pnlSubscribeAndUnsubscribe.add(btnUnsubscribe);
 		
-		mainGrid.setWidget(0, 0, userList);
+		mainGrid.setWidget(0, 0, userSubscriptionList);
 		mainGrid.setWidget(1, 0, pnlSubscribeAndUnsubscribe);
 		
 		this.add(mainGrid);		
@@ -59,22 +71,28 @@ private String[] users = {"cem", "ivan", "serkan", "marina", "kerim", "thies"};
 		dialogBox.setGlassEnabled(true);
 		dialogBox.setAnimationEnabled(true);
 		
-		final Grid mainGrid = new Grid(4,1);
+		final Grid mainGrid = new Grid(3,1);
 		
 		final Label lblTitle = new Label("Neues User-Abo");
 		lblTitle.addStyleName("popup-title");
-		final TextBox tbSearch = new TextBox();
-		final Button btnSearch = new Button("Suchen");
-		
-		final HorizontalPanel pnlSearchControls = new HorizontalPanel();
-		pnlSearchControls.add(tbSearch);
-		pnlSearchControls.add(btnSearch);
-		
-		final ListBox userList = new ListBox();
+
 		userList.setStyleName("listbox-usersubs");
 		userList.setVisibleItemCount(5);
 		
 		final Button btnSubscribe = new Button("Abonnieren");
+		btnSubscribe.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				if(userList.getSelectedIndex() == -1) {
+					ClientsideSettings.getLogger().severe("Kein User ausgewählt.");
+					return;
+				}
+				
+				subscribe(allUsers.get(userList.getSelectedIndex()));
+			}
+		});
+		
 		final Button btnCancel = new Button("Abbrechen");
 		btnCancel.addClickHandler(new ClickHandler() {
 			
@@ -89,13 +107,38 @@ private String[] users = {"cem", "ivan", "serkan", "marina", "kerim", "thies"};
 		pnlSubscriptionControls.add(btnCancel);
 		
 		mainGrid.setWidget(0, 0, lblTitle);
-		mainGrid.setWidget(1, 0, pnlSearchControls);
-		mainGrid.setWidget(2, 0, userList);
-		mainGrid.setWidget(3, 0, pnlSubscriptionControls);
+		mainGrid.setWidget(1, 0, userList);
+		mainGrid.setWidget(2, 0, pnlSubscriptionControls);
 		
 		dialogBox.add(mainGrid);
 		
 		return dialogBox;		
+	}
+	
+	private void getAllUsers() {
+		msgSvc.findAllUserWithoutLoggedInUser(loggedInUser, new AsyncCallback<ArrayList<User>>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				ClientsideSettings.getLogger().severe("User konnten nicht geladen werden.");
+			}
+
+			@Override
+			public void onSuccess(ArrayList<User> result) {
+				allUsers = result;
+				
+				for(User u : allUsers) {
+					userList.addItem(u.getNickname());
+				}
+				
+				ClientsideSettings.getLogger().finest("User wurden geladen.");
+			}
+			
+		});
+	}
+	
+	private void subscribe(User user) {
+		// TODO: Methode zum abonnieren des Nutzers.
 	}
 
 }

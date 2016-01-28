@@ -129,7 +129,7 @@ public class HdmMsg extends VerticalPanel implements EntryPoint {
 			@Override
 			public void execute() {
 				RootPanel.get("content_wrap").clear();
-				RootPanel.get("content_wrap").add(new UserSubscriptionOverview());
+				RootPanel.get("content_wrap").add(new UserSubscriptionOverview(getCurrentUser()));
 			}
 		};
 		
