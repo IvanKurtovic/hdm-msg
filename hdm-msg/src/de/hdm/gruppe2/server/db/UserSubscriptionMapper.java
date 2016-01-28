@@ -27,7 +27,6 @@ public class UserSubscriptionMapper {
 		
 		try {
 			if(findByRecipientAndSenderId(us.getRecipientId(), us.getSenderId()) == null) {
-
 				Statement stmt = con.createStatement();			
 				stmt.executeUpdate("INSERT INTO `dbmessenger`.`usersubscription`(`posterId`, `subscriberId`) VALUES (" + us.getSenderId() + ", " + us.getRecipientId() + " )");					
 			}
@@ -46,7 +45,7 @@ public class UserSubscriptionMapper {
 			if(rs.next()) {
 				UserSubscription us = new UserSubscription();
 				us.setSenderId(rs.getInt("posterId"));
-				us.setRecipientId(rs.getInt("userId"));		
+				us.setRecipientId(rs.getInt("subscriberId"));		
 				return us;
 			}
 		} catch (SQLException e) {

@@ -90,6 +90,7 @@ public class UserSubscriptionOverview extends VerticalPanel {
 				}
 				
 				subscribe(allUsers.get(userList.getSelectedIndex()));
+				dialogBox.hide();
 			}
 		});
 		
@@ -133,12 +134,27 @@ public class UserSubscriptionOverview extends VerticalPanel {
 				
 				ClientsideSettings.getLogger().finest("User wurden geladen.");
 			}
-			
 		});
 	}
 	
+	private void getAllUserSubscriptions() {
+		// TODO RPC-Methode zum laden aller Userabos schreiben.
+	}
+	
 	private void subscribe(User user) {
-		// TODO: Methode zum abonnieren des Nutzers.
+		msgSvc.createUserSubscription(user, loggedInUser, new AsyncCallback<Void>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				ClientsideSettings.getLogger().severe("UserSubscription konnte nicht angelegt werden.");
+			}
+
+			@Override
+			public void onSuccess(Void result) {
+				getAllUserSubscriptions();
+				ClientsideSettings.getLogger().finest("UserSubscription wurde angelegt.");	
+			}
+		});
 	}
 
 }
