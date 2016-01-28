@@ -2,11 +2,14 @@ package de.hdm.gruppe2.client;
 
 import java.util.ArrayList;
 
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -17,6 +20,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import de.hdm.gruppe2.shared.MsgServiceAsync;
 import de.hdm.gruppe2.shared.bo.Hashtag;
 import de.hdm.gruppe2.shared.bo.HashtagSubscription;
+import de.hdm.gruppe2.shared.bo.Message;
 import de.hdm.gruppe2.shared.bo.User;
 import de.hdm.gruppe2.shared.bo.UserSubscription;
 
@@ -25,10 +29,13 @@ public class UserSubscriptionOverview extends VerticalPanel {
 	private MsgServiceAsync msgSvc = ClientsideSettings.getMsgService();
 	private ArrayList<User> allUsers = null;
 	private ArrayList<UserSubscription> userSubscriptions = null;
+	private ArrayList<Message> allMessagesOfSubscription = null;
+	private UserSubscription selectedSubscription = null;
 	private User loggedInUser = null;
 	
 	private final ListBox userList = new ListBox();
 	private final ListBox subscriptionsList = new ListBox();
+	private final FlexTable ftPosts = new FlexTable();
 	
 	public UserSubscriptionOverview(User currentUser) {
 		this.loggedInUser = currentUser;
@@ -44,6 +51,19 @@ public class UserSubscriptionOverview extends VerticalPanel {
 		
 		subscriptionsList.setStyleName("listbox");
 		subscriptionsList.setVisibleItemCount(11);
+		subscriptionsList.addChangeHandler(new ChangeHandler() {
+
+			@Override
+			public void onChange(ChangeEvent event) {
+				if(subscriptionsList.getSelectedIndex() == -1) {
+					ClientsideSettings.getLogger().severe("Kein Abo ausgewählt.");
+					return;
+				}
+				
+				selectedSubscription = userSubscriptions.get(subscriptionsList.getSelectedIndex());
+				getAllSubscriptionPosts(selectedSubscription);	
+			}
+		});
 		
 		final Button btnNewSubscription = new Button("Neues Abonnement");
 		btnNewSubscription.setStyleName("newsubs-usersubs");
@@ -66,6 +86,7 @@ public class UserSubscriptionOverview extends VerticalPanel {
 		pnlSubscribeAndUnsubscribe.add(btnUnsubscribe);
 		
 		mainGrid.setWidget(0, 0, subscriptionsList);
+		mainGrid.setWidget(0, 1, ftPosts);
 		mainGrid.setWidget(1, 0, pnlSubscribeAndUnsubscribe);
 		
 		this.add(mainGrid);		
@@ -184,6 +205,36 @@ public class UserSubscriptionOverview extends VerticalPanel {
 				getAllUserSubscriptions();
 				ClientsideSettings.getLogger().finest("UserSubscription wurde angelegt.");	
 			}
+		});
+	}
+	
+	private void getAllSubscriptionPosts(UserSubscription us) {
+		msgSvc.findAllPostsOfUser(us.getSenderId(), new AsyncCallback<ArrayList<Message>> () {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				ClientsideSettings.getLogger().severe("Posts konnten nicht geladen werden.");
+			}
+
+			@Override
+			public void onSuccess(ArrayList<Message> result) {
+				allMessagesOfSubscription = result;
+				
+				ftPosts.clear(true);
+				ftPosts.removeAllRows();
+				
+				for(Message m : allMessagesOfSubscription) {
+					
+					int numOfRows = ftPosts.getRowCount();
+					
+					ftPosts.setText(numOfRows + 1, 0, Integer.toString(m.getUserId()));
+					ftPosts.setText(numOfRows + 1, 1, m.getText());
+					ftPosts.setText(numOfRows + 1, 2, m.getCreationDate().toString());
+
+				}
+				
+				ClientsideSettings.getLogger().finest("Posts wurden geladen.");
+			}	
 		});
 	}
 
