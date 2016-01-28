@@ -4,14 +4,15 @@ public class UserSubscription extends Subscription {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private User sender;	
+	// Fremdschlüssel des Abonnierten
+	private int senderId;	
 	
 	
-	public User getAboUser(){
-		return sender;
+	public int getSenderId(){
+		return senderId;
 	}
 	
-	public void setAboUser(User AboUser){
-		this.sender=AboUser;
+	public void setSenderId(int userId){
+		this.senderId = userId;
 	}
 }

@@ -31,7 +31,6 @@ public class NewPostOverview extends VerticalPanel {
 	
 	private final FlexTable ftPosts = new FlexTable();
 	private final TextArea taPost = new TextArea();
-	private final Button btnPost = new Button("Posten!");
 	
 	public NewPostOverview(User user) {
 		this.loggedInUser = user;
@@ -42,11 +41,13 @@ public class NewPostOverview extends VerticalPanel {
 		this.getAllPosts(ftPosts, loggedInUser.getId());
 
 		final Grid mainGrid = new Grid(3,1);
+		
+		final Button btnPost = new Button("Posten!");
 		btnPost.addClickHandler(new ClickHandler() {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				createPost(taPost.getText(), loggedInUser, null);
+				createPost(taPost.getText(), loggedInUser, HashtagParser.checkForHashtags(taPost.getText()));
 			}
 			
 		});

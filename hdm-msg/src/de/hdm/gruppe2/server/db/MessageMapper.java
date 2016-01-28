@@ -120,7 +120,7 @@ public class MessageMapper {
 			// Zunächst überprüfen ob der Hashtag existiert.
 			if(hashtagmapper.findHashtagByKeyword(hashtag) == null) {
 				// Wenn nicht wird dieser zunächst eingefügt.
-				hashtagmapper.insert(hashtag);
+				hashtag = hashtagmapper.insert(hashtag);
 			}
 			
 			// Erst jetzt können wir erfolgreich mappen.
@@ -140,7 +140,10 @@ public class MessageMapper {
 		
 		try {
 			Statement stmt = con.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM `dbmessenger`.`messagehashtags` WHERE `messageid` = " + message.getId() + "AND `hashtagId` = " + hashtag.getId());
+			ResultSet rs = stmt.executeQuery("SELECT * "
+					+ "FROM `dbmessenger`.`messagehashtags` "
+					+ "WHERE `messagehashtags`.`messageid` = " + message.getId() 
+					+ "AND `messagehashtags`.`hashtagid` = " + hashtag.getId());
 			
 			if(rs.next()) {
 				return true;
@@ -313,6 +316,35 @@ public class MessageMapper {
 				hashtag.setCreationDate(rs.getDate("creationDate"));
 				
 				result.add(hashtag);
+			}
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	public ArrayList<Message> findAllPostsWithHashtag(int hashtagId) {
+		Connection con = DBConnection.connection();
+		ArrayList<Message> result = new ArrayList<Message>();
+		
+		try {
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT `messagehashtags`.`messageId`, `messagehashtags`.`hashtagId`, `message`.`text`, `message`.`autorID`, `message`.`chatId`, `message`.`creationDate` "
+											+ "FROM `messagehashtags` INNER JOIN `message` "
+											+ "ON `messagehashtags`.`messageId` = `message`.`id` "
+											+ "WHERE `message`.`chatId` IS NULL AND `messagehashtags`.`hashtagId` = " + hashtagId);
+			
+			while(rs.next()) {
+				Message message = new Message();
+				message.setId(rs.getInt("messageId"));
+				message.setText(rs.getString("text"));
+				message.setUserId(rs.getInt("autorID"));
+				message.setChatId(-1);
+				message.setHashtagList(getAllHashtagsOfMessage(rs.getInt("messageId")));
+				message.setCreationDate(rs.getDate("creationDate"));
+				
+				result.add(message);
 			}
 			
 		} catch(SQLException e) {

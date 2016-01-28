@@ -1,12 +1,15 @@
 package de.hdm.gruppe2.server;
 
 import de.hdm.gruppe2.server.db.ChatMapper;
+import de.hdm.gruppe2.server.db.HashtagMapper;
+import de.hdm.gruppe2.server.db.HashtagSubscriptionMapper;
 import de.hdm.gruppe2.server.db.MessageMapper;
 import de.hdm.gruppe2.server.db.UserMapper;
 import de.hdm.gruppe2.shared.FieldVerifier;
 import de.hdm.gruppe2.shared.MsgService;
 import de.hdm.gruppe2.shared.bo.Chat;
 import de.hdm.gruppe2.shared.bo.Hashtag;
+import de.hdm.gruppe2.shared.bo.HashtagSubscription;
 import de.hdm.gruppe2.shared.bo.Message;
 import de.hdm.gruppe2.shared.bo.User;
 
@@ -22,6 +25,8 @@ public class MsgServiceImpl extends RemoteServiceServlet implements MsgService {
 
 	private UserMapper usermapper = UserMapper.usermapper();
 	private ChatMapper chatmapper = ChatMapper.chatMapper();
+	private HashtagMapper hashtagmapper = HashtagMapper.hashtagMapper();
+	private HashtagSubscriptionMapper hashtagsubscriptionmapper = HashtagSubscriptionMapper.hashtagSubscriptionMapper();
 	private MessageMapper messagemapper = MessageMapper.messageMapper();
 
 	@Override
@@ -145,5 +150,43 @@ public class MsgServiceImpl extends RemoteServiceServlet implements MsgService {
 	@Override
 	public ArrayList<User> findAllParticipantsOfChat(Chat selectedChat) {
 		return this.chatmapper.getAllParticipantsOfChat(selectedChat);
+	}
+
+	@Override
+	public ArrayList<Hashtag> findAllHashtags() {
+		return this.hashtagmapper.getAllHashtags();
+	}
+
+	@Override
+	public void createHashtagSubscription(Hashtag hashtag, User user) {
+		this.hashtagsubscriptionmapper.insert(hashtag, user);
+	}
+
+	@Override
+	public ArrayList<HashtagSubscription> findAllHashtagSubscriptionsOfUser(User user) {
+		return this.hashtagsubscriptionmapper.findAllHashtagSubscriptionsOfUser(user);
+	}
+
+	@Override
+	public ArrayList<Message> findAllHashtagSubscriptionPosts(int hashtagId) {
+		return this.messagemapper.findAllPostsWithHashtag(hashtagId);
+	}
+
+	@Override
+	public void deleteHashtagSubscription(HashtagSubscription hs) {		
+		this.hashtagsubscriptionmapper.delete(hs.getHashtagId(), hs.getRecipientId());		
+	}
+
+	@Override
+	public Hashtag createHashtag(String keyword) {
+		Hashtag hashtag = new Hashtag();
+		hashtag.setKeyword(keyword);
+		
+		return this.hashtagmapper.insert(hashtag);
+	}
+
+	@Override
+	public void deleteHashtag(Hashtag hashtag) {
+		this.hashtagmapper.delete(hashtag);
 	}
 }

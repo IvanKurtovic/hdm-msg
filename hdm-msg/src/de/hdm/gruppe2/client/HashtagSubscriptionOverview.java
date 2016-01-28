@@ -1,9 +1,15 @@
 package de.hdm.gruppe2.client;
 
+import java.util.ArrayList;
+
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -11,22 +17,52 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
+import de.hdm.gruppe2.shared.MsgServiceAsync;
+import de.hdm.gruppe2.shared.bo.Hashtag;
+import de.hdm.gruppe2.shared.bo.HashtagSubscription;
+import de.hdm.gruppe2.shared.bo.Message;
+import de.hdm.gruppe2.shared.bo.User;
+
 public class HashtagSubscriptionOverview extends VerticalPanel {
 	
-	private String[] hashtags = {"thies", "itprojekt", "ibne2015", "banane", "up0rn"};
+	private MsgServiceAsync msgSvc = ClientsideSettings.getMsgService();
+	private ArrayList<HashtagSubscription> hashtagSubscriptions = null;
+	private ArrayList<Message> allMessagesOfSubscription = null;
+	private ArrayList<Hashtag> allHashtags = null;
+	private HashtagSubscription selectedSubscription = null;
+	private User loggedInUser = null;
+	
+	private final ListBox subscriptionsList = new ListBox();
+	private final ListBox allHashtagsList = new ListBox();
+	private final FlexTable ftPosts = new FlexTable();
+	
+	public HashtagSubscriptionOverview(User currentUser) {
+		this.loggedInUser = currentUser;
+	}
 	
 	@Override
 	public void onLoad() {
 		
+		this.getAllHashtags();
+		this.getAllSubscriptions();
+		
 		final Grid mainGrid = new Grid(2, 2);
 		
-		final ListBox hashtagList = new ListBox();
-		hashtagList.setStyleName("listbox");
-		hashtagList.setVisibleItemCount(11);
-		
-		for(String s : hashtags) {
-			hashtagList.addItem("#" + s);
-		}
+		subscriptionsList.setStyleName("listbox");
+		subscriptionsList.setVisibleItemCount(11);
+		subscriptionsList.addChangeHandler(new ChangeHandler() {
+
+			@Override
+			public void onChange(ChangeEvent event) {
+				if(subscriptionsList.getSelectedIndex() == -1) {
+					ClientsideSettings.getLogger().severe("Kein Abo ausgewählt.");
+					return;
+				}
+				
+				selectedSubscription = hashtagSubscriptions.get(subscriptionsList.getSelectedIndex());
+				getAllSubscriptionPosts(selectedSubscription);
+			}
+		});
 		
 		final Button btnNewSubscription = new Button("Neues Abonnement");
 		btnNewSubscription.setStyleName("newabo-hashtagabo");
@@ -40,14 +76,41 @@ public class HashtagSubscriptionOverview extends VerticalPanel {
 				dialogBox.center();
 			}
 		});
+		
+		final Button btnRefresh = new Button("Refresh");
+		btnRefresh.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				getAllHashtags();
+				getAllSubscriptions();
+			}
+			
+		});
+		
 		final Button btnUnsubscribe = new Button("Deabonnieren");
 		btnUnsubscribe.setStyleName("unsubs-hashtagabo");
+		btnUnsubscribe.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				if(subscriptionsList.getSelectedIndex() == -1) {
+					ClientsideSettings.getLogger().severe("Kein Abo ausgewählt.");
+					return;
+				}
+				
+				unsubscribe(selectedSubscription);
+				getAllSubscriptions();
+			}
+		});
 		
 		final HorizontalPanel pnlSubscribeAndUnsubscribe = new HorizontalPanel();
 		pnlSubscribeAndUnsubscribe.add(btnNewSubscription);
+		pnlSubscribeAndUnsubscribe.add(btnRefresh);
 		pnlSubscribeAndUnsubscribe.add(btnUnsubscribe);
 		
-		mainGrid.setWidget(0, 0, hashtagList);
+		mainGrid.setWidget(0, 0, subscriptionsList);
+		mainGrid.setWidget(0, 1, ftPosts);
 		mainGrid.setWidget(1, 0, pnlSubscribeAndUnsubscribe);
 		
 		this.add(mainGrid);		
@@ -63,19 +126,60 @@ public class HashtagSubscriptionOverview extends VerticalPanel {
 		
 		final Label lblTitle = new Label("Neues Hashtag-Abo");
 		lblTitle.addStyleName("popup-title");
-		final TextBox tbSearch = new TextBox();
-		final Button btnSearch = new Button("Suchen");
+		final TextBox tbCreateHashtag = new TextBox();
+		final Button btnCreateHashtag = new Button("Hashtag anlegen");
+		btnCreateHashtag.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				String keyword = tbCreateHashtag.getText();				
+				keyword = keyword.replaceAll("#", " ");
+				keyword = keyword.trim();
+				
+				if(!keyword.isEmpty()) {
+					createHashtag(keyword);
+				}
+			}
+		});
+		
+		final Button btnDeleteHashtag = new Button("Hashtag löschen");
+		btnDeleteHashtag.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				if(allHashtagsList.getSelectedIndex() == -1) {
+					ClientsideSettings.getLogger().severe("Kein Hashtag ausgewählt.");
+					return;
+				}
+				
+				deleteHashtag(allHashtags.get(allHashtagsList.getSelectedIndex()));
+			}
+		});
 		
 		final HorizontalPanel pnlSearchControls = new HorizontalPanel();
-		pnlSearchControls.add(tbSearch);
-		pnlSearchControls.add(btnSearch);
-		
-		final ListBox hashtagList = new ListBox();
-		hashtagList.setStyleName("listbox");
-		hashtagList.setVisibleItemCount(5);
+		pnlSearchControls.add(tbCreateHashtag);
+		pnlSearchControls.add(btnCreateHashtag);
+		pnlSearchControls.add(btnDeleteHashtag);
+
+		allHashtagsList.setStyleName("listbox");
+		allHashtagsList.setVisibleItemCount(11);
 		
 		final Button btnSubscribe = new Button("Abonnieren");
 		btnSubscribe.setStyleName("popup-abo-hashtagabo");
+		btnSubscribe.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				if(allHashtagsList.getSelectedIndex() == -1) {
+					ClientsideSettings.getLogger().severe("Kein Hashtag ausgewählt.");
+					return;
+				}
+				
+				subscribe(allHashtags.get(allHashtagsList.getSelectedIndex()));
+				dialogBox.hide();
+			}
+		});		
+
 		final Button btnCancel = new Button("Abbrechen");
 		btnCancel.setStyleName("popup-cancel-hashtagabo");
 		btnCancel.addClickHandler(new ClickHandler() {
@@ -92,11 +196,160 @@ public class HashtagSubscriptionOverview extends VerticalPanel {
 		
 		mainGrid.setWidget(0, 0, lblTitle);
 		mainGrid.setWidget(1, 0, pnlSearchControls);
-		mainGrid.setWidget(2, 0, hashtagList);
+		mainGrid.setWidget(2, 0, allHashtagsList);
 		mainGrid.setWidget(3, 0, pnlSubscriptionControls);
 		
 		dialogBox.add(mainGrid);
 		
 		return dialogBox;		
+	}
+	
+	private void subscribe(Hashtag hashtag) {
+		msgSvc.createHashtagSubscription(hashtag, loggedInUser, new AsyncCallback<Void>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				ClientsideSettings.getLogger().severe("Abonnement konnte nicht eingerichtet werden.");
+			}
+
+			@Override
+			public void onSuccess(Void result) {
+				getAllSubscriptions();
+				ClientsideSettings.getLogger().finest("Abonnement wurde erfolgreich eingerichtet.");
+			}
+		});
+	}
+	
+	
+	private void unsubscribe(HashtagSubscription hs) {		
+		msgSvc.deleteHashtagSubscription(hs, new AsyncCallback<Void>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				ClientsideSettings.getLogger().severe("Abonnement konnte nicht gekündigt werden.");
+			}
+
+			@Override
+			public void onSuccess(Void result) {
+				getAllSubscriptions();
+				ClientsideSettings.getLogger().finest("Abonnement wurde erfolgreich gekündigt.");
+			}
+			
+		});
+	}
+	
+	private void getAllHashtags() {
+		msgSvc.findAllHashtags(new AsyncCallback<ArrayList<Hashtag>>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				ClientsideSettings.getLogger().severe("Hashtags konnten nicht geladen werden.");
+			}
+
+			@Override
+			public void onSuccess(ArrayList<Hashtag> result) {
+				allHashtags = result;
+				
+				allHashtagsList.clear();
+				
+				for(Hashtag h : allHashtags) {
+					allHashtagsList.addItem("#" + h.getKeyword());
+				}
+				
+				ClientsideSettings.getLogger().finest("Alle Hashtags geladen.");
+			}
+		});
+	}
+	
+	private void getAllSubscriptions() {
+		msgSvc.findAllHashtagSubscriptionsOfUser(loggedInUser, new AsyncCallback<ArrayList<HashtagSubscription>> () {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				ClientsideSettings.getLogger().severe("Abonnements konnten nicht geladen werden.");
+			}
+
+			@Override
+			public void onSuccess(ArrayList<HashtagSubscription> result) {
+				hashtagSubscriptions = result;
+				
+				subscriptionsList.clear();
+				
+				for(HashtagSubscription hs : hashtagSubscriptions) {
+					for(Hashtag h : allHashtags) {
+						if(h.getId() == hs.getHashtagId()) {
+							subscriptionsList.addItem("#" + h.getKeyword());	
+						}
+					}
+				}
+				
+				ClientsideSettings.getLogger().finest("Alle Hashtags geladen.");
+			}
+		});
+	}
+	
+	private void getAllSubscriptionPosts(HashtagSubscription subscription) {
+		msgSvc.findAllHashtagSubscriptionPosts(subscription.getHashtagId(), new AsyncCallback<ArrayList<Message>> () {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				ClientsideSettings.getLogger().severe("Posts des Abonnements konnten nicht geladen werden.");
+			}
+
+			@Override
+			public void onSuccess(ArrayList<Message> result) {
+				allMessagesOfSubscription = result;
+				
+				ftPosts.clear(true);
+				ftPosts.removeAllRows();
+				
+				for(Message m : allMessagesOfSubscription) {
+					
+					int numOfRows = ftPosts.getRowCount();
+					
+					ftPosts.setText(numOfRows + 1, 0, Integer.toString(m.getUserId()));
+					ftPosts.setText(numOfRows + 1, 1, m.getText());
+					ftPosts.setText(numOfRows + 1, 2, m.getCreationDate().toString());
+
+				}
+				
+				ClientsideSettings.getLogger().finest("Alle Posts des Abonnements geladen.");
+			}
+		});
+	}
+	
+	private void createHashtag(String keyword) {
+		msgSvc.createHashtag(keyword, new AsyncCallback<Hashtag>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				ClientsideSettings.getLogger().severe("Hashtag erfolgreich angelegt.");
+			}
+
+			@Override
+			public void onSuccess(Hashtag result) {
+				getAllHashtags();
+				ClientsideSettings.getLogger().finest("Hashtag wurde erfolgreich angelegt.");
+			}
+			
+		});
+	}
+	
+	private void deleteHashtag(Hashtag hashtag) {
+		msgSvc.deleteHashtag(hashtag, new AsyncCallback<Void> () {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				ClientsideSettings.getLogger().severe("Hashtag erfolgreich gelöscht.");
+			}
+
+			@Override
+			public void onSuccess(Void result) {
+				getAllHashtags();
+				getAllSubscriptions();
+				ClientsideSettings.getLogger().finest("Hashtag wurde erfolgreich gelöscht.");
+			}
+			
+		});
 	}
 }

@@ -4,15 +4,15 @@ public class Subscription extends BusinessObject {
 
 	private static final long serialVersionUID = 1L;	
 	
-	private User recipient; 
+	private int recipientId; 
 	
 	
-	public User getUser(){
-		return recipient;
+	public int getRecipientId(){
+		return recipientId;
 		
 	}
 	
-	public void setUser(User recipient){
-		this.recipient=recipient;
+	public void setRecipientId(int recipientId){
+		this.recipientId = recipientId;
 	}
 }

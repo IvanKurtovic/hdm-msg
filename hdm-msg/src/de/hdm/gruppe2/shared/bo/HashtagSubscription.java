@@ -4,15 +4,13 @@ public class HashtagSubscription extends Subscription {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private Hashtag hashtag;
-
+	private int hashtagId;
 	
-	public Hashtag getHashtag(){
-		return hashtag;
-		}
+	public int getHashtagId(){
+		return hashtagId;
+	}
 	
-	public void setHashtag(Hashtag aboHashtag){
-		this.hashtag=aboHashtag;
-		
+	public void setHashtagId(int hashtagId){
+		this.hashtagId = hashtagId;
 	}
 }

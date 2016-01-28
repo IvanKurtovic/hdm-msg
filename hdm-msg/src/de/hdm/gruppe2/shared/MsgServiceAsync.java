@@ -6,6 +6,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import de.hdm.gruppe2.shared.bo.Chat;
 import de.hdm.gruppe2.shared.bo.Hashtag;
+import de.hdm.gruppe2.shared.bo.HashtagSubscription;
 import de.hdm.gruppe2.shared.bo.Message;
 import de.hdm.gruppe2.shared.bo.User;
 
@@ -50,4 +51,18 @@ public interface MsgServiceAsync {
 	void findAllMessagesOfChat(Chat selectedChat, AsyncCallback<ArrayList<Message>> callback);
 
 	void findAllParticipantsOfChat(Chat selectedChat, AsyncCallback<ArrayList<User>> callback);
+
+	void findAllHashtags(AsyncCallback<ArrayList<Hashtag>> callback);
+
+	void createHashtagSubscription(Hashtag hashtag, User user, AsyncCallback<Void> callback);
+
+	void deleteHashtagSubscription(HashtagSubscription hs, AsyncCallback<Void> callback);
+	
+	void findAllHashtagSubscriptionsOfUser(User user, AsyncCallback<ArrayList<HashtagSubscription>> callback);
+
+	void findAllHashtagSubscriptionPosts(int hashtagId, AsyncCallback<ArrayList<Message>> callback);
+
+	void createHashtag(String keyword, AsyncCallback<Hashtag> callback);
+
+	void deleteHashtag(Hashtag hashtag, AsyncCallback<Void> callback);
 }

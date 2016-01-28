@@ -1,5 +1,6 @@
 package de.hdm.gruppe2.server.db;
 
+import java.util.ArrayList;
 import java.util.Vector;
 import java.sql.*;
 import de.hdm.gruppe2.shared.bo.*;
@@ -130,8 +131,27 @@ public class HashtagMapper {
 		return null;
 	}
 	
-	public Vector<Hashtag> getAllHashtags() {
-		// TODO Abfrage implementieren sobald die Datenbankstruktur steht.
-		return null;
+	public ArrayList<Hashtag> getAllHashtags() {
+		Connection con = DBConnection.connection();
+		ArrayList<Hashtag> allHashtags = new ArrayList<Hashtag>();
+		
+		try {
+	      Statement stmt = con.createStatement();
+	      ResultSet rs = stmt.executeQuery("SELECT * FROM `dbmessenger`.`hashtag`");
+	      
+	      while(rs.next()) {
+	    	  Hashtag hashtag = new Hashtag();
+	    	  
+	    	  hashtag.setId(rs.getInt("id"));
+	    	  hashtag.setKeyword(rs.getString("text"));
+	    	  hashtag.setCreationDate(rs.getDate("creationDate"));
+	    	  
+	    	  allHashtags.add(hashtag);
+	      }
+	    }
+	    catch (SQLException e) {
+	      e.printStackTrace();
+	    }
+		return allHashtags;
 	}
 }

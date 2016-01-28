@@ -7,6 +7,7 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 import de.hdm.gruppe2.shared.bo.Chat;
 import de.hdm.gruppe2.shared.bo.Hashtag;
+import de.hdm.gruppe2.shared.bo.HashtagSubscription;
 import de.hdm.gruppe2.shared.bo.Message;
 import de.hdm.gruppe2.shared.bo.User;
 
@@ -51,4 +52,18 @@ public interface MsgService extends RemoteService {
 	public ArrayList<Message> findAllMessagesOfChat(Chat selectedChat);
 	
 	public ArrayList<User> findAllParticipantsOfChat(Chat selectedChat);
+	
+	public ArrayList<Hashtag> findAllHashtags();
+	
+	public Hashtag createHashtag(String keyword);
+	
+	public void deleteHashtag(Hashtag hashtag);
+	
+	public void createHashtagSubscription(Hashtag hashtag, User user);
+	
+	public void deleteHashtagSubscription(HashtagSubscription hs);
+	
+	public ArrayList<HashtagSubscription> findAllHashtagSubscriptionsOfUser(User user);
+	
+	public ArrayList<Message> findAllHashtagSubscriptionPosts(int hashtagId);
 }
