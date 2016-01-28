@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Map;
 
 import de.hdm.gruppe2.shared.bo.Chat;
 import de.hdm.gruppe2.shared.bo.Message;
@@ -50,6 +51,34 @@ public class ChatMapper {
   		      e2.printStackTrace();
   		}
   		return chat;
+	}
+	
+	public boolean chatExists(Chat chat) {
+	
+		// TODO: CHECK OB DER CHAT BEREITS EXISTIERT ODER NICHT.
+		return false;
+		
+	}
+	
+	public boolean isParticipantOfChat(Chat chat, User participant) {
+		Connection con = DBConnection.connection();
+		
+		try {
+			
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM `chatparticipants` WHERE `chatId` = " + chat.getId() + " AND `userId` = " + participant.getId());
+		  
+			if(rs.next()){
+				return true;
+		    }
+
+			stmt.close();
+			rs.close();
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
+		return false;
 	}
 	
 	public void insertChatParticipant(User participant, Chat chat) {
@@ -109,32 +138,6 @@ public class ChatMapper {
 		} catch (SQLException e2) {
 			e2.printStackTrace();
 		}
-	}
-
-	public Chat findAllChatsOfUser (int id) {
-		 			
-		Connection con = DBConnection.connection();
-		Chat chat = new Chat();
-		
-		try {
-			
-			Statement stmt = con.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM `chat` WHERE id="+ id);
-		  
-			if(rs.next()){
-				chat.setId(rs.getInt("id"));
-				chat.setName(rs.getString("name"));
-			   	chat.setCreationDate(rs.getDate("creationDate"));
-		    }
-
-			stmt.close();
-			rs.close();
-		}
-		catch(SQLException e){
-			e.printStackTrace();
-		}
-
-		return chat;
 	}
 	
 	public ArrayList<Chat> getAllChats() {

@@ -59,6 +59,52 @@ public class NewPostOverview extends VerticalPanel {
 		this.add(mainGrid);
 	}
 	
+	private DialogBox editPostDialog(final Message post) {
+
+		final DialogBox dialogBox = new DialogBox();
+		dialogBox.setStyleName("dialogbox-user");
+		dialogBox.setGlassEnabled(true);
+		dialogBox.setAnimationEnabled(true);
+		
+		final Grid mainGrid = new Grid(3, 2);
+		
+		final Label lblTitle = new Label("Post bearbeiten");
+		final Label lblText = new Label("Text:");
+		final TextBox tbText = new TextBox();
+		
+		final Button btnSave = new Button("Speichern");
+		btnSave.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				post.setText(tbText.getText());
+				savePost(post);
+				dialogBox.hide();
+			}
+			
+		});
+		
+		final Button btnCancel = new Button("Abbrechen");
+		btnCancel.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				dialogBox.hide();
+			}
+			
+		});
+		
+		mainGrid.setWidget(0, 0, lblTitle);
+		mainGrid.setWidget(1, 0, lblText);
+		mainGrid.setWidget(1, 1, tbText);
+		mainGrid.setWidget(2, 0, btnSave);
+		mainGrid.setWidget(2, 1, btnCancel);
+		
+		dialogBox.add(mainGrid);
+		
+		return dialogBox;
+	}
+	
 	private void createPost(String text, User currentUser, ArrayList<Hashtag> hashtagList) {
 		msgSvc.createPost(text, currentUser, hashtagList, new AsyncCallback<Message> () {
 
@@ -130,52 +176,6 @@ public class NewPostOverview extends VerticalPanel {
 			}
 
 		});
-	}
-	
-	private DialogBox editPostDialog(final Message post) {
-
-		final DialogBox dialogBox = new DialogBox();
-		dialogBox.setStyleName("dialogbox-user");
-		dialogBox.setGlassEnabled(true);
-		dialogBox.setAnimationEnabled(true);
-		
-		final Grid mainGrid = new Grid(3, 2);
-		
-		final Label lblTitle = new Label("Post bearbeiten");
-		final Label lblText = new Label("Text:");
-		final TextBox tbText = new TextBox();
-		
-		final Button btnSave = new Button("Speichern");
-		btnSave.addClickHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-				post.setText(tbText.getText());
-				savePost(post);
-				dialogBox.hide();
-			}
-			
-		});
-		
-		final Button btnCancel = new Button("Abbrechen");
-		btnCancel.addClickHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-				dialogBox.hide();
-			}
-			
-		});
-		
-		mainGrid.setWidget(0, 0, lblTitle);
-		mainGrid.setWidget(1, 0, lblText);
-		mainGrid.setWidget(1, 1, tbText);
-		mainGrid.setWidget(2, 0, btnSave);
-		mainGrid.setWidget(2, 1, btnCancel);
-		
-		dialogBox.add(mainGrid);
-		
-		return dialogBox;
 	}
 	
 	private void deletePost(int postId, final int flexTableRow) {

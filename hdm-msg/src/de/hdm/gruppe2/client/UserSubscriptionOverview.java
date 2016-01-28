@@ -6,6 +6,7 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
@@ -17,7 +18,9 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
+import de.hdm.gruppe2.shared.HashtagParser;
 import de.hdm.gruppe2.shared.MsgServiceAsync;
+import de.hdm.gruppe2.shared.bo.Chat;
 import de.hdm.gruppe2.shared.bo.Hashtag;
 import de.hdm.gruppe2.shared.bo.HashtagSubscription;
 import de.hdm.gruppe2.shared.bo.Message;
@@ -167,6 +170,63 @@ public class UserSubscriptionOverview extends VerticalPanel {
 		return dialogBox;		
 	}
 	
+	private DialogBox replyDialog(Message post, final User replyUser) {
+		
+		final DialogBox dialogBox = new DialogBox();
+		dialogBox.setGlassEnabled(true);
+		dialogBox.setAnimationEnabled(true);
+		
+		final Grid mainGrid = new Grid(3,1);
+		
+		final Label lblTitle = new Label("Anworten");
+		lblTitle.addStyleName("popup-title");
+		
+		final Grid messageInfo = new Grid(1, 3);
+		messageInfo.setText(0, 0, replyUser.getNickname());
+		messageInfo.setText(0, 1, post.getText());
+		messageInfo.setText(0, 2, post.getCreationDate().toString());
+		
+		final TextBox tbReplyText = new TextBox();
+		final Button btnSendReply = new Button("Antworten");
+		btnSendReply.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				String replyText = tbReplyText.getText();
+				
+				if(replyText.isEmpty()) {
+					ClientsideSettings.getLogger().severe("Keine Nachricht eingegeben.");
+					return;
+				}
+				
+				createRecipientChatAndSendReply(replyUser, replyText);
+				dialogBox.hide();
+			}
+		});
+		
+		final Button btnCancel = new Button("Abbrechen");
+		btnCancel.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				dialogBox.hide();
+			}
+		});
+		
+		final HorizontalPanel pnlReply = new HorizontalPanel();
+		pnlReply.add(tbReplyText);
+		pnlReply.add(btnSendReply);
+		pnlReply.add(btnCancel);
+		
+		mainGrid.setWidget(0, 0, lblTitle);
+		mainGrid.setWidget(1, 0, messageInfo);
+		mainGrid.setWidget(2, 0, pnlReply);
+		
+		dialogBox.add(mainGrid);
+		
+		return dialogBox;
+	}
+	
 	private void getAllUsers() {
 		msgSvc.findAllUserWithoutLoggedInUser(loggedInUser, new AsyncCallback<ArrayList<User>>() {
 
@@ -266,13 +326,39 @@ public class UserSubscriptionOverview extends VerticalPanel {
 				ftPosts.clear(true);
 				ftPosts.removeAllRows();
 				
+				int numOfRows = ftPosts.getRowCount();
+				
 				for(Message m : allMessagesOfSubscription) {
 					
-					int numOfRows = ftPosts.getRowCount();
+					numOfRows++;
 					
-					ftPosts.setText(numOfRows + 1, 0, Integer.toString(m.getUserId()));
-					ftPosts.setText(numOfRows + 1, 1, m.getText());
-					ftPosts.setText(numOfRows + 1, 2, m.getCreationDate().toString());
+					final Button btnReply = new Button("Antworten");
+					btnReply.addClickHandler(new ClickHandler() {
+
+						@Override
+						public void onClick(ClickEvent event) {
+							int rowIndex = ftPosts.getCellForEvent(event).getRowIndex();
+							int messageIndex = rowIndex - 1;
+							Message replyPost = allMessagesOfSubscription.get(messageIndex);
+							User replyUser = null;
+							
+							for(User u : allUsers) {
+								if(u.getId() == replyPost.getUserId()) {
+									replyUser = u;
+								}
+							}
+
+							DialogBox dialogBox = replyDialog(replyPost, replyUser);
+							dialogBox.setStyleName("dialogbox-usersubs");
+							dialogBox.show();
+							dialogBox.center();
+						}
+					});
+					
+					ftPosts.setText(numOfRows, 0, Integer.toString(m.getUserId()));
+					ftPosts.setText(numOfRows, 1, m.getText());
+					ftPosts.setText(numOfRows, 2, m.getCreationDate().toString());
+					ftPosts.setWidget(numOfRows, 3, btnReply);
 
 				}
 				
@@ -280,5 +366,45 @@ public class UserSubscriptionOverview extends VerticalPanel {
 			}	
 		});
 	}
+	
+	private void createRecipientChatAndSendReply(User recipient, final String text) {
+		// Da es nur zwischen dem Poster und dem User laufen soll brauchen
+		// wir nur die beiden als Empfänger.
+		ArrayList<User> chatParticipants = new ArrayList<User>();
+		chatParticipants.add(recipient);
+		chatParticipants.add(loggedInUser);
+		
+		msgSvc.createChat(chatParticipants, new AsyncCallback<Chat>() {
 
+			@Override
+			public void onFailure(Throwable caught) {
+				ClientsideSettings.getLogger().severe("Chat konnte nicht gefunden oder angelegt werden.");
+			}
+
+			@Override
+			public void onSuccess(Chat result) {
+				if(result != null) {
+					sendReplyToUser(result, text);		
+				}
+				ClientsideSettings.getLogger().finest("Chat gefunden, Antwort wird vorbereitet...");
+			}
+			
+		});
+	}
+
+	private void sendReplyToUser(Chat recipient, String text) {
+		msgSvc.sendMessage(text, loggedInUser, recipient, HashtagParser.checkForHashtags(text), new AsyncCallback<Message>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				ClientsideSettings.getLogger().severe("Antwort konnte nicht versendet werden.");
+			}
+
+			@Override
+			public void onSuccess(Message result) {
+				ClientsideSettings.getLogger().finest("Antwort erfolgreich versendet.");
+			}
+			
+		});
+	}
 }
