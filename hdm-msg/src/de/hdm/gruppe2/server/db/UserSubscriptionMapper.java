@@ -76,4 +76,18 @@ public class UserSubscriptionMapper {
 		return subscriptions;
 	}
 	
+	public void delete(int senderId, int recipientId) {
+		Connection con = DBConnection.connection();
+		
+		try {			
+			Statement stmt = con.createStatement();			
+			stmt.executeUpdate("DELETE FROM `dbmessenger`.`usersubscription` WHERE `posterId` = " 
+			+ senderId + " AND `subscriberId` = " 
+			+ recipientId);
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 }

@@ -71,4 +71,6 @@ public interface MsgService extends RemoteService {
 	public void createUserSubscription(User sender, User subscriber);
 	
 	public ArrayList<UserSubscription> findAllUserSubscriptionsOfUser(User user);
+	
+	public void deleteUserSubscription(UserSubscription us);
 }

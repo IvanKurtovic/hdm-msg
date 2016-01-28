@@ -78,11 +78,35 @@ public class UserSubscriptionOverview extends VerticalPanel {
 			}
 		});
 		
+		final Button btnRefresh = new Button("Refresh");
+		btnRefresh.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				getAllUsers();
+				getAllUserSubscriptions();
+			}
+		});
+		
 		final Button btnUnsubscribe = new Button("Deabonnieren");
 		btnUnsubscribe.setStyleName("unsubs-usersubs");
+		btnUnsubscribe.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				if(subscriptionsList.getSelectedIndex() == -1) {
+					ClientsideSettings.getLogger().severe("Kein Abo ausgewählt.");
+					return;
+				}
+				
+				unsubscribe(selectedSubscription);
+			}
+			
+		});
 		
 		final HorizontalPanel pnlSubscribeAndUnsubscribe = new HorizontalPanel();
 		pnlSubscribeAndUnsubscribe.add(btnNewSubscription);
+		pnlSubscribeAndUnsubscribe.add(btnRefresh);
 		pnlSubscribeAndUnsubscribe.add(btnUnsubscribe);
 		
 		mainGrid.setWidget(0, 0, subscriptionsList);
@@ -155,6 +179,8 @@ public class UserSubscriptionOverview extends VerticalPanel {
 			public void onSuccess(ArrayList<User> result) {
 				allUsers = result;
 				
+				userList.clear();
+				
 				for(User u : allUsers) {
 					userList.addItem(u.getNickname());
 				}
@@ -205,6 +231,23 @@ public class UserSubscriptionOverview extends VerticalPanel {
 				getAllUserSubscriptions();
 				ClientsideSettings.getLogger().finest("UserSubscription wurde angelegt.");	
 			}
+		});
+	}
+	
+	private void unsubscribe(UserSubscription us) {
+		msgSvc.deleteUserSubscription(selectedSubscription, new AsyncCallback<Void>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				ClientsideSettings.getLogger().severe("Abonnement konnte nicht gekündigt werden.");
+			}
+
+			@Override
+			public void onSuccess(Void result) {
+				getAllUserSubscriptions();
+				ClientsideSettings.getLogger().finest("Abonnement wurde erfolgreich gekündigt.");
+			}
+			
 		});
 	}
 	

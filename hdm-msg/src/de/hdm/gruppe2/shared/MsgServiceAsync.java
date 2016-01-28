@@ -70,4 +70,6 @@ public interface MsgServiceAsync {
 	void createUserSubscription(User sender, User subscriber, AsyncCallback<Void> callback);
 
 	void findAllUserSubscriptionsOfUser(User user, AsyncCallback<ArrayList<UserSubscription>> callback);
+
+	void deleteUserSubscription(UserSubscription us, AsyncCallback<Void> callback);
 }
