@@ -15,16 +15,20 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import de.hdm.gruppe2.shared.MsgServiceAsync;
+import de.hdm.gruppe2.shared.bo.Hashtag;
+import de.hdm.gruppe2.shared.bo.HashtagSubscription;
 import de.hdm.gruppe2.shared.bo.User;
+import de.hdm.gruppe2.shared.bo.UserSubscription;
 
 public class UserSubscriptionOverview extends VerticalPanel {
 	
 	private MsgServiceAsync msgSvc = ClientsideSettings.getMsgService();
 	private ArrayList<User> allUsers = null;
+	private ArrayList<UserSubscription> userSubscriptions = null;
 	private User loggedInUser = null;
 	
 	private final ListBox userList = new ListBox();
-	private final ListBox userSubscriptionList = new ListBox();
+	private final ListBox subscriptionsList = new ListBox();
 	
 	public UserSubscriptionOverview(User currentUser) {
 		this.loggedInUser = currentUser;
@@ -33,12 +37,13 @@ public class UserSubscriptionOverview extends VerticalPanel {
 	@Override
 	public void onLoad() {
 		
+		this.getAllUserSubscriptions();
 		this.getAllUsers();
 		
 		final Grid mainGrid = new Grid(2, 2);
 		
-		userSubscriptionList.setStyleName("listbox");
-		userSubscriptionList.setVisibleItemCount(11);
+		subscriptionsList.setStyleName("listbox");
+		subscriptionsList.setVisibleItemCount(11);
 		
 		final Button btnNewSubscription = new Button("Neues Abonnement");
 		btnNewSubscription.setStyleName("newsubs-usersubs");
@@ -52,6 +57,7 @@ public class UserSubscriptionOverview extends VerticalPanel {
 				dialogBox.center();
 			}
 		});
+		
 		final Button btnUnsubscribe = new Button("Deabonnieren");
 		btnUnsubscribe.setStyleName("unsubs-usersubs");
 		
@@ -59,7 +65,7 @@ public class UserSubscriptionOverview extends VerticalPanel {
 		pnlSubscribeAndUnsubscribe.add(btnNewSubscription);
 		pnlSubscribeAndUnsubscribe.add(btnUnsubscribe);
 		
-		mainGrid.setWidget(0, 0, userSubscriptionList);
+		mainGrid.setWidget(0, 0, subscriptionsList);
 		mainGrid.setWidget(1, 0, pnlSubscribeAndUnsubscribe);
 		
 		this.add(mainGrid);		
@@ -138,7 +144,31 @@ public class UserSubscriptionOverview extends VerticalPanel {
 	}
 	
 	private void getAllUserSubscriptions() {
-		// TODO RPC-Methode zum laden aller Userabos schreiben.
+		msgSvc.findAllUserSubscriptionsOfUser(loggedInUser, new AsyncCallback<ArrayList<UserSubscription>> () {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				ClientsideSettings.getLogger().severe("UserSubscriptions konnten nicht geladen werden.");
+			}
+
+			@Override
+			public void onSuccess(ArrayList<UserSubscription> result) {
+				userSubscriptions = result;
+				
+				subscriptionsList.clear();
+				
+				for(UserSubscription us : userSubscriptions) {
+					for(User u : allUsers) {
+						if(u.getId() == us.getSenderId()) {
+							subscriptionsList.addItem(u.getNickname());
+						}
+					}
+				}
+				
+				ClientsideSettings.getLogger().finest("UserSubscriptions wurden geladen.");	
+			}
+			
+		});
 	}
 	
 	private void subscribe(User user) {

@@ -4,8 +4,10 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import de.hdm.gruppe2.shared.bo.HashtagSubscription;
+import de.hdm.gruppe2.shared.bo.User;
 import de.hdm.gruppe2.shared.bo.UserSubscription;
 
 public class UserSubscriptionMapper {
@@ -52,6 +54,26 @@ public class UserSubscriptionMapper {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	public ArrayList<UserSubscription> findAllUserSubscriptionsOfUser(User user) {
+		Connection con = DBConnection.connection();
+		ArrayList<UserSubscription> subscriptions = new ArrayList<UserSubscription>();
+		
+		try {
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM `dbmessenger`.`usersubscription` WHERE `subscriberId` = " + user.getId());
+			
+			while(rs.next()) {
+				UserSubscription us = new UserSubscription();
+				us.setSenderId(rs.getInt("posterId"));
+				us.setRecipientId(rs.getInt("subscriberId"));		
+				subscriptions.add(us);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return subscriptions;
 	}
 	
 }

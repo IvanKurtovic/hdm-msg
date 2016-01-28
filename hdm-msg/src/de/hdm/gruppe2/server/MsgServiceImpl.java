@@ -201,4 +201,9 @@ public class MsgServiceImpl extends RemoteServiceServlet implements MsgService {
 		
 		this.usersubscriptionmapper.insert(us);
 	}
+
+	@Override
+	public ArrayList<UserSubscription> findAllUserSubscriptionsOfUser(User user) {
+		return this.usersubscriptionmapper.findAllUserSubscriptionsOfUser(user);
+	}
 }

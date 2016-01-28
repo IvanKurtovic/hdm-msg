@@ -10,6 +10,7 @@ import de.hdm.gruppe2.shared.bo.Hashtag;
 import de.hdm.gruppe2.shared.bo.HashtagSubscription;
 import de.hdm.gruppe2.shared.bo.Message;
 import de.hdm.gruppe2.shared.bo.User;
+import de.hdm.gruppe2.shared.bo.UserSubscription;
 
 /**
  * The client-side stub for the RPC service.
@@ -68,4 +69,6 @@ public interface MsgService extends RemoteService {
 	public ArrayList<Message> findAllHashtagSubscriptionPosts(int hashtagId);
 	
 	public void createUserSubscription(User sender, User subscriber);
+	
+	public ArrayList<UserSubscription> findAllUserSubscriptionsOfUser(User user);
 }

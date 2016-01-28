@@ -43,8 +43,8 @@ public class HashtagSubscriptionOverview extends VerticalPanel {
 	@Override
 	public void onLoad() {
 		
-		this.getAllHashtags();
 		this.getAllSubscriptions();
+		this.getAllHashtags();
 		
 		final Grid mainGrid = new Grid(2, 2);
 		

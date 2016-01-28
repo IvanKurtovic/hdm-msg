@@ -9,6 +9,7 @@ import de.hdm.gruppe2.shared.bo.Hashtag;
 import de.hdm.gruppe2.shared.bo.HashtagSubscription;
 import de.hdm.gruppe2.shared.bo.Message;
 import de.hdm.gruppe2.shared.bo.User;
+import de.hdm.gruppe2.shared.bo.UserSubscription;
 
 /**
  * The async counterpart of <code>MsgService</code>.
@@ -67,4 +68,6 @@ public interface MsgServiceAsync {
 	void deleteHashtag(Hashtag hashtag, AsyncCallback<Void> callback);
 
 	void createUserSubscription(User sender, User subscriber, AsyncCallback<Void> callback);
+
+	void findAllUserSubscriptionsOfUser(User user, AsyncCallback<ArrayList<UserSubscription>> callback);
 }
