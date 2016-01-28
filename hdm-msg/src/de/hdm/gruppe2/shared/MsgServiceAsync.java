@@ -65,4 +65,6 @@ public interface MsgServiceAsync {
 	void createHashtag(String keyword, AsyncCallback<Hashtag> callback);
 
 	void deleteHashtag(Hashtag hashtag, AsyncCallback<Void> callback);
+
+	void createUserSubscription(User sender, User subscriber, AsyncCallback<Void> callback);
 }

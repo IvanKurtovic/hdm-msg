@@ -5,6 +5,7 @@ import de.hdm.gruppe2.server.db.HashtagMapper;
 import de.hdm.gruppe2.server.db.HashtagSubscriptionMapper;
 import de.hdm.gruppe2.server.db.MessageMapper;
 import de.hdm.gruppe2.server.db.UserMapper;
+import de.hdm.gruppe2.server.db.UserSubscriptionMapper;
 import de.hdm.gruppe2.shared.FieldVerifier;
 import de.hdm.gruppe2.shared.MsgService;
 import de.hdm.gruppe2.shared.bo.Chat;
@@ -12,6 +13,7 @@ import de.hdm.gruppe2.shared.bo.Hashtag;
 import de.hdm.gruppe2.shared.bo.HashtagSubscription;
 import de.hdm.gruppe2.shared.bo.Message;
 import de.hdm.gruppe2.shared.bo.User;
+import de.hdm.gruppe2.shared.bo.UserSubscription;
 
 import java.util.ArrayList;
 
@@ -27,6 +29,7 @@ public class MsgServiceImpl extends RemoteServiceServlet implements MsgService {
 	private ChatMapper chatmapper = ChatMapper.chatMapper();
 	private HashtagMapper hashtagmapper = HashtagMapper.hashtagMapper();
 	private HashtagSubscriptionMapper hashtagsubscriptionmapper = HashtagSubscriptionMapper.hashtagSubscriptionMapper();
+	private UserSubscriptionMapper usersubscriptionmapper = UserSubscriptionMapper.userSubscriptionMapper();
 	private MessageMapper messagemapper = MessageMapper.messageMapper();
 
 	@Override
@@ -188,5 +191,14 @@ public class MsgServiceImpl extends RemoteServiceServlet implements MsgService {
 	@Override
 	public void deleteHashtag(Hashtag hashtag) {
 		this.hashtagmapper.delete(hashtag);
+	}
+
+	@Override
+	public void createUserSubscription(User sender, User subscriber) {
+		UserSubscription us = new UserSubscription();
+		us.setSenderId(sender.getId());
+		us.setRecipientId(subscriber.getId());
+		
+		this.usersubscriptionmapper.insert(us);
 	}
 }

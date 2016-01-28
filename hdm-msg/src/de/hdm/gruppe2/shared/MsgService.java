@@ -66,4 +66,6 @@ public interface MsgService extends RemoteService {
 	public ArrayList<HashtagSubscription> findAllHashtagSubscriptionsOfUser(User user);
 	
 	public ArrayList<Message> findAllHashtagSubscriptionPosts(int hashtagId);
+	
+	public void createUserSubscription(User sender, User subscriber);
 }
