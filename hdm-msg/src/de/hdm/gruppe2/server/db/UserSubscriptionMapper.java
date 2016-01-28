@@ -1,9 +1,11 @@
 package de.hdm.gruppe2.server.db;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import de.hdm.gruppe2.shared.bo.HashtagSubscription;
 import de.hdm.gruppe2.shared.bo.UserSubscription;
 
 public class UserSubscriptionMapper {
@@ -35,6 +37,21 @@ public class UserSubscriptionMapper {
 	}
 	
 	public UserSubscription findByRecipientAndSenderId(int recipientId, int senderId) {
+		Connection con = DBConnection.connection();
+		
+		try {
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM `dbmessenger`.`usersubscription` WHERE `posterId` = " + senderId + " AND `subscriberId` = " + recipientId);
+			
+			if(rs.next()) {
+				UserSubscription us = new UserSubscription();
+				us.setSenderId(rs.getInt("posterId"));
+				us.setRecipientId(rs.getInt("userId"));		
+				return us;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 	
