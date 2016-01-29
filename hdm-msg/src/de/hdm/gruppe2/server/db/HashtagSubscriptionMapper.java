@@ -90,4 +90,28 @@ public class HashtagSubscriptionMapper {
 		}
 		return subscriptions;
 	}
+
+	public ArrayList<User> findAllFollowersOfHashtag(Hashtag h) {
+		Connection con = DBConnection.connection();
+		ArrayList<User> subscriptions = new ArrayList<User>();
+		
+		try {
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT `user`.`id`, `user`.`email`, `user`.`nickname`, `user`.`creationDate` "
+											+ "FROM `dbmessenger`.`user` INNER JOIN `dbmessenger`.`hashtagsubscription` "
+											+ "ON `dbmessenger`.`user`.`id` = `dbmessenger`.`hashtagsubscription`.`userId`"
+											+ "WHERE `hashtagId` = " + h.getId());
+			while(rs.next()) {
+				User u = new User();
+				u.setId(rs.getInt("id"));
+				u.setEmail(rs.getString("email"));
+				u.setNickname(rs.getString("nickname"));
+				u.setCreationDate(rs.getDate("creationDate"));
+				subscriptions.add(u);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return subscriptions;
+	}
 }

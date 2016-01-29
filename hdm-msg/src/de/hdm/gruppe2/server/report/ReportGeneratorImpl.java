@@ -32,8 +32,9 @@ import de.hdm.gruppe2.shared.report.SimpleParagraph;
  * @author thies
  * @author Korkmaz
  */
+@SuppressWarnings("serial")
 public class ReportGeneratorImpl extends RemoteServiceServlet implements ReportGenerator {
-	  
+	
 	/**
 	* Ein ReportGenerator benötigt Zugriff auf den MsgService, da dieser die
 	* essentiellen Methoden für die Koexistenz von Datenobjekten (vgl.
@@ -182,19 +183,148 @@ public class ReportGeneratorImpl extends RemoteServiceServlet implements ReportG
 	@Override
 	public AllMessagesOfPeriodReport createAllMessagesOfPeriodReport(String start, String end)
 			throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		return null;
+
+		if(this.getMsgService() == null)
+			return null;
+		
+		AllMessagesOfPeriodReport result = new AllMessagesOfPeriodReport();
+		
+		result.setTitle("Alle Nachrichten eines Zeitraums");
+	    result.setCreated(new Date());
+	    
+	    CompositeParagraph header = new CompositeParagraph();
+	    header.addSubParagraph(new SimpleParagraph("Startzeit: " + start));
+	    header.addSubParagraph(new SimpleParagraph("Endzeit: " + end));
+	    
+	    result.setHeaderData(header);
+	    
+	    Row headline = new Row();
+	    
+	    /*
+	     * Wir wollen Zeilen mit 5 Spalten in der Tabelle erzeugen. In die ersten
+	     * Spalte schreiben wir die jeweilige Message-ID und in die zweite den
+	     * aktuellen Text. Die drei weiteren Spalten enthalten die ID des Empfänger-Chats
+	     * und den Erstellzeitpunkt. In der Kopfzeile legen wir also entsprechende
+	     * Überschriften ab.
+	     */
+	    headline.addColumn(new Column("Msg.-ID."));
+	    headline.addColumn(new Column("Text"));
+	    headline.addColumn(new Column("Verfasser ID"));
+	    headline.addColumn(new Column("Empfänger ID"));
+	    headline.addColumn(new Column("Erstellungszeitpunkt"));
+	    
+	    result.addRow(headline);
+	    
+	    ArrayList<Message> messages = this.msgSvc.findAllMessagesOfPeriod(start, end);
+	    
+	    for (Message m : messages) {
+	        Row messageRow = new Row();
+
+	        messageRow.addColumn(new Column(String.valueOf(m.getId())));
+	        messageRow.addColumn(new Column(m.getText()));
+	        messageRow.addColumn(new Column(String.valueOf(m.getUserId())));
+	        messageRow.addColumn(new Column(String.valueOf(m.getChatId())));
+	        messageRow.addColumn(new Column(m.getCreationDate().toString()));
+
+	        result.addRow(messageRow);
+	    }
+
+	    return result;
 	}
 
 	@Override
 	public AllFollowersOfHashtagReport createAllFollowersOfHashtagReport(Hashtag h) throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		return null;
+		if(this.getMsgService() == null)
+			return null;
+		
+		AllFollowersOfHashtagReport result = new AllFollowersOfHashtagReport();
+		
+		result.setTitle("Alle Abonennten eines Hashtags");
+	    result.setCreated(new Date());
+	    
+	    CompositeParagraph header = new CompositeParagraph();
+	    header.addSubParagraph(new SimpleParagraph("Hashtag: #" + h.getKeyword()));
+	    
+	    result.setHeaderData(header);
+	    
+	    Row headline = new Row();
+	    
+	    /*
+	     * Wir wollen Zeilen mit 4 Spalten in der Tabelle erzeugen. In die ersten
+	     * Spalte schreiben wir die jeweilige Message-ID und in die zweite den
+	     * aktuellen Text. Die drei weiteren Spalten enthalten die ID des Empfänger-Chats
+	     * und den Erstellzeitpunkt. In der Kopfzeile legen wir also entsprechende
+	     * Überschriften ab.
+	     */
+	    headline.addColumn(new Column("User-ID."));
+	    headline.addColumn(new Column("Email"));
+	    headline.addColumn(new Column("Nickname"));
+	    headline.addColumn(new Column("Erstellungszeitpunkt"));
+	    
+	    result.addRow(headline);
+	    
+	    ArrayList<User> followers = this.msgSvc.findAllFollowersOfHashtag(h);
+	    
+	    for (User u : followers) {
+	        Row userRow = new Row();
+
+	        userRow.addColumn(new Column(String.valueOf(u.getId())));
+	        userRow.addColumn(new Column(u.getEmail()));
+	        userRow.addColumn(new Column(u.getNickname()));
+	        userRow.addColumn(new Column(u.getCreationDate().toString()));
+
+	        result.addRow(userRow);
+	    }
+
+	    return result;
 	}
 
 	@Override
 	public AllFollowersOfUserReport createAllFollowersOfUserReport(User u) throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		return null;
+		if(this.getMsgService() == null)
+			return null;
+		
+		AllFollowersOfUserReport result = new AllFollowersOfUserReport();
+		
+		result.setTitle("Alle Abonennten eines Anwenders");
+	    result.setCreated(new Date());
+	    
+	    CompositeParagraph header = new CompositeParagraph();
+	    header.addSubParagraph(new SimpleParagraph(u.getEmail() + ", "
+	        + u.getNickname()));
+	    header.addSubParagraph(new SimpleParagraph("Anwender.-Nr.: " + u.getId()));
+	    
+	    result.setHeaderData(header);
+	    
+	    Row headline = new Row();
+	    
+	    /*
+	     * Wir wollen Zeilen mit 4 Spalten in der Tabelle erzeugen. In die ersten
+	     * Spalte schreiben wir die jeweilige Message-ID und in die zweite den
+	     * aktuellen Text. Die drei weiteren Spalten enthalten die ID des Empfänger-Chats
+	     * und den Erstellzeitpunkt. In der Kopfzeile legen wir also entsprechende
+	     * Überschriften ab.
+	     */
+	    headline.addColumn(new Column("User-ID."));
+	    headline.addColumn(new Column("Email"));
+	    headline.addColumn(new Column("Nickname"));
+	    headline.addColumn(new Column("Erstellungszeitpunkt"));
+	    
+	    result.addRow(headline);
+	    
+	    ArrayList<User> followers = this.msgSvc.findAllFollowersOfUser(u);
+	    
+	    for (User user : followers) {
+	        Row userRow = new Row();
+
+	        userRow.addColumn(new Column(String.valueOf(user.getId())));
+	        userRow.addColumn(new Column(user.getEmail()));
+	        userRow.addColumn(new Column(user.getNickname()));
+	        userRow.addColumn(new Column(user.getCreationDate().toString()));
+
+	        result.addRow(userRow);
+	    }
+
+	    return result;
 	}
 }

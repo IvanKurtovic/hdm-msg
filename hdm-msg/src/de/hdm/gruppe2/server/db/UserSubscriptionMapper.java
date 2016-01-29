@@ -89,5 +89,29 @@ public class UserSubscriptionMapper {
 			e.printStackTrace();
 		}
 	}
+
+	public ArrayList<User> findAllFollowersOfUser(User u) {
+		Connection con = DBConnection.connection();
+		ArrayList<User> subscriptions = new ArrayList<User>();
+		
+		try {
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT `user`.`id`, `user`.`email`, `user`.`nickname`, `user`.`creationDate` "
+											+ "FROM `dbmessenger`.`user` INNER JOIN `dbmessenger`.`usersubscription` "
+											+ "ON `dbmessenger`.`user`.`id` = `dbmessenger`.`usersubscription`.`subscriberId`"
+											+ "WHERE `posterId` = " + u.getId());
+			while(rs.next()) {
+				User user = new User();
+				user.setId(rs.getInt("id"));
+				user.setEmail(rs.getString("email"));
+				user.setNickname(rs.getString("nickname"));
+				user.setCreationDate(rs.getDate("creationDate"));
+				subscriptions.add(user);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return subscriptions;
+	}
 	
 }

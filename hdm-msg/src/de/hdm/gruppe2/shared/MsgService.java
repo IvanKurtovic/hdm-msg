@@ -42,6 +42,10 @@ public interface MsgService extends RemoteService {
 	
 	public ArrayList<Chat> findAllChatsOfUser(User currentUser);
 	
+	public ArrayList<User> findAllFollowersOfHashtag(Hashtag h);
+	
+	public ArrayList<User> findAllFollowersOfUser(User u);
+	
 	public Message createPost(String text, User author, ArrayList<Hashtag> hashtagList);
 	
 	public ArrayList<Message> findAllPostsOfUser(int userId);
@@ -55,6 +59,8 @@ public interface MsgService extends RemoteService {
 	public ArrayList<Message> findAllMessagesOfChat(Chat selectedChat);
 	
 	public ArrayList<Message> findAllMessagesOfUser(User user);
+	
+	public ArrayList<Message> findAllMessagesOfPeriod(String start, String end);
 	
 	public ArrayList<User> findAllParticipantsOfChat(Chat selectedChat);
 	

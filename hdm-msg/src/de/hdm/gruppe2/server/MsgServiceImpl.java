@@ -253,4 +253,19 @@ public class MsgServiceImpl extends RemoteServiceServlet implements MsgService {
 	public ArrayList<Message> findAllMessagesOfUser(User user) {
 		return this.messagemapper.findAllMessagesOfUser(user);
 	}
+
+	@Override
+	public ArrayList<User> findAllFollowersOfHashtag(Hashtag h) {
+		return this.hashtagsubscriptionmapper.findAllFollowersOfHashtag(h);
+	}
+
+	@Override
+	public ArrayList<User> findAllFollowersOfUser(User u) {
+		return this.usersubscriptionmapper.findAllFollowersOfUser(u);
+	}
+
+	@Override
+	public ArrayList<Message> findAllMessagesOfPeriod(String start, String end) {
+		return this.messagemapper.findAllMessagesOfPeriod(start, end);
+	}
 }

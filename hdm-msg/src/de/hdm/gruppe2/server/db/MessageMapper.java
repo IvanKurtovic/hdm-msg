@@ -360,11 +360,39 @@ public class MessageMapper {
 			
 			while(rs.next()) {
 				Message message = new Message();
-				message.setId(rs.getInt("messageId"));
+				message.setId(rs.getInt("Id"));
 				message.setText(rs.getString("text"));
 				message.setUserId(rs.getInt("autorID"));
 				message.setChatId(rs.getInt("chatID"));
-				message.setHashtagList(getAllHashtagsOfMessage(rs.getInt("messageId")));
+				message.setHashtagList(getAllHashtagsOfMessage(rs.getInt("Id")));
+				message.setCreationDate(rs.getDate("creationDate"));
+				
+				result.add(message);
+			}
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	public ArrayList<Message> findAllMessagesOfPeriod(String start, String end) {
+		Connection con = DBConnection.connection();
+		ArrayList<Message> result = new ArrayList<Message>();
+		
+		try {
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * "
+											+ "FROM `dbmessenger`.`message` "
+											+ "WHERE `creationDate` BETWEEN '" + start + "' AND '" + end + "'");
+			
+			while(rs.next()) {
+				Message message = new Message();
+				message.setId(rs.getInt("Id"));
+				message.setText(rs.getString("text"));
+				message.setUserId(rs.getInt("autorID"));
+				message.setChatId(rs.getInt("chatID"));
+				message.setHashtagList(getAllHashtagsOfMessage(rs.getInt("Id")));
 				message.setCreationDate(rs.getDate("creationDate"));
 				
 				result.add(message);

@@ -76,4 +76,10 @@ public interface MsgServiceAsync {
 	void init(AsyncCallback<Void> callback);
 
 	void findAllMessagesOfUser(User user, AsyncCallback<ArrayList<Message>> callback);
+
+	void findAllMessagesOfPeriod(String start, String end, AsyncCallback<ArrayList<Message>> callback);
+
+	void findAllFollowersOfHashtag(Hashtag h, AsyncCallback<ArrayList<User>> callback);
+
+	void findAllFollowersOfUser(User u, AsyncCallback<ArrayList<User>> callback);
 }
