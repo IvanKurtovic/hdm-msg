@@ -8,6 +8,7 @@
   <!-- Default page to serve -->
   <welcome-file-list>
     <welcome-file>HdmMsg.html</welcome-file>
+    <welcome-file>ReportGenerator.html</welcome-file>
   </welcome-file-list>
     
   <!-- Servlets -->
@@ -19,9 +20,21 @@
   <servlet-mapping>
     <servlet-name>msgServlet</servlet-name>
     <url-pattern>/hdmMsg/msgServlet</url-pattern>
+    <url-pattern>/reportGenerator/msgServlet</url-pattern>
   </servlet-mapping>
   
-    <servlet>
+  <servlet>
+  	<servlet-name>reportgenerator</servlet-name>
+  	<servlet-class>de.hdm.gruppe2.server.report.ReportGeneratorImpl</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>reportgenerator</servlet-name>
+    <url-pattern>/hdmMsg/reportgenerator</url-pattern>
+    <url-pattern>/reportGenerator/reportgenerator</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
     <servlet-name>login</servlet-name>
     <servlet-class>de.hdm.gruppe2.server.LoginServiceImpl</servlet-class>
   </servlet>
@@ -29,6 +42,7 @@
   <servlet-mapping>
     <servlet-name>login</servlet-name>
     <url-pattern>/hdmMsg/login</url-pattern>
+    <url-pattern>/reportGenerator/login</url-pattern>
   </servlet-mapping>
  
 </web-app>

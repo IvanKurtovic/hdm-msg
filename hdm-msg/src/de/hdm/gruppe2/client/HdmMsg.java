@@ -149,9 +149,8 @@ public class HdmMsg extends VerticalPanel implements EntryPoint {
 
 			@Override
 			public void execute() {
-				RootPanel.get("header_wrap").clear(true);
-				RootPanel.get("content_wrap").clear(true);
-				Window.Location.assign(GWT.getHostPageBaseURL() + "HdmMsgReport.html");
+				RootPanel.get("content_wrap").clear();
+				Window.Location.assign(GWT.getHostPageBaseURL() + "ReportGenerator.html");
 			}
 		};
 
