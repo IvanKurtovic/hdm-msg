@@ -265,11 +265,6 @@ public class MessageMapper {
 		return null;
 	}
 	
-	public Vector<Message> findByChat(int chatId) {
-		// TODO Abfrage implementieren sobald die Datenbankstruktur steht.
-		return null;
-	}
-	
 	public ArrayList<Message> findAllPostsOfUser(int userId) {
 		
 		Connection con = DBConnection.connection();
@@ -340,7 +335,35 @@ public class MessageMapper {
 				message.setId(rs.getInt("messageId"));
 				message.setText(rs.getString("text"));
 				message.setUserId(rs.getInt("autorID"));
-				message.setChatId(-1);
+				message.setChatId(rs.getInt("chatID"));
+				message.setHashtagList(getAllHashtagsOfMessage(rs.getInt("messageId")));
+				message.setCreationDate(rs.getDate("creationDate"));
+				
+				result.add(message);
+			}
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	public ArrayList<Message> findAllMessagesOfUser(User user) {
+		Connection con = DBConnection.connection();
+		ArrayList<Message> result = new ArrayList<Message>();
+		
+		try {
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * "
+											+ "FROM `dbmessenger`.`message` "
+											+ "WHERE `autorId` = " + user.getId());
+			
+			while(rs.next()) {
+				Message message = new Message();
+				message.setId(rs.getInt("messageId"));
+				message.setText(rs.getString("text"));
+				message.setUserId(rs.getInt("autorID"));
+				message.setChatId(rs.getInt("chatID"));
 				message.setHashtagList(getAllHashtagsOfMessage(rs.getInt("messageId")));
 				message.setCreationDate(rs.getDate("creationDate"));
 				

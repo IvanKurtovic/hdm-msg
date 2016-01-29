@@ -54,6 +54,8 @@ public interface MsgService extends RemoteService {
 
 	public ArrayList<Message> findAllMessagesOfChat(Chat selectedChat);
 	
+	public ArrayList<Message> findAllMessagesOfUser(User user);
+	
 	public ArrayList<User> findAllParticipantsOfChat(Chat selectedChat);
 	
 	public ArrayList<Hashtag> findAllHashtags();

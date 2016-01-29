@@ -248,4 +248,9 @@ public class MsgServiceImpl extends RemoteServiceServlet implements MsgService {
 	public void deleteUserSubscription(UserSubscription us) {
 		this.usersubscriptionmapper.delete(us.getSenderId(), us.getRecipientId());
 	}
+
+	@Override
+	public ArrayList<Message> findAllMessagesOfUser(User user) {
+		return this.messagemapper.findAllMessagesOfUser(user);
+	}
 }
