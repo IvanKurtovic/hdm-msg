@@ -9,6 +9,7 @@ import java.util.Vector;
  * <code>getReportText()</code> ausgelesen werden.
  * 
  * @author Thies
+ * @author Kurtovic
  */
 public class HTMLReportWriter extends ReportWriter {
 
