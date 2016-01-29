@@ -27,6 +27,14 @@ public abstract class ReportWriter {
   public abstract void process(AllMessagesOfUserReport r);
 
   /**
+   * Übersetzen eines <code>AllMessagesOfAllUsers</code> in das
+   * Zielformat.
+   * 
+   * @param r der zu übersetzende Report
+   */
+  public abstract void process(AllMessagesOfAllUsersReport r);
+  
+  /**
    * Übersetzen eines <code>AllMessagesOfPeriodReport</code> in das
    * Zielformat.
    * 
