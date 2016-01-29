@@ -1,7 +1,9 @@
 package de.hdm.gruppe2.shared.report;
 
+import java.io.Serializable;
+
 /**
- * Report, der alle Nachrichten eines bestimmten Zeitraumes darstellt.
+ * Report, der alle Nachrichten aller Nutzer darstellt.
  * Die Klasse trägt keine weiteren Attribute- und Methoden-Implementierungen,
  * da alles Notwendige schon in den Superklassen vorliegt. Ihre Existenz ist 
  * dennoch wichtig, um bestimmte Typen von Reports deklarieren und mit ihnen 
@@ -10,8 +12,9 @@ package de.hdm.gruppe2.shared.report;
  * @author Thies
  * @author Kurtovic
  */
-public class AllMessagesOfPeriodReport 
-	extends SimpleReport {
+public class AllMessagesOfAllUsersReport 
+	extends CompositeReport 
+	implements Serializable {
 
 	/**
 	 * 
