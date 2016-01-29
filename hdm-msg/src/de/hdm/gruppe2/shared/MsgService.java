@@ -18,6 +18,8 @@ import de.hdm.gruppe2.shared.bo.UserSubscription;
 @RemoteServiceRelativePath("msgServlet")
 public interface MsgService extends RemoteService {
 
+	public void init();
+	
 	public User createUser(String email, String nickname);
 	
 	public User saveUser(User user);

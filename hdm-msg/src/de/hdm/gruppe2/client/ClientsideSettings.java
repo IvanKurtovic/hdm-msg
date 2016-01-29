@@ -30,7 +30,7 @@ public class ClientsideSettings extends CommonSettings {
    * Remote Service Proxy zur Verbindungsaufnahme mit dem Server-seitgen Dienst
    * namens <code>ReportGenerator</code>.
    */
-  //private static ReportGeneratorAsync reportGenerator = null;
+  private static ReportGeneratorAsync reportGenerator = null;
 
   /**
    * Name des Client-seitigen Loggers.
@@ -151,7 +151,7 @@ public class ClientsideSettings extends CommonSettings {
    * @author Peter Thies
    * @since 28.02.2012
    */
-  /*
+  
   public static ReportGeneratorAsync getReportGenerator() {
     // Gab es bislang noch keine ReportGenerator-Instanz, dann...
     if (reportGenerator == null) {
@@ -178,6 +178,5 @@ public class ClientsideSettings extends CommonSettings {
     // So, nun brauchen wir den ReportGenerator nur noch zurückzugeben.
     return reportGenerator;
   }
-*/
 
 }

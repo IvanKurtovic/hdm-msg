@@ -72,4 +72,6 @@ public interface MsgServiceAsync {
 	void findAllUserSubscriptionsOfUser(User user, AsyncCallback<ArrayList<UserSubscription>> callback);
 
 	void deleteUserSubscription(UserSubscription us, AsyncCallback<Void> callback);
+
+	void init(AsyncCallback<Void> callback);
 }

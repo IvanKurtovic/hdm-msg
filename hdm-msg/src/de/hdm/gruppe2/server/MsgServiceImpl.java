@@ -25,13 +25,50 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 @SuppressWarnings("serial")
 public class MsgServiceImpl extends RemoteServiceServlet implements MsgService {
 
-	private UserMapper usermapper = UserMapper.usermapper();
-	private ChatMapper chatmapper = ChatMapper.chatMapper();
-	private HashtagMapper hashtagmapper = HashtagMapper.hashtagMapper();
-	private HashtagSubscriptionMapper hashtagsubscriptionmapper = HashtagSubscriptionMapper.hashtagSubscriptionMapper();
-	private UserSubscriptionMapper usersubscriptionmapper = UserSubscriptionMapper.userSubscriptionMapper();
-	private MessageMapper messagemapper = MessageMapper.messageMapper();
+	private UserMapper usermapper = null;
+	private ChatMapper chatmapper = null;
+	private HashtagMapper hashtagmapper = null;
+	private MessageMapper messagemapper = null;
+	private HashtagSubscriptionMapper hashtagsubscriptionmapper = null;
+	private UserSubscriptionMapper usersubscriptionmapper = null;
 
+	/**
+	* <p>
+	* Ein <code>RemoteServiceServlet</code> wird unter GWT mittels
+	* <code>GWT.create(Klassenname.class)</code> Client-seitig erzeugt. Hierzu
+	* ist ein solcher No-Argument-Konstruktor anzulegen. Ein Aufruf eines anderen
+	* Konstruktors ist durch die Client-seitige Instantiierung durch
+	* <code>GWT.create(Klassenname.class)</code> nach derzeitigem Stand nicht
+	* möglich.
+	* </p>
+	* <p>
+	* Es bietet sich also an, eine separate Instanzenmethode zu erstellen, die
+	* Client-seitig direkt nach <code>GWT.create(Klassenname.class)</code>
+	* aufgerufen wird, um eine Initialisierung der Instanz vorzunehmen.
+	* </p>
+	*/
+	public MsgServiceImpl() throws IllegalArgumentException {}
+	
+	/**
+	* Initialsierungsmethode. Siehe dazu Anmerkungen zum No-Argument-Konstruktor.
+	* 
+	* @see #MsgServiceImpl()
+	*/
+	@Override
+	public void init() throws IllegalArgumentException {
+	    /*
+	     * Ganz wesentlich ist, dass die BankAdministration einen vollständigen Satz
+	     * von Mappern besitzt, mit deren Hilfe sie dann mit der Datenbank
+	     * kommunizieren kann.
+	     */
+		this.usermapper = UserMapper.usermapper();
+		this.chatmapper = ChatMapper.chatMapper();
+		this.hashtagmapper = HashtagMapper.hashtagMapper();
+		this.messagemapper = MessageMapper.messageMapper();
+		this.hashtagsubscriptionmapper = HashtagSubscriptionMapper.hashtagSubscriptionMapper();
+		this.usersubscriptionmapper = UserSubscriptionMapper.userSubscriptionMapper();
+	}
+	
 	@Override
 	public User createUser(String email, String nickname) {
 		
