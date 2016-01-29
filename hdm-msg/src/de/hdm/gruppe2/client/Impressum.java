@@ -15,13 +15,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 	*/
 	public class Impressum extends VerticalPanel {
 	    
-		public void onLoad(){
-	    
-	    	Button impressumBtn = new Button("Impressum");
-	    	impressumBtn.setStylePrimaryName("impressumBtn");
-	    	
-	    	
-	    	
+		public void onLoad(){    	
 	        final HTML html = new HTML("");
 	        html.setHTML("<h2>Impressum</h2>"+
 	        		"<h2>Angaben: Paragraph 5 Telemediengesaetz:</h2>"+
@@ -38,20 +32,9 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 	        		"<tr><td>E-Mail:</td>"+
 	        		"<td>info@hdm-stuttgart.de</td>"+
 	        		"</tr></table><p>"
-	        		);
-	        
-	        impressumBtn.addClickHandler(new ClickHandler() {
-	        	public void onClick(ClickEvent event) {     	
-	        		RootPanel.get("content_wrap").clear();
-	        		RootPanel.get("content_wrap").add(html);
-	        	}
-	        });
-	        
-	       
-	        
-	        RootPanel.get("Impressum").add(impressumBtn);
-
-	        
+	        		);        
+	        RootPanel.get("content_wrap").clear();
+    		RootPanel.get("content_wrap").add(html);  
 		}
 	    
 	}
