@@ -1,5 +1,7 @@
 package de.hdm.gruppe2.shared;
 
+import java.util.ArrayList;
+
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
@@ -117,4 +119,13 @@ public interface ReportRPC extends RemoteService {
 	*/
 	public abstract AllFollowersOfUserReport createAllFollowersOfUserReport(
 			User u) throws IllegalArgumentException;
+	
+	/**
+	* Erstellen einer <code>ArrayList</code> die sämtliche der Datenbank bekannte
+	* Hashtags enthält.
+	* 
+	* @return	Eine ArrayList mit allen Hashtagobjekten der Datenbank
+	* @throws	IllegalArgumentException
+	*/
+	public ArrayList<Hashtag> findAllHashtags() throws IllegalArgumentException;
 }

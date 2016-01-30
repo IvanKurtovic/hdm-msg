@@ -9,7 +9,8 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.RootPanel;
 
-import de.hdm.gruppe2.client.report.AllMessagesOfPeriodReportForm;
+import de.hdm.gruppe2.client.report.AllFollowersOfHashtagForm;
+import de.hdm.gruppe2.client.report.AllMessagesOfPeriodForm;
 import de.hdm.gruppe2.client.report.AllMessagesOfUserForm;
 import de.hdm.gruppe2.shared.ReportRPCAsync;
 import de.hdm.gruppe2.shared.report.AllMessagesOfPeriodReport;
@@ -47,7 +48,7 @@ public class ReportGenerator implements EntryPoint {
 			public void execute() {
 				RootPanel.get("footer_wrap").clear();
 				RootPanel.get("content_wrap").clear();
-				RootPanel.get("content_wrap").add(new AllMessagesOfPeriodReportForm());
+				RootPanel.get("content_wrap").add(new AllMessagesOfPeriodForm());
 			}
 		};
 		
@@ -63,7 +64,7 @@ public class ReportGenerator implements EntryPoint {
 			public void execute() {
 				RootPanel.get("footer_wrap").clear();
 				RootPanel.get("content_wrap").clear();
-				RootPanel.get("content_wrap").add(new HTML("FOLLOWERS OF HASHTAG REPORT"));
+				RootPanel.get("content_wrap").add(new AllFollowersOfHashtagForm());
 			}
 		};
 		

@@ -256,6 +256,7 @@ public class ReportImpl extends RemoteServiceServlet implements ReportRPC {
 		AllFollowersOfHashtagReport result = new AllFollowersOfHashtagReport();
 		
 		result.setTitle("Alle Abonennten eines Hashtags");
+		this.addImprint(result);
 	    result.setCreated(new Date());
 	    
 	    CompositeParagraph header = new CompositeParagraph();
@@ -303,6 +304,7 @@ public class ReportImpl extends RemoteServiceServlet implements ReportRPC {
 		AllFollowersOfUserReport result = new AllFollowersOfUserReport();
 		
 		result.setTitle("Alle Abonennten eines Anwenders");
+		this.addImprint(result);
 	    result.setCreated(new Date());
 	    
 	    CompositeParagraph header = new CompositeParagraph();
@@ -342,6 +344,11 @@ public class ReportImpl extends RemoteServiceServlet implements ReportRPC {
 	    }
 
 	    return result;
+	}
+	
+	@Override
+	public ArrayList<Hashtag> findAllHashtags() throws IllegalArgumentException {
+		return this.msgSvc.findAllHashtags();
 	}
 	
 	/**

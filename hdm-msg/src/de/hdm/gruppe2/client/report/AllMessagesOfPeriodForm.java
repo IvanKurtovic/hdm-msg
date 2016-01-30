@@ -21,7 +21,7 @@ import de.hdm.gruppe2.shared.ReportRPCAsync;
 import de.hdm.gruppe2.shared.report.AllMessagesOfPeriodReport;
 import de.hdm.gruppe2.shared.report.HTMLReportWriter;
 
-public class AllMessagesOfPeriodReportForm extends VerticalPanel {
+public class AllMessagesOfPeriodForm extends VerticalPanel {
 
 	private ReportRPCAsync reportGenerator = null;
 	

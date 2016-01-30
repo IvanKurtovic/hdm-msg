@@ -1,5 +1,7 @@
 package de.hdm.gruppe2.shared;
 
+import java.util.ArrayList;
+
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import de.hdm.gruppe2.shared.bo.Hashtag;
@@ -23,5 +25,7 @@ public interface ReportRPCAsync {
 	void createAllFollowersOfHashtagReport(Hashtag h, AsyncCallback<AllFollowersOfHashtagReport> callback);
 
 	void createAllFollowersOfUserReport(User u, AsyncCallback<AllFollowersOfUserReport> callback);
+
+	void findAllHashtags(AsyncCallback<ArrayList<Hashtag>> callback);
 
 }
