@@ -11,6 +11,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 
 import de.hdm.gruppe2.client.report.AllFollowersOfHashtagForm;
 import de.hdm.gruppe2.client.report.AllFollowersOfUserForm;
+import de.hdm.gruppe2.client.report.AllMessagesOfAllUsersForm;
 import de.hdm.gruppe2.client.report.AllMessagesOfPeriodForm;
 import de.hdm.gruppe2.client.report.AllMessagesOfUserForm;
 import de.hdm.gruppe2.shared.ReportRPCAsync;
@@ -41,7 +42,7 @@ public class ReportGenerator implements EntryPoint {
 			public void execute() {
 				RootPanel.get("footer_wrap").clear();
 				RootPanel.get("content_wrap").clear();
-				RootPanel.get("content_wrap").add(new HTML("ALL MESSAGES OF ALL USERS REPORT"));
+				RootPanel.get("content_wrap").add(new AllMessagesOfAllUsersForm());
 			}
 		};
 		

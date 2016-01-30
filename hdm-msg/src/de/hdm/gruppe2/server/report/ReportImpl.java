@@ -191,8 +191,22 @@ public class ReportImpl extends RemoteServiceServlet implements ReportRPC {
 
 	@Override
 	public AllMessagesOfAllUsersReport createAllMessagesOfAllUsersReport() throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		return null;
+		if(this.getMsgService() == null)
+			return null;
+		
+		AllMessagesOfAllUsersReport result = new AllMessagesOfAllUsersReport();
+		
+		result.setTitle("Alle Nachrichten aller Nutzen");
+		this.addImprint(result);
+		result.setCreated(new Date());
+		
+		ArrayList<User> allUsers = msgSvc.findAllUser();
+		
+		for(User u : allUsers) {
+			result.addSubReport(this.createAllMessagesOfUserReport(u.getEmail()));
+		}
+		
+		return result;
 	}
 
 	@Override
