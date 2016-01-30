@@ -28,4 +28,6 @@ public interface ReportRPCAsync {
 
 	void findAllHashtags(AsyncCallback<ArrayList<Hashtag>> callback);
 
+	void findAllUsers(AsyncCallback<ArrayList<User>> callback);
+
 }

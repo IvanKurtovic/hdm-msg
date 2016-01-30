@@ -377,5 +377,10 @@ public class ReportImpl extends RemoteServiceServlet implements ReportRPC {
 		// Das eigentliche Hinzufügen des Impressums zum Report.
 		    r.setImprint(imprint);
 	}
+
+	@Override
+	public ArrayList<User> findAllUsers() throws IllegalArgumentException {
+		return msgSvc.findAllUser();
+	}
 	
 }

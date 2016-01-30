@@ -15,16 +15,16 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 import de.hdm.gruppe2.client.ClientsideSettings;
 import de.hdm.gruppe2.shared.ReportRPCAsync;
-import de.hdm.gruppe2.shared.bo.Hashtag;
-import de.hdm.gruppe2.shared.report.AllFollowersOfHashtagReport;
+import de.hdm.gruppe2.shared.bo.User;
+import de.hdm.gruppe2.shared.report.AllFollowersOfUserReport;
 import de.hdm.gruppe2.shared.report.HTMLReportWriter;
 
-public class AllFollowersOfHashtagForm extends VerticalPanel {
+public class AllFollowersOfUserForm extends VerticalPanel {
 
 	private ReportRPCAsync reportGenerator = null;
-	private ArrayList<Hashtag> hashtags = null;
+	private ArrayList<User> users = null;
 	
-	private ListBox lbHashtags = new ListBox();
+	private ListBox lbUsers = new ListBox();
 	private Button btnReport = new Button("Laden");
 	
 	@Override
@@ -32,57 +32,57 @@ public class AllFollowersOfHashtagForm extends VerticalPanel {
 		
 		reportGenerator = ClientsideSettings.getReportGenerator();
 		
-		this.getAllHashtags();
+		this.getAllUsers();
 		
 		Grid mainGrid = new Grid(3, 2);
 		
-		Label lblTitle = new Label("Alle Follower eines Hashtags");
+		Label lblTitle = new Label("Alle Follower eines Nutzers");
 		
 		btnReport.addClickHandler(new ClickHandler() {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				if(lbHashtags.getSelectedIndex() == -1) {
+				if(lbUsers.getSelectedIndex() == -1) {
 					ClientsideSettings.getLogger().severe("Kein hashtag ausgewählt.");
 					return;
 				}
 				
-				loadReport(hashtags.get(lbHashtags.getSelectedIndex()));
+				loadReport(users.get(lbUsers.getSelectedIndex()));
 			}
 		});
 		
 		mainGrid.setWidget(0, 0, lblTitle);
-		mainGrid.setWidget(1, 0, lbHashtags);
+		mainGrid.setWidget(1, 0, lbUsers);
 		mainGrid.setWidget(2, 0, btnReport);
 		
 		this.add(mainGrid);
 		
 	}
 	
-	private void getAllHashtags() {
-		reportGenerator.findAllHashtags(new AsyncCallback<ArrayList<Hashtag>>() {
+	private void getAllUsers() {
+		reportGenerator.findAllUsers(new AsyncCallback<ArrayList<User>>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
 				ClientsideSettings.getLogger().severe(
-						"Hashtags konnten nicht geladen werden!");
+						 "User konnten nicht geladen werden!");
 			}
 
 			@Override
-			public void onSuccess(ArrayList<Hashtag> result) {
-				hashtags = result;
+			public void onSuccess(ArrayList<User> result) {
+				users = result;
 				
-				lbHashtags.clear();
+				lbUsers.clear();
 				
-				for(Hashtag h : hashtags) {
-					lbHashtags.addItem("#" + h.getKeyword());
+				for(User u : users) {
+					lbUsers.addItem(u.getNickname());
 				}
 			}
 		});
 	}
 	
-	private void loadReport(Hashtag h) {
-		reportGenerator.createAllFollowersOfHashtagReport(h, new AsyncCallback<AllFollowersOfHashtagReport>() {
+	private void loadReport(User u) {
+		reportGenerator.createAllFollowersOfUserReport(u, new AsyncCallback<AllFollowersOfUserReport>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -91,15 +91,14 @@ public class AllFollowersOfHashtagForm extends VerticalPanel {
 			}
 
 			@Override
-			public void onSuccess(AllFollowersOfHashtagReport result) {
+			public void onSuccess(AllFollowersOfUserReport result) {
 				if (result != null) {
 					HTMLReportWriter writer = new HTMLReportWriter();
 					writer.process(result);
 					RootPanel.get("footer_wrap").clear();
 					RootPanel.get("footer_wrap").add(new HTML(writer.getReportText()));
 				}
-			}
-			
+			}	
 		});
 	}
 }

@@ -128,4 +128,13 @@ public interface ReportRPC extends RemoteService {
 	* @throws	IllegalArgumentException
 	*/
 	public ArrayList<Hashtag> findAllHashtags() throws IllegalArgumentException;
+	
+	/**
+	* Erstellen einer <code>ArrayList</code> die sämtliche der Datenbank bekannte
+	* Nutzer enthält.
+	* 
+	* @return	Eine ArrayList mit allen Nutzerobjekten der Datenbank
+	* @throws	IllegalArgumentException
+	*/
+	public ArrayList<User> findAllUsers() throws IllegalArgumentException;
 }
