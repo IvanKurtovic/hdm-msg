@@ -89,7 +89,7 @@ public class ReportImpl extends RemoteServiceServlet implements ReportRPC {
 	}
 
 	@Override
-	public AllMessagesOfUserReport createAllMessagesOfUserReport(User u) throws IllegalArgumentException {
+	public AllMessagesOfUserReport createAllMessagesOfUserReport(String userMail) throws IllegalArgumentException {
 		
 		if(this.getMsgService() == null)
 			return null;
@@ -101,7 +101,7 @@ public class ReportImpl extends RemoteServiceServlet implements ReportRPC {
 		
 		// Jeder Report hat einen Titel (Bezeichnung / Überschrift).
 		result.setTitle("Alle Nachrichten des Nutzers");
-		
+		this.addImprint(result);
 		/*
 	     * Datum der Erstellung hinzufügen. new Date() erzeugt autom. einen
 	     * "Timestamp" des Zeitpunkts der Instantiierung des Date-Objekts.
@@ -115,15 +115,26 @@ public class ReportImpl extends RemoteServiceServlet implements ReportRPC {
 	     */
 	    CompositeParagraph header = new CompositeParagraph();
 	    
-	    // Email und Nickname des Users aufnehmen
-	    header.addSubParagraph(new SimpleParagraph(u.getEmail() + ", "
-	        + u.getNickname()));
+		// Erst suchen wir den Besitzer der Email.
+		User user = msgSvc.findUserByEmail(userMail);
+		
+		if(user != null) {
+			// Email und Nickname des Users aufnehmen
+		    header.addSubParagraph(new SimpleParagraph(user.getEmail() + ", "
+		        + user.getNickname()));
+		    
+		    // Anwendernummer aufnehmen
+		    header.addSubParagraph(new SimpleParagraph("Anwender.-Nr.: " + user.getId()));
+		    
+		    // Hinzufügen der zusammengestellten Kopfdaten zu dem Report
+		    result.setHeaderData(header);
+		} else {
+			// Falls der User nicht vorhanden ist soll hier abgebrochen werden.
+			result.setHeaderData(new SimpleParagraph("Kein Nutzer mit dieser Email gefunden."));
+			return result;
+		}
 	    
-	    // Anwendernummer aufnehmen
-	    header.addSubParagraph(new SimpleParagraph("Anwender.-Nr.: " + u.getId()));
 	    
-	    // Hinzufügen der zusammengestellten Kopfdaten zu dem Report
-	    result.setHeaderData(header);
 	    
 	    /*
 	     * Ab hier erfolgt ein zeilenweises Hinzufügen von Message-Informationen.
@@ -153,7 +164,7 @@ public class ReportImpl extends RemoteServiceServlet implements ReportRPC {
 	     * Nun werden sämtliche Messages des Nutzers ausgelesen und deren Details
 	     * sukzessive in die Tabelle eingetragen.
 	     */
-	    ArrayList<Message> messages = this.msgSvc.findAllMessagesOfUser(u);
+	    ArrayList<Message> messages = this.msgSvc.findAllMessagesOfUser(user);
 	    
 	    for (Message m : messages) {
 	    	// Eine leere Zeile anlegen.

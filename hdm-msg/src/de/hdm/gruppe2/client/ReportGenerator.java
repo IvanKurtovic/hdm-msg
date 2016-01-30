@@ -10,6 +10,7 @@ import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.RootPanel;
 
 import de.hdm.gruppe2.client.report.AllMessagesOfPeriodReportForm;
+import de.hdm.gruppe2.client.report.AllMessagesOfUserForm;
 import de.hdm.gruppe2.shared.ReportRPCAsync;
 import de.hdm.gruppe2.shared.report.AllMessagesOfPeriodReport;
 import de.hdm.gruppe2.shared.report.HTMLReportWriter;
@@ -28,13 +29,15 @@ public class ReportGenerator implements EntryPoint {
 		
 		Command allMessagesOfUser = new Command() {
 			public void execute() {
+				RootPanel.get("footer_wrap").clear();
 				RootPanel.get("content_wrap").clear();
-				RootPanel.get("content_wrap").add(new HTML("MESSAGES OF USER REPORT"));
+				RootPanel.get("content_wrap").add(new AllMessagesOfUserForm());
 			}
 		};
 		
 		Command allMessagesOfAllUsers = new Command() {
 			public void execute() {
+				RootPanel.get("footer_wrap").clear();
 				RootPanel.get("content_wrap").clear();
 				RootPanel.get("content_wrap").add(new HTML("ALL MESSAGES OF ALL USERS REPORT"));
 			}
@@ -42,6 +45,7 @@ public class ReportGenerator implements EntryPoint {
 		
 		Command allMessagesOfPeriod = new Command() {
 			public void execute() {
+				RootPanel.get("footer_wrap").clear();
 				RootPanel.get("content_wrap").clear();
 				RootPanel.get("content_wrap").add(new AllMessagesOfPeriodReportForm());
 			}
@@ -49,6 +53,7 @@ public class ReportGenerator implements EntryPoint {
 		
 		Command allFollowersOfUser = new Command() {
 			public void execute() {
+				RootPanel.get("footer_wrap").clear();
 				RootPanel.get("content_wrap").clear();
 				RootPanel.get("content_wrap").add(new HTML("FOLLOWERS OF USER REPORT"));
 			}
@@ -56,6 +61,7 @@ public class ReportGenerator implements EntryPoint {
 		
 		Command allFollowersOfHashtag = new Command() {
 			public void execute() {
+				RootPanel.get("footer_wrap").clear();
 				RootPanel.get("content_wrap").clear();
 				RootPanel.get("content_wrap").add(new HTML("FOLLOWERS OF HASHTAG REPORT"));
 			}
@@ -63,6 +69,7 @@ public class ReportGenerator implements EntryPoint {
 		
 		Command callMessenger = new Command() {
 			public void execute() {
+				RootPanel.get("footer_wrap").clear();
 				RootPanel.get("content_wrap").clear();
 				Window.Location.assign(GWT.getHostPageBaseURL() + "HdmMsg.html");
 			}

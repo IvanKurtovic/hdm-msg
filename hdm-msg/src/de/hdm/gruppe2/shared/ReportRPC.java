@@ -65,7 +65,7 @@ public interface ReportRPC extends RemoteService {
 	* @see 		AllMessagesOfUserReport
 	*/
 	public abstract AllMessagesOfUserReport createAllMessagesOfUserReport(
-			User u) throws IllegalArgumentException;
+			String userMail) throws IllegalArgumentException;
 	
 	/**
 	* Erstellen eines <code>AllMessagesOfAllUsersReport</code>-Reports. Dieser

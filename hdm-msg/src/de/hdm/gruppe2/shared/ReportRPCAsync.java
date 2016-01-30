@@ -16,7 +16,7 @@ public interface ReportRPCAsync {
 
 	void createAllMessagesOfPeriodReport(String start, String end, AsyncCallback<AllMessagesOfPeriodReport> callback);
 
-	void createAllMessagesOfUserReport(User u, AsyncCallback<AllMessagesOfUserReport> callback);
+	void createAllMessagesOfUserReport(String userMail, AsyncCallback<AllMessagesOfUserReport> callback);
 
 	void createAllMessagesOfAllUsersReport(AsyncCallback<AllMessagesOfAllUsersReport> callback);
 
