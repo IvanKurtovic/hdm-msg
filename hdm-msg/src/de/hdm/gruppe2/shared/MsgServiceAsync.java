@@ -12,7 +12,12 @@ import de.hdm.gruppe2.shared.bo.User;
 import de.hdm.gruppe2.shared.bo.UserSubscription;
 
 /**
- * The async counterpart of <code>MsgService</code>.
+ * Das asynchrone Gegenstück des Interface {@link MsgService}. Es wird
+ * semiautomatisch durch das Google Plugin erstellt und gepflegt. Daher erfolgt
+ * hier keine weitere Dokumentation. Für weitere Informationen siehe das
+ * synchrone Interface {@link MsgService}.
+ * 
+ * @author thies
  */
 public interface MsgServiceAsync {
 

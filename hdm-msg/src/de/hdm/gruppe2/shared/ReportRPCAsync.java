@@ -12,6 +12,14 @@ import de.hdm.gruppe2.shared.report.AllMessagesOfAllUsersReport;
 import de.hdm.gruppe2.shared.report.AllMessagesOfPeriodReport;
 import de.hdm.gruppe2.shared.report.AllMessagesOfUserReport;
 
+/**
+ * Das asynchrone Gegenstück des Interface {@link ReportRPC}. Es wird
+ * semiautomatisch durch das Google Plugin erstellt und gepflegt. Daher erfolgt
+ * hier keine weitere Dokumentation. Für weitere Informationen siehe das
+ * synchrone Interface {@link ReportRPC}.
+ * 
+ * @author thies
+ */
 public interface ReportRPCAsync {
 
 	void init(AsyncCallback<Void> callback);
