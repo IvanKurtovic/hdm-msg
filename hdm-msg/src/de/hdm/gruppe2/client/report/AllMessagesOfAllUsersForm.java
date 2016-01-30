@@ -10,6 +10,16 @@ import de.hdm.gruppe2.shared.ReportRPCAsync;
 import de.hdm.gruppe2.shared.report.AllMessagesOfAllUsersReport;
 import de.hdm.gruppe2.shared.report.HTMLReportWriter;
 
+/**
+ * Diese Klasse bildet die Oberfläche für den Report "Alle Nachrichten aller Nutzer"
+ * ab. Bei Aufruf wird über einen RPC-Call des ReportRPCAsync Interfaces die Datenbank
+ * ausgelesen und anschließend ein Report HTML Text generiert. Dieser wird in den 
+ * "footer_wrap" der HTML Seite geschrieben und dem Nutzer präsentiert.
+ * 
+ * @author Kurtovic
+ * @author Korkmaz
+ *
+ */
 public class AllMessagesOfAllUsersForm extends VerticalPanel {
 
 	private ReportRPCAsync reportGenerator = null;

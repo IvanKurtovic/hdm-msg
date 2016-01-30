@@ -21,6 +21,17 @@ import de.hdm.gruppe2.shared.ReportRPCAsync;
 import de.hdm.gruppe2.shared.report.AllMessagesOfPeriodReport;
 import de.hdm.gruppe2.shared.report.HTMLReportWriter;
 
+/**
+ * Diese Klasse bildet die Oberfläche für den Report "Alle Nachrichten eines Zeitraums"
+ * ab. Es stellt zwei DatePicker zur Auswahl des Zeitraums zur Verfügung.
+ * Der Anwender kann nach Auswahl der Daten über den Button "btnReport" 
+ * den Report generieren lassen. Dieser wird als reiner HTML Text in den "footer_wrap" 
+ * der HTML Seite geschrieben.
+ * 
+ * @author Kurtovic
+ * @author Korkmaz
+ *
+ */
 public class AllMessagesOfPeriodForm extends VerticalPanel {
 
 	private ReportRPCAsync reportGenerator = null;

@@ -19,6 +19,19 @@ import de.hdm.gruppe2.shared.bo.Hashtag;
 import de.hdm.gruppe2.shared.report.AllFollowersOfHashtagReport;
 import de.hdm.gruppe2.shared.report.HTMLReportWriter;
 
+/**
+ * Diese Klasse bildet die Oberfläche für den Report "Alle Follower eines Hashtags"
+ * ab. Es stellt eines ListBox zur Verfügung die alle vorhandenen Hashtags der Datenbank
+ * präsentiert. Dazu liest diese Klasse bei Erzeugung via RPC-Call die Datenbank nach
+ * allen Hashtags aus und speichert sie in eine ArrayList.
+ * Der Anwender kann schließlich über diese Box ein Hashtag wählen und den Report
+ * über den Button "btnReport" generieren lassen. Dieser wird als reiner HTML Text
+ * in den "footer_wrap" der HTML Seite geschrieben.
+ * 
+ * @author Kurtovic
+ * @author Korkmaz
+ *
+ */
 public class AllFollowersOfHashtagForm extends VerticalPanel {
 
 	private ReportRPCAsync reportGenerator = null;
@@ -99,7 +112,6 @@ public class AllFollowersOfHashtagForm extends VerticalPanel {
 					RootPanel.get("footer_wrap").add(new HTML(writer.getReportText()));
 				}
 			}
-			
 		});
 	}
 }

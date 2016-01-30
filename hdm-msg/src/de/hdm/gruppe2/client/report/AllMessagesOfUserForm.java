@@ -2,7 +2,6 @@ package de.hdm.gruppe2.client.report;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Grid;
@@ -17,6 +16,16 @@ import de.hdm.gruppe2.shared.ReportRPCAsync;
 import de.hdm.gruppe2.shared.report.AllMessagesOfUserReport;
 import de.hdm.gruppe2.shared.report.HTMLReportWriter;
 
+/**
+ * Diese Klasse bildet die Oberfläche für den Report "Alle Nachrichten eines Nutzers"
+ * ab. Es stellt eine TextBox zur Eingabe der User Email bereit. Anhand dieser Email
+ * wird anschließend über den Druck auf den Button "btnReport" der Report generiert und
+ * als HTML Text in den "footer_wrap" der HTML Seite geschrieben.
+ * 
+ * @author Kurtovic
+ * @author Korkmaz
+ *
+ */
 public class AllMessagesOfUserForm extends VerticalPanel {
 
 	private ReportRPCAsync reportGenerator = null;

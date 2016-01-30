@@ -19,6 +19,19 @@ import de.hdm.gruppe2.shared.bo.User;
 import de.hdm.gruppe2.shared.report.AllFollowersOfUserReport;
 import de.hdm.gruppe2.shared.report.HTMLReportWriter;
 
+/**
+ * Diese Klasse bildet die Oberfläche für den Report "Alle Follower eines Users"
+ * ab. Es stellt eines ListBox zur Verfügung die alle vorhandenen User der Datenbank
+ * präsentiert. Dazu liest diese Klasse bei Erzeugung via RPC-Call die Datenbank nach
+ * allen Usern aus und speichert sie in eine ArrayList.
+ * Der Anwender kann schließlich über diese Box einen User auswählen und den Report
+ * über den Button "btnReport" generieren lassen. Dieser wird als reiner HTML Text
+ * in den "footer_wrap" der HTML Seite geschrieben.
+ * 
+ * @author Kurtovic
+ * @author Korkmaz
+ *
+ */
 public class AllFollowersOfUserForm extends VerticalPanel {
 
 	private ReportRPCAsync reportGenerator = null;
