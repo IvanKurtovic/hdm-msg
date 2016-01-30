@@ -3,6 +3,7 @@
 <module rename-to='reportGenerator'>
 	<inherits name="com.google.gwt.user.User" />
 	<entry-point class='de.hdm.gruppe2.client.ReportGenerator'/>
+	<inherits name='com.google.gwt.user.theme.clean.Clean'/>
 	<source path="client"/>
 	<source path="shared"/>
 </module>
