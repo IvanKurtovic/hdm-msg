@@ -17,38 +17,53 @@ import java.sql.Date;
  * textuelle Notation in JSON (siehe http://www.json.org/) kodiert.
  * </p>
  * 
- * @author Thies & Ioannidou
+ * @author Thies
+ * @author Sari
+ * @author Yilmaz
  */
 
 public abstract class BusinessObject implements Serializable {
 	
+	/**
+	 * 
+	 */
 	private static final long serialVersionUID = 1L;
 	
 	/**
 	 * Eindeutige ID für alle Businessobjekte.
 	 */
 	private int id;
+	
+	/**
+	 * Das Erstelldatum eines Objekts.
+	 */
 	private Date creationDate;
 
-
+ /**
+   * Auslesen des Erstelldatums.
+   */
 	public Date getCreationDate() {
 		return creationDate;
 	}
 
+ /**
+   * Setzen des Erstelldatums.
+   */
 	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
 	}
 
+  /**
+   * Auslesen der ID.
+   */
 	public int getId() {
 		return id;
 	}
-
+	
+  /**
+   * Setzen der ID.
+   */
 	public void setId(int id) {
 		this.id = id;
-	}
-
-	public boolean equals() {
-		// TODO Auto-generated method stub
-		return false;
 	}
 }

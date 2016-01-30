@@ -528,7 +528,7 @@ select {
 .gwt-PopupPanelGlass {
   background-color: #000;
   opacity: 0.3;
-  filter: alpha(opacity=30);
+  filter: alpha(30);
 }
 
 .gwt-PushButton-up,
@@ -564,7 +564,7 @@ select {
   border: 1px solid #bbb;
   cursor: default;
   opacity: .5;
-  filter: alpha(opacity=45);
+  filter: alpha(45);
   zoom: 1;
 }
 .gwt-PushButton-down,
@@ -588,7 +588,7 @@ select {
   border: 1px outset #ccc;
   cursor: default;
   opacity: 0.5;
-  filter: alpha(opacity=45);
+  filter: alpha(45);
   zoom: 1;
 }
 
@@ -1042,7 +1042,7 @@ select {
   cursor: default;
   opacity: .5;
   zoom: 1;
-  filter: alpha(opacity=45);
+  filter: alpha(45);
 }
 .gwt-ToggleButton-down,
 .gwt-ToggleButton-down-hovering,
@@ -1068,7 +1068,7 @@ select {
   cursor: default;
   opacity: .5;
   zoom: 1;
-  filter: alpha(opacity=45);
+  filter: alpha(45);
 }
 
 .gwt-Tree .gwt-TreeItem {
