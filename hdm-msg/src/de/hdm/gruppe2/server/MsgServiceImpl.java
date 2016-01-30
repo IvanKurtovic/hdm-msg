@@ -6,7 +6,6 @@ import de.hdm.gruppe2.server.db.HashtagSubscriptionMapper;
 import de.hdm.gruppe2.server.db.MessageMapper;
 import de.hdm.gruppe2.server.db.UserMapper;
 import de.hdm.gruppe2.server.db.UserSubscriptionMapper;
-import de.hdm.gruppe2.shared.FieldVerifier;
 import de.hdm.gruppe2.shared.MsgService;
 import de.hdm.gruppe2.shared.bo.Chat;
 import de.hdm.gruppe2.shared.bo.Hashtag;
@@ -137,12 +136,12 @@ public class MsgServiceImpl extends RemoteServiceServlet implements MsgService {
 	
 	@Override
 	public ArrayList<Chat> findAllChats() {
-		return this.chatmapper.getAllChats();
+		return this.chatmapper.findAllChats();
 	}
 
 	@Override
 	public ArrayList<Chat> findAllChatsOfUser(User currentUser) {
-		return this.chatmapper.getAllChatsOfUser(currentUser);
+		return this.chatmapper.findAllChatsOfUser(currentUser);
 	}
 
 	@Override
@@ -189,12 +188,12 @@ public class MsgServiceImpl extends RemoteServiceServlet implements MsgService {
 
 	@Override
 	public ArrayList<User> findAllParticipantsOfChat(Chat selectedChat) {
-		return this.chatmapper.getAllParticipantsOfChat(selectedChat);
+		return this.chatmapper.findAllParticipantsOfChat(selectedChat);
 	}
 
 	@Override
 	public ArrayList<Hashtag> findAllHashtags() {
-		return this.hashtagmapper.getAllHashtags();
+		return this.hashtagmapper.findAllHashtags();
 	}
 
 	@Override

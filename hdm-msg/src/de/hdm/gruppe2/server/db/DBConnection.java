@@ -19,6 +19,8 @@ import com.google.appengine.api.utils.SystemProperty;
  * verkomplizieren, da dies für diesen Anwendungsfall nicht erforderlich ist.
  * 
  * @author Thies
+ * @author Sari
+ * @author Yilmaz
  */
 public class DBConnection {
 
@@ -30,8 +32,12 @@ public class DBConnection {
      * für sämtliche eventuellen Instanzen dieser Klasse vorhanden. Sie
      * speichert die einzige Instanz dieser Klasse.
      * 
-     * @see AccountMapper.accountMapper()
-     * @see CustomerMapper.customerMapper()
+     * @see HashtagMapper.hashtagMapper()
+     * @see UserMapper.usermapper()
+     * @see MessageMapper.messagemapper()
+     * @see ChatMapper.chatMapper()
+     * @see HashtagSubscriptionMapper.hashtagSubscriptionMapper()
+     * @see UserSubscriptionMapper.userSubscriptionMapper()
      */
     private static Connection con = null;
 
