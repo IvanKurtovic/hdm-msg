@@ -16,7 +16,8 @@ public interface LoginService extends RemoteService {
 	 * Ausführen des Logins und ablegen aller relevanten Nutzer Informationen
 	 * in einem LoginInfo Objekt
 	 * 
-	 * @param requestUri Die URL von der 
+	 * @param requestUri Die Basis URL der aufrufenden Seite 
+	 * 					 (ermittelt über GWT.getHostPageBaseURL())
 	 * @return
 	 */
 	public LoginInfo login(String requestUri);

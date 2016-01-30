@@ -2,6 +2,16 @@ package de.hdm.gruppe2.shared;
 
 import java.io.Serializable;
 
+/**
+ * Diese Klasse enthält alle Login Informationen eines Nutzers.
+ * Dazu zählen der Login-Status, eine Login URL, eine Logout URL,
+ * eine Email Adresse sowie der Nickname des Nutzers.
+ * 
+ * @author GWT Tutorial
+ * @author Sari
+ * @author Yilmaz
+ *
+ */
 public class LoginInfo implements Serializable {
 
 	/**
