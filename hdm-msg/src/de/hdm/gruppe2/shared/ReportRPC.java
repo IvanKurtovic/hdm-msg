@@ -41,9 +41,9 @@ import de.hdm.gruppe2.shared.report.AllMessagesOfUserReport;
  * @author Korkmaz
  */
 
-@RemoteServiceRelativePath("reportgenerator")
-public interface ReportGenerator extends RemoteService {
-	  
+@RemoteServiceRelativePath("reportGenerator")
+public interface ReportRPC extends RemoteService {
+	
 	/**
 	* Initialisierung des Objekts. Diese Methode ist vor dem Hintergrund von GWT
 	* RPC zusätzlich zum No Argument Constructor der implementierenden Klasse
@@ -118,5 +118,3 @@ public interface ReportGenerator extends RemoteService {
 	public abstract AllFollowersOfUserReport createAllFollowersOfUserReport(
 			User u) throws IllegalArgumentException;
 }
-
-

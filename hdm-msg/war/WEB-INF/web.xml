@@ -31,11 +31,18 @@
    <servlet-mapping> 
      <servlet-name>msgServlet</servlet-name> 
      <url-pattern>/hdmMsg/msgServlet</url-pattern> 
+     <url-pattern>/reportGenerator/msgServlet</url-pattern> 
    </servlet-mapping> 
     
+   <servlet> 
+     <servlet-name>reportGenerator</servlet-name> 
+     <servlet-class>de.hdm.gruppe2.server.report.ReportImpl</servlet-class> 
+   </servlet> 
+   
    <servlet-mapping> 
-     <servlet-name>msgServlet</servlet-name> 
-     <url-pattern>/reportGenerator/msgServlet</url-pattern> 
+     <servlet-name>reportGenerator</servlet-name> 
+     <url-pattern>/hdmMsg/reportGenerator</url-pattern> 
+     <url-pattern>/reportGenerator/reportGenerator</url-pattern> 
    </servlet-mapping> 
 
 </web-app>

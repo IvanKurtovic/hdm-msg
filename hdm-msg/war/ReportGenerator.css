@@ -1,0 +1,17 @@
+.gwt-MenuBar-horizontal .gwt-MenuItem {
+  padding: 50px 10px;
+  width: 205px;
+  vertical-align: bottom;
+  color: #ffffff;
+  /*background: #619eff;*/
+  font-weight: bold;
+  
+  
+
+}
+	
+.gwt-MenuBar-vertical .gwt-MenuItem {
+  	padding: 2px 40px 2px 1px;
+  	width: 165px;
+  	color: #20ac8e;
+}

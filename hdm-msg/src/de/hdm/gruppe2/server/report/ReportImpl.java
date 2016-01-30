@@ -1,15 +1,13 @@
 package de.hdm.gruppe2.server.report;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import de.hdm.gruppe2.server.MsgServiceImpl;
 import de.hdm.gruppe2.shared.MsgService;
-import de.hdm.gruppe2.shared.ReportGenerator;
+import de.hdm.gruppe2.shared.ReportRPC;
 import de.hdm.gruppe2.shared.bo.Hashtag;
 import de.hdm.gruppe2.shared.bo.Message;
 import de.hdm.gruppe2.shared.bo.User;
@@ -20,6 +18,7 @@ import de.hdm.gruppe2.shared.report.AllMessagesOfPeriodReport;
 import de.hdm.gruppe2.shared.report.AllMessagesOfUserReport;
 import de.hdm.gruppe2.shared.report.Column;
 import de.hdm.gruppe2.shared.report.CompositeParagraph;
+import de.hdm.gruppe2.shared.report.Report;
 import de.hdm.gruppe2.shared.report.Row;
 import de.hdm.gruppe2.shared.report.SimpleParagraph;
 
@@ -32,8 +31,13 @@ import de.hdm.gruppe2.shared.report.SimpleParagraph;
  * @author thies
  * @author Korkmaz
  */
-@SuppressWarnings("serial")
-public class ReportGeneratorImpl extends RemoteServiceServlet implements ReportGenerator {
+
+public class ReportImpl extends RemoteServiceServlet implements ReportRPC {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	
 	/**
 	* Ein ReportGenerator benötigt Zugriff auf den MsgService, da dieser die
@@ -57,7 +61,7 @@ public class ReportGeneratorImpl extends RemoteServiceServlet implements ReportG
 	* aufgerufen wird, um eine Initialisierung der Instanz vorzunehmen.
 	* </p>
 	*/
-	public ReportGeneratorImpl() throws IllegalArgumentException {}
+	public ReportImpl() throws IllegalArgumentException {}
 	
 	/**
 	* Initialsierungsmethode. Siehe dazu Anmerkungen zum No-Argument-Konstruktor.
@@ -190,6 +194,7 @@ public class ReportGeneratorImpl extends RemoteServiceServlet implements ReportG
 		AllMessagesOfPeriodReport result = new AllMessagesOfPeriodReport();
 		
 		result.setTitle("Alle Nachrichten eines Zeitraums");
+		this.addImprint(result);
 	    result.setCreated(new Date());
 	    
 	    CompositeParagraph header = new CompositeParagraph();
@@ -327,4 +332,32 @@ public class ReportGeneratorImpl extends RemoteServiceServlet implements ReportG
 
 	    return result;
 	}
+	
+	/**
+	* Hinzufügen des Report-Impressums. Diese Methode ist aus den
+	* <code>create...</code>-Methoden ausgegliedert, da jede dieser Methoden
+	* diese Tätigkeiten redundant auszuführen hätte. Stattdessen rufen die
+	* <code>create...</code>-Methoden diese Methode auf.
+	* 
+	* @param r der um das Impressum zu erweiternde Report.
+	*/
+	protected void addImprint(Report r) {
+		/*
+		* Das Impressum soll wesentliche Informationen über die Bank enthalten.
+		*/
+		User user = this.msgSvc.findUserByEmail("sarikerim91@googlemail.com");
+		
+		/*
+		 * Das Imressum soll mehrzeilig sein.
+		 */
+		CompositeParagraph imprint = new CompositeParagraph();
+		
+		imprint.addSubParagraph(new SimpleParagraph(String.valueOf(user.getId())));
+		imprint.addSubParagraph(new SimpleParagraph(user.getNickname()));
+		imprint.addSubParagraph(new SimpleParagraph(user.getEmail()));
+		
+		// Das eigentliche Hinzufügen des Impressums zum Report.
+		    r.setImprint(imprint);
+	}
+	
 }

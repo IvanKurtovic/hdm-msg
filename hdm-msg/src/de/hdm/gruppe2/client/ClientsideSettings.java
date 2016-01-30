@@ -30,7 +30,7 @@ public class ClientsideSettings extends CommonSettings {
    * Remote Service Proxy zur Verbindungsaufnahme mit dem Server-seitgen Dienst
    * namens <code>ReportGenerator</code>.
    */
-  private static ReportGeneratorAsync reportGenerator = null;
+  private static ReportRPCAsync reportGenerator = null;
 
   /**
    * Name des Client-seitigen Loggers.
@@ -152,27 +152,27 @@ public class ClientsideSettings extends CommonSettings {
    * @since 28.02.2012
    */
   
-  public static ReportGeneratorAsync getReportGenerator() {
+  public static ReportRPCAsync getReportGenerator() {
     // Gab es bislang noch keine ReportGenerator-Instanz, dann...
     if (reportGenerator == null) {
       // Zunächst instantiieren wir ReportGenerator
-      reportGenerator = GWT.create(ReportGenerator.class);
-
+      reportGenerator = GWT.create(ReportRPC.class);
+      
       final AsyncCallback<Void> initReportGeneratorCallback = new AsyncCallback<Void>() {
-        @Override
-		public void onFailure(Throwable caught) {
-          ClientsideSettings.getLogger().severe(
-              "Der ReportGenerator konnte nicht initialisiert werden!");
-        }
+          @Override
+  		public void onFailure(Throwable caught) {
+            ClientsideSettings.getLogger().severe(
+                "Der ReportGenerator konnte nicht initialisiert werden!");
+          }
 
-        @Override
-		public void onSuccess(Void result) {
-          ClientsideSettings.getLogger().info(
-              "Der ReportGenerator wurde initialisiert.");
-        }
-      };
+          @Override
+  		public void onSuccess(Void result) {
+            ClientsideSettings.getLogger().info(
+                "Der ReportGenerator wurde initialisiert.");
+          }
+        };
 
-      reportGenerator.init(initReportGeneratorCallback);
+        reportGenerator.init(initReportGeneratorCallback);
     }
 
     // So, nun brauchen wir den ReportGenerator nur noch zurückzugeben.

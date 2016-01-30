@@ -16,7 +16,6 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import de.hdm.gruppe2.shared.LoginInfo;
 import de.hdm.gruppe2.shared.LoginServiceAsync;
 import de.hdm.gruppe2.shared.MsgServiceAsync;
-import de.hdm.gruppe2.shared.ReportGeneratorAsync;
 import de.hdm.gruppe2.shared.bo.User;
 
 /**
