@@ -9,6 +9,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.RootPanel;
 
+import de.hdm.gruppe2.client.report.AllMessagesOfPeriodReportForm;
 import de.hdm.gruppe2.shared.ReportRPCAsync;
 import de.hdm.gruppe2.shared.report.AllMessagesOfPeriodReport;
 import de.hdm.gruppe2.shared.report.HTMLReportWriter;
@@ -41,7 +42,8 @@ public class ReportGenerator implements EntryPoint {
 		
 		Command allMessagesOfPeriod = new Command() {
 			public void execute() {
-				loadReport3();
+				RootPanel.get("content_wrap").clear();
+				RootPanel.get("content_wrap").add(new AllMessagesOfPeriodReportForm());
 			}
 		};
 		
@@ -75,32 +77,5 @@ public class ReportGenerator implements EntryPoint {
 		mainMenu.addItem("Messenger", callMessenger);
 		
 		RootPanel.get("header_wrap").add(mainMenu);
-	}
-	
-	private void loadReport3() {
-		reportGenerator.createAllMessagesOfPeriodReport("2016-01-27 00:00:00", "2016-01-27 23:59:59", new AsyncCallback<AllMessagesOfPeriodReport> () {
-
-			@Override
-			public void onFailure(Throwable caught) {
-				Window.alert("FAIL MAN");
-				ClientsideSettings.getLogger().severe(
-						"Erzeugen des Reports fehlgeschlagen!");
-			}
-
-			@Override
-			public void onSuccess(AllMessagesOfPeriodReport result) {
-				if(result != null) {
-					Window.alert("SUCCESS");
-					Window.alert(result.getTitle() + "\n" + result.getCreated() + "\n" + result.getHeaderData());
-					Window.alert(result.getImprint().toString());
-					Window.alert(result.getClass().toString());
-					HTMLReportWriter writer = new HTMLReportWriter();
-					writer.process(result);
-					Window.alert(writer.getReportText());
-					RootPanel.get("content_wrap").clear();
-					RootPanel.get("content_wrap").add(new HTML(writer.getReportText()));
-				}
-			}	
-		});
 	}
 }
