@@ -6,8 +6,6 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -19,7 +17,12 @@ import de.hdm.gruppe2.shared.MsgServiceAsync;
 import de.hdm.gruppe2.shared.bo.User;
 
 /**
- * Entry point classes define <code>onModuleLoad()</code>.
+ * Die EntryPoint Klasse des Messengers. Er stellt den Startpunkt des Nutzers dar
+ * und bietet ihm eine Menüleiste zur Navigation durch den Messenger. Ebenfalls enthalten
+ * ist der Login für den User. Nachdem der User sich einloggt wird sein User Objekt an
+ * alle geladenen Views übergeben damit sie mit den enthaltenen Informationen weiter arbeiten
+ * können.
+ * 
  */
 public class HdmMsg implements EntryPoint {
 	
@@ -32,7 +35,7 @@ public class HdmMsg implements EntryPoint {
 	private LoginInfo loginInfo = null;
 	private VerticalPanel loginPanel = new VerticalPanel();
 	private Label loginLabel = new Label(
-			"Please sign in to your Google Account to access the StockWatcher application.");
+			"Please sign in to your Google Account to access the Messenger application.");
 	private Anchor signInLink = new Anchor("Sign In");
 	
 	public void onModuleLoad() {
@@ -105,7 +108,7 @@ public class HdmMsg implements EntryPoint {
 		Command userOverview = new Command() {
 			public void execute() {
 				RootPanel.get("content_wrap").clear();
-				RootPanel.get("content_wrap").add(new UserOverview(getCurrentUser()));
+				RootPanel.get("content_wrap").add(new UserOverview());
 			}
 		};
 		
@@ -153,6 +156,15 @@ public class HdmMsg implements EntryPoint {
 				Window.Location.assign(GWT.getHostPageBaseURL() + "ReportGenerator.html");
 			}
 		};
+		
+		Command logout = new Command() {
+
+			@Override
+			public void execute() {
+				RootPanel.get("content_wrap").clear();
+				Window.Location.assign(loginInfo.getLogoutUrl());
+			}
+		};
 
 		MenuBar homeMenu = new MenuBar(true);
 		homeMenu.addItem("Startseite", newPostOverview);
@@ -175,6 +187,7 @@ public class HdmMsg implements EntryPoint {
 		mainMenu.addItem("Abos", aboMenu);
 		mainMenu.addItem("About", about);
 		mainMenu.addItem("Report Generator", callReportGenerator);
+		mainMenu.addItem("Logout", logout);
 		
 	    RootPanel.get("header_wrap").add(mainMenu);		
 	}

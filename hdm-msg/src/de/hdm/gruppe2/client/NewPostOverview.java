@@ -4,18 +4,15 @@ import java.util.ArrayList;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.regexp.shared.*;
 
 import de.hdm.gruppe2.shared.HashtagParser;
 import de.hdm.gruppe2.shared.MsgServiceAsync;
@@ -23,6 +20,18 @@ import de.hdm.gruppe2.shared.bo.Hashtag;
 import de.hdm.gruppe2.shared.bo.Message;
 import de.hdm.gruppe2.shared.bo.User;
 
+/**
+ * Diese Klasse repräsentiert die Post Übersicht. Es enthält alle
+ * momentan in der Datenbank befindlichen Posts des momentan eingeloggten Nutzers. 
+ * Der Nutzer kann zusätzliche Posts schreiben und beim schreiben auch Hashtags
+ * generieren lassen indem er ein Wort mit dem Symbol '#' beginnt.
+ * Die notwendigen Methoden zum anlegen, editieren und löschen der Posts erhält diese 
+ * Klasse über den MsgService.
+ * 
+ * @author Yilmaz
+ * @author Sari
+ *
+ */
 public class NewPostOverview extends VerticalPanel {
 	
 	private MsgServiceAsync msgSvc = ClientsideSettings.getMsgService();

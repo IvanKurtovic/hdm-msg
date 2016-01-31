@@ -20,10 +20,14 @@ public class ClientsideSettings extends CommonSettings {
 
   /**
    * Remote Service Proxy zur Verbindungsaufnahme mit dem Server-seitgen Dienst
-   * namens <code>BankAdministration</code>.
+   * namens <code>MsgService</code>.
    */
   private static MsgServiceAsync messageVerwaltung = null;
   
+  /**
+   * Remote Service Proxy zur Verbindungsaufnahme mit dem Server-seitgen Dienst
+   * namens <code>LoginService</code>.
+   */
   private static LoginServiceAsync loginVerwaltung = null;
 
   /**
@@ -95,20 +99,22 @@ public class ClientsideSettings extends CommonSettings {
 
   /**
    * <p>
-   * Anlegen und Auslesen der applikationsweit eindeutigen BankAdministration. Diese
-   * Methode erstellt die BankAdministration, sofern sie noch nicht existiert. Bei
+   * Anlegen und Auslesen der applikationsweit eindeutigen MsgService. Diese
+   * Methode erstellt den MsgService, sofern sie noch nicht existiert. Bei
    * wiederholtem Aufruf dieser Methode wird stets das bereits zuvor angelegte
    * Objekt zurückgegeben.
    * </p>
    * 
    * <p>
    * Der Aufruf dieser Methode erfolgt im Client z.B. durch
-   * <code>BankAdministrationAsync bankVerwaltung = ClientSideSettings.getBankVerwaltung()</code>
+   * <code>MsgServiceAsync msgSvc = ClientSideSettings.getMsgService()</code>
    * .
    * </p>
    * 
-   * @return eindeutige Instanz des Typs <code>BankAdministrationAsync</code>
+   * @return eindeutige Instanz des Typs <code>MsgServiceAsync</code>
    * @author Peter Thies
+   * @author Yilmaz
+   * @author Sari
    * @since 28.02.2012
    */
   public static MsgServiceAsync getMsgService() {
@@ -121,7 +127,27 @@ public class ClientsideSettings extends CommonSettings {
     // So, nun brauchen wir die messageVerwaltung nur noch zurückzugeben.
     return messageVerwaltung;
   }
-  
+
+  /**
+   * <p>
+   * Anlegen und Auslesen der applikationsweit eindeutigen LoginService. Diese
+   * Methode erstellt den LoginService, sofern sie noch nicht existiert. Bei
+   * wiederholtem Aufruf dieser Methode wird stets das bereits zuvor angelegte
+   * Objekt zurückgegeben.
+   * </p>
+   * 
+   * <p>
+   * Der Aufruf dieser Methode erfolgt im Client z.B. durch
+   * <code>LoginServiceAsync loginVerwaltung = ClientSideSettings.getLoginService()</code>
+   * .
+   * </p>
+   * 
+   * @return eindeutige Instanz des Typs <code>LoginServiceAsync</code>
+   * @author Peter Thies
+   * @author Yilmaz
+   * @author Sari
+   * @since 28.02.2012
+   */
   public static LoginServiceAsync getLoginService() {
 	    // Gab es bislang noch keine MsgService-Instanz, dann...
 	    if (loginVerwaltung == null) {

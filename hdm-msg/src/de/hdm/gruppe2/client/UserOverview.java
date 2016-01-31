@@ -7,7 +7,6 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
@@ -22,6 +21,18 @@ import de.hdm.gruppe2.shared.MsgService;
 import de.hdm.gruppe2.shared.MsgServiceAsync;
 import de.hdm.gruppe2.shared.bo.User;
 
+/**
+ * Diese Klasse repräsentiert die User Übersicht. Es enthält alle
+ * momentan in der Datenbank befindlichen Nutzer. Der Nutzer kann
+ * alle Nutzer bearbeiten, löschen oder neue Nutzer über ein PopUp-Dialog
+ * anlegen. Die notwendigen Methoden zum auslesen, anlegen und editieren
+ * erhält diese Klasse über den MsgService.
+ * 
+ * 
+ * @author Yilmaz
+ * @author Sari
+ *
+ */
 public class UserOverview extends VerticalPanel{
 	
 	private ArrayList<User> users = new ArrayList<User>();	
@@ -29,15 +40,11 @@ public class UserOverview extends VerticalPanel{
 	private Label lblNotification = new Label();
 	private final ListBox userList = new ListBox();
 	private User selectedUser = null;
-	private User loggedInUser = null;
 	
 	private final TextBox tbNickname = new TextBox();
 	private final TextBox tbEmail = new TextBox();
 	private final TextBox tbCreationDate = new TextBox();
-	
-	public UserOverview(User loggedInUser) {
-		this.loggedInUser = loggedInUser;
-	}
+	private final Button btnDeleteUser = new Button("Entfernen");
 	
 	@Override
 	public void onLoad() {
@@ -50,6 +57,7 @@ public class UserOverview extends VerticalPanel{
 		final Label lblEmail = new Label("Email: ");
 		final Label lblCreationDate = new Label("Angelegt am: ");
 		tbCreationDate.setEnabled(false);
+		tbEmail.setEnabled(false);
 		
 		// Set Style-Names
 		detailsGrid.setStyleName("detailsgrid-user");
@@ -60,6 +68,7 @@ public class UserOverview extends VerticalPanel{
 		tbEmail.setStyleName("textbox-email-user");
 		tbCreationDate.setStyleName("textbox-timestamp-user");
 		userList.setStyleName("listbox");
+		btnDeleteUser.setStyleName("delete-user");
 		
 		// User List links
 		userList.setVisibleItemCount(11);
@@ -80,7 +89,7 @@ public class UserOverview extends VerticalPanel{
 		});
 		
 		// Alle User aus der Datenbank laden und in die Liste speichern.
-		this.getAllUsersWithoutLoggedInUser(loggedInUser);
+		this.getAllUsers();
 		
 		//final HorizontalPanel pnlFunctions = new HorizontalPanel();		
 		final Button btnCreateUser = new Button("Neuer User");
@@ -119,14 +128,12 @@ public class UserOverview extends VerticalPanel{
 					selectedUser.setNickname(nickname);
 					selectedUser.setEmail(email);
 					
-					msgSvc.saveUser(selectedUser, new SaveUserCallback(lblNotification));
+					msgSvc.saveUser(selectedUser, new SaveUserCallback());
 				}
 			}
 			
 		});
 		
-		final Button btnDeleteUser = new Button("Entfernen");
-		btnDeleteUser.setStyleName("delete-user");
 		btnDeleteUser.addClickHandler(new ClickHandler() {
 
 			@Override
@@ -148,7 +155,7 @@ public class UserOverview extends VerticalPanel{
 
 			@Override
 			public void onClick(ClickEvent event) {
-				getAllUsersWithoutLoggedInUser(loggedInUser);
+				getAllUsers();
 			}
 			
 		});
@@ -167,8 +174,7 @@ public class UserOverview extends VerticalPanel{
 		detailsGrid.setWidget(2, 0, lblCreationDate);
 		detailsGrid.setWidget(2, 1, tbCreationDate);
 		detailsGrid.setWidget(3, 0, btnSaveUser);
-		
-		
+				
 		mainGrid.setWidget(0, 0, userList);
 		mainGrid.setWidget(0, 1, detailsGrid);
 		mainGrid.setWidget(1, 0, pnlSaveDeleteRefresh);
@@ -211,15 +217,12 @@ public class UserOverview extends VerticalPanel{
 				if(nickname == null || nickname.isEmpty()) {
 					lblNotification.setText("Keinen Nickname eingetragen.");
 					return;
-				} else if(email == null || email.isEmpty()) {
-					lblNotification.setText("Keine Email eingetragen.");
-					return;
 				} else if(!(email.matches(regEx))) {
 					lblNotification.setText("Eingabe entspricht keiner Email-Adresse.");
 					return;
 				}
 				
-				msgSvc.createUser(email, nickname, new CreateUserCallback(lblNotification));
+				msgSvc.createUser(email, nickname, new CreateUserCallback());
 				dialogBox.hide();
 			}	
 		});
@@ -247,25 +250,31 @@ public class UserOverview extends VerticalPanel{
 	}
 	
 	private class CreateUserCallback implements AsyncCallback<User> {
-
-		private Label notification = null;
-		
-		public CreateUserCallback(Label notificationLabel) {
-			this.notification = notificationLabel;
-		}
 		
 		@Override
 		public void onFailure(Throwable caught) {
-			this.notification.setText("Der User wurde nicht angelegt!");			
+			ClientsideSettings.getLogger().severe("Der User wurde nicht angelegt!");
 		}
 
 		@Override
 		public void onSuccess(User result) {
-			this.notification.setText("Der User wurde angelegt!");
+			getAllUsers();
 		}
 		
 	}
 	
+	private class SaveUserCallback implements AsyncCallback<User> {
+
+		@Override
+		public void onFailure(Throwable caught) {
+			ClientsideSettings.getLogger().severe("Änderungen konnten nicht übernommen werden.");			
+		}
+
+		@Override
+		public void onSuccess(User result) {
+			getAllUsers();			
+		}		
+	}
 	
 	private void getAllUsers(){
 		msgSvc.findAllUser(new AsyncCallback<ArrayList<User>>() {
@@ -293,26 +302,6 @@ public class UserOverview extends VerticalPanel{
 		});
 	}
 	
-	private class SaveUserCallback implements AsyncCallback<User> {
-
-		private Label notification = null;
-		
-		public SaveUserCallback(Label notificationLabel) {
-			this.notification = notificationLabel;
-		}
-		
-		@Override
-		public void onFailure(Throwable caught) {
-			notification.setText("Änderungen konnten nicht übernommen werden.");			
-		}
-
-		@Override
-		public void onSuccess(User result) {
-			notification.setText("Änderungen erfolgreich eingetragen. Bitte refreshen.");			
-		}
-		
-	}
-	
 	private void deleteUser(User user) {
 		msgSvc.deleteUser(user, new AsyncCallback<Void>() {
 
@@ -334,34 +323,7 @@ public class UserOverview extends VerticalPanel{
 				users.remove(userList.getSelectedIndex());
 				
 				ClientsideSettings.getLogger().finest("User wurde entfernt.");
-			}
-			
-		});
-	}
-
-	private void getAllUsersWithoutLoggedInUser(User user) {
-		msgSvc.findAllUserWithoutLoggedInUser(loggedInUser, new AsyncCallback<ArrayList<User>> () {
-
-			@Override
-			public void onFailure(Throwable caught) {
-				ClientsideSettings.getLogger().severe("User konnten nicht geladen werden!");
-			}
-
-			@Override
-			public void onSuccess(ArrayList<User> result) {
-				users = result;
-				
-				// Da wir nur ein Listobjekt weiter reichen, säubern wir zunächst alle vorhandenen
-				// Einträge.
-				userList.clear();
-				
-				for(User u : users) {
-					userList.addItem(u.getNickname());
-				}
-				
-				ClientsideSettings.getLogger().finest("Alle User wurden geladen!");
-			}
-			
+			}		
 		});
 	}
 }

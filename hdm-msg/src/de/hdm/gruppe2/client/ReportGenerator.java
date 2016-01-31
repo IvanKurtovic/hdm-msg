@@ -4,8 +4,6 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.RootPanel;
 
@@ -15,9 +13,14 @@ import de.hdm.gruppe2.client.report.AllMessagesOfAllUsersForm;
 import de.hdm.gruppe2.client.report.AllMessagesOfPeriodForm;
 import de.hdm.gruppe2.client.report.AllMessagesOfUserForm;
 import de.hdm.gruppe2.shared.ReportRPCAsync;
-import de.hdm.gruppe2.shared.report.AllMessagesOfPeriodReport;
-import de.hdm.gruppe2.shared.report.HTMLReportWriter;
 
+/**
+ * Die EntryPoint Klasse des ReportGenerators. Er stellt den Startpunkt des Nutzers dar
+ * und bietet ihm eine Menüleiste zur Navigation durch den ReportGenerator. Von hier aus
+ * kann der User alle Reports generieren und anzeigen lassen oder zurück zum Messenger
+ * wechseln.
+ * 
+ */
 public class ReportGenerator implements EntryPoint {
 
 	private ReportRPCAsync reportGenerator = ClientsideSettings.getReportGenerator();

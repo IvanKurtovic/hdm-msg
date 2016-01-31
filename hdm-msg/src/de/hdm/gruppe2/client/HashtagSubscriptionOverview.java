@@ -23,6 +23,18 @@ import de.hdm.gruppe2.shared.bo.HashtagSubscription;
 import de.hdm.gruppe2.shared.bo.Message;
 import de.hdm.gruppe2.shared.bo.User;
 
+/**
+ * Diese Klasse repräsentiert die Hashtag Abo Übersicht. Es enthält alle
+ * momentan in der Datenbank befindlichen Hashtag Abos des momentan eingeloggten Nutzers. 
+ * Der Nutzer kann jeden vorhandenen Hashtag über ein PopUp Dialog abonnieren. Ebenfalls
+ * kann er im PopUp Dialog manuell Hashtags anlegen oder löschen.
+ * Die notwendigen Methoden zum abonnieren und deabonnieren erhält diese 
+ * Klasse über den MsgService.
+ * 
+ * @author Yilmaz
+ * @author Sari
+ *
+ */
 public class HashtagSubscriptionOverview extends VerticalPanel {
 	
 	private MsgServiceAsync msgSvc = ClientsideSettings.getMsgService();
@@ -141,7 +153,7 @@ public class HashtagSubscriptionOverview extends VerticalPanel {
 			}
 		});
 		
-		final Button btnDeleteHashtag = new Button("Hashtag löschen");
+		final Button btnDeleteHashtag = new Button("Hashtag entfernen");
 		btnDeleteHashtag.addClickHandler(new ClickHandler() {
 
 			@Override

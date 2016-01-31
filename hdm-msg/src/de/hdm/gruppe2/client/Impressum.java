@@ -1,8 +1,5 @@
 package de.hdm.gruppe2.client;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -18,8 +15,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 		public void onLoad(){    	
 	        final HTML html = new HTML("");
 	        html.setHTML("<h2>Impressum</h2>"+
-	        		"<h2>Angaben: Paragraph 5 Telemediengesaetz:</h2>"+
-	        		"<p>Kerim Sari, Serkan Yilmaz, Ivan Kurtovic, Cem Korkmaz, Marina <br />"+
+	        		"<p>Kerim Sari, Serkan Yilmaz, Ivan Kurtovic, Cem Korkmaz<br />"+
 	        		"Nobelstrasse 10<br />"+
 	        		"70569 Stuttgart"+
 	        		"</p>" +
@@ -36,5 +32,4 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 	        RootPanel.get("content_wrap").clear();
     		RootPanel.get("content_wrap").add(html);  
 		}
-	    
 	}

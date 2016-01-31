@@ -6,7 +6,6 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
@@ -21,12 +20,21 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import de.hdm.gruppe2.shared.HashtagParser;
 import de.hdm.gruppe2.shared.MsgServiceAsync;
 import de.hdm.gruppe2.shared.bo.Chat;
-import de.hdm.gruppe2.shared.bo.Hashtag;
-import de.hdm.gruppe2.shared.bo.HashtagSubscription;
 import de.hdm.gruppe2.shared.bo.Message;
 import de.hdm.gruppe2.shared.bo.User;
 import de.hdm.gruppe2.shared.bo.UserSubscription;
 
+/**
+ * Diese Klasse repräsentiert die User Abo Übersicht. Es enthält alle
+ * momentan in der Datenbank befindlichen User Abos des momentan eingeloggten Nutzers. 
+ * Der Nutzer kann jeden vorhandenen Nutzer über ein PopUp Dialog abonnieren. 
+ * Die notwendigen Methoden zum abonnieren und deabonnieren erhält diese 
+ * Klasse über den MsgService.
+ * 
+ * @author Yilmaz
+ * @author Sari
+ *
+ */
 public class UserSubscriptionOverview extends VerticalPanel {
 	
 	private MsgServiceAsync msgSvc = ClientsideSettings.getMsgService();
