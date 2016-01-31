@@ -49,7 +49,12 @@ public class NewPostOverview extends VerticalPanel {
 		
 		this.getAllPosts(ftPosts, loggedInUser.getId());
 
-		final Grid mainGrid = new Grid(3,1);
+		final Grid mainGrid = new Grid(4,1);
+		
+		Label lblTitle = new Label("Posting Uebersicht");
+		lblTitle.addStyleName("navigation-title");
+		
+		taPost.setWidth("100%");
 		
 		final Button btnPost = new Button("Posten!");
 		btnPost.addClickHandler(new ClickHandler() {
@@ -61,9 +66,10 @@ public class NewPostOverview extends VerticalPanel {
 			
 		});
 		
-		mainGrid.setWidget(0, 0, ftPosts);
-		mainGrid.setWidget(1, 0, taPost);
-		mainGrid.setWidget(2, 0, btnPost);
+		mainGrid.setWidget(0, 0, lblTitle);
+		mainGrid.setWidget(1, 0, ftPosts);
+		mainGrid.setWidget(2, 0, taPost);
+		mainGrid.setWidget(3, 0, btnPost);
 		
 		this.add(mainGrid);
 	}

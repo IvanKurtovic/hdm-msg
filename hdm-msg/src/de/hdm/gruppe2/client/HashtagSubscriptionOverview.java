@@ -58,7 +58,10 @@ public class HashtagSubscriptionOverview extends VerticalPanel {
 		this.getAllSubscriptions();
 		this.getAllHashtags();
 		
-		final Grid mainGrid = new Grid(2, 2);
+		final Grid mainGrid = new Grid(3, 2);
+		
+		Label lblTitle = new Label("Hashtag Abonnements");
+		lblTitle.addStyleName("navigation-title");
 		
 		subscriptionsList.setStyleName("listbox");
 		subscriptionsList.setVisibleItemCount(11);
@@ -90,6 +93,7 @@ public class HashtagSubscriptionOverview extends VerticalPanel {
 		});
 		
 		final Button btnRefresh = new Button("Refresh");
+		btnRefresh.addStyleName("refresh-hashtagabo");
 		btnRefresh.addClickHandler(new ClickHandler() {
 
 			@Override
@@ -120,9 +124,10 @@ public class HashtagSubscriptionOverview extends VerticalPanel {
 		pnlSubscribeAndUnsubscribe.add(btnRefresh);
 		pnlSubscribeAndUnsubscribe.add(btnUnsubscribe);
 		
-		mainGrid.setWidget(0, 0, subscriptionsList);
-		mainGrid.setWidget(0, 1, ftPosts);
-		mainGrid.setWidget(1, 0, pnlSubscribeAndUnsubscribe);
+		mainGrid.setWidget(0, 0, lblTitle);
+		mainGrid.setWidget(1, 0, subscriptionsList);
+		mainGrid.setWidget(1, 1, ftPosts);
+		mainGrid.setWidget(2, 0, pnlSubscribeAndUnsubscribe);
 		
 		this.add(mainGrid);		
 	}
@@ -172,8 +177,8 @@ public class HashtagSubscriptionOverview extends VerticalPanel {
 		pnlSearchControls.add(btnCreateHashtag);
 		pnlSearchControls.add(btnDeleteHashtag);
 
-		allHashtagsList.setStyleName("listbox");
-		allHashtagsList.setVisibleItemCount(11);
+		allHashtagsList.setVisibleItemCount(15);
+		allHashtagsList.setWidth("100%");
 		
 		final Button btnSubscribe = new Button("Abonnieren");
 		btnSubscribe.setStyleName("popup-abo-hashtagabo");

@@ -3,15 +3,12 @@
 
 /** Example rules used by the template application (remove for your app) */
 h1 {
-	
-font-family: bradley hand;	
+  font-family: bradley hand;	
   font-size: 2em;
   font-weight: bold;
   color: #ffffff;
   text-align: center;
   background: rgb(176,196,222);
-
-
 }
 
 .sendButton {
@@ -43,9 +40,6 @@ font-family: bradley hand;
 	left: 0em;
 	width: 100%;
 	height: 4em;
-	
-
-	
 }
 
 #content_wrap {
@@ -56,17 +50,26 @@ font-family: bradley hand;
 	height: 44em;
 	/*border: solid;*/
 	background: rgb(176,196,222);
+}
 
+#footer_wrap {
+	background: rgb(176,196,222);
 }
 
 .listbox {
-	width: 16em;
+	width: 12em;
 	height: 100%;
 }
 
 .popup-title {
 	text-align: center;
 	font-size: 2.5em;
+	font-weight: bold;
+}
+
+.navigation-title {
+	text-align: center;
+	font-size: 1.5em;
 	font-weight: bold;
 }
 
@@ -77,9 +80,6 @@ font-family: bradley hand;
   color: #ffffff;
   /*background: #619eff;*/
   font-weight: bold;
-  
-  
-
 }
 	
 .gwt-MenuBar-vertical .gwt-MenuItem {
@@ -87,7 +87,6 @@ font-family: bradley hand;
   	width: 165px;
   	color: #20ac8e;
 }
-
 
 .listbox{
 	font-family: bradley hand;
@@ -97,12 +96,7 @@ font-family: bradley hand;
     top: 9px;
     width: 30em;
     height: 30em;
-  	
-  	
-  	
-  	
 }
-	
 	
 .new-chat{
 	font-family: bradley hand;
@@ -112,10 +106,7 @@ font-family: bradley hand;
 	position: relative; 
 	top: 10px;
 	left:5px;
-	
 }
-	
-	
 
 .delete-chat{
 	font-family: bradley hand;
@@ -129,7 +120,6 @@ font-family: bradley hand;
     border-radius: 4px; 
     text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
     left:10px;
-	
 }
 
 .send-chat{
@@ -156,7 +146,6 @@ font-family: bradley hand;
 	bottom:7em;
 	left: 40em;
 	right: 50em; 
-	
 }
 
 
@@ -170,17 +159,10 @@ font-family: bradley hand;
 }
 
 .popup-listbox-chat{
-	
 	width: 20em;
-	
-	}
-	
-	
-	
-
+}
 
 .detailsgrid-user{
-	
 	position: absolute;
 	margin-right: auto;
 	margin-left: 100px;
@@ -194,7 +176,6 @@ font-family: bradley hand;
 }
 
 .textbox-firstname-user{
-	
 	width:20em;
 }
 
@@ -245,8 +226,6 @@ font-family: bradley hand;
 	font-size:15px;
 	height: 4em;
 	width: 160px;
-
-	
 }
 .delete-user{
 	position: relative; 
@@ -267,7 +246,6 @@ font-family: bradley hand;
 	font-size:15px;
 	height: 4em;
 	width: 160px;
-	
 }
 
 .dialogbox-user{
@@ -275,7 +253,6 @@ font-family: bradley hand;
 	background: rgb(176,196,222);
 	color: white;
 	border:5px solid white;
-
 }
 
 
@@ -286,8 +263,17 @@ font-family: bradley hand;
 	height: 4em;
 	width: 160px; 
 	top: 10px;
-	left:5px;
-	
+	left:5px;	
+}
+
+.refresh-usersubs{
+	position: relative; 
+	font-family: bradley hand;
+	font-size:15px;
+	height: 4.5em;
+	width: 160px; 
+	top: 10px;
+	left:7px;
 }
 
 .unsubs-usersubs{
@@ -309,7 +295,6 @@ font-family: bradley hand;
 	background: rgb(176,196,222);
 	color: white;
 	border:5px solid white;
-	
 }
 
 .listbox-usersubs{
@@ -328,6 +313,16 @@ font-family: bradley hand;
 	left:5px;
 }
 
+.refresh-hashtagabo{
+	position: relative; 
+	font-family: bradley hand;
+	font-size:15px;
+	height: 4.5em;
+	width: 160px; 
+	top: 10px;
+	left:7px;
+}
+
 .unsubs-hashtagabo{
 	font-family: bradley hand;
 	font-size:15px;
@@ -343,7 +338,6 @@ font-family: bradley hand;
 }
 
 .dialogbox-hashtagabo{
-	
 	font-family: bradley hand;
 	background: rgb(176,196,222);
 	color: white;
@@ -352,12 +346,20 @@ font-family: bradley hand;
 	
 }
 
-popup-abo-hashtagabo{
-	
+.chat-button {
+	height: 4em;
+}
+
+.chat-refresh {
+	height: 4em;
+}
+
+.panel-chat-controls {
+	position: relative;
 	top: 2em;
 }
 
-popup-cancel-hashtagabo{
-	
-	top:2em;
+.panel-chat-send {
+	position: relative;
+	top: 2em;
 }

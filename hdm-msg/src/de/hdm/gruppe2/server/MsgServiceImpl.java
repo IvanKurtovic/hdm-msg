@@ -277,7 +277,7 @@ public class MsgServiceImpl extends RemoteServiceServlet implements MsgService {
 		String chatName = "";
 		
 		for(User u : participants) {
-			chatName += u.getNickname() + " ";
+			chatName += u.getNickname() + ";";
 		}
 		
 		Chat c = new Chat();

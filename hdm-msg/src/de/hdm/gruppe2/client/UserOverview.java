@@ -50,8 +50,11 @@ public class UserOverview extends VerticalPanel{
 	public void onLoad() {
 
 		// User Details
-		final Grid mainGrid = new Grid(5,3);
+		final Grid mainGrid = new Grid(3,2);
 		final Grid detailsGrid = new Grid(4,2);
+		
+		Label lblTitle = new Label("User Uebersicht");
+		lblTitle.addStyleName("navigation-title");
 		
 		final Label lblNickname = new Label("Nickname: ");
 		final Label lblEmail = new Label("Email: ");
@@ -174,11 +177,12 @@ public class UserOverview extends VerticalPanel{
 		detailsGrid.setWidget(2, 0, lblCreationDate);
 		detailsGrid.setWidget(2, 1, tbCreationDate);
 		detailsGrid.setWidget(3, 0, btnSaveUser);
-				
-		mainGrid.setWidget(0, 0, userList);
-		mainGrid.setWidget(0, 1, detailsGrid);
-		mainGrid.setWidget(1, 0, pnlSaveDeleteRefresh);
-		mainGrid.setWidget(1, 1, lblNotification);
+		
+		mainGrid.setWidget(0, 0, lblTitle);
+		mainGrid.setWidget(1, 0, userList);
+		mainGrid.setWidget(1, 1, detailsGrid);
+		mainGrid.setWidget(2, 0, pnlSaveDeleteRefresh);
+		mainGrid.setWidget(2, 1, lblNotification);
 
 		this.add(mainGrid);
 	}

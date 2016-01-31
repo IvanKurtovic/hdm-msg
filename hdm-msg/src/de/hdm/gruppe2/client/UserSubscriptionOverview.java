@@ -58,7 +58,10 @@ public class UserSubscriptionOverview extends VerticalPanel {
 		this.getAllUserSubscriptions();
 		this.getAllUsers();
 		
-		final Grid mainGrid = new Grid(2, 2);
+		final Grid mainGrid = new Grid(3, 2);
+		
+		Label lblTitle = new Label("User Abonnements");
+		lblTitle.addStyleName("navigation-title");
 		
 		subscriptionsList.setStyleName("listbox");
 		subscriptionsList.setVisibleItemCount(11);
@@ -90,6 +93,7 @@ public class UserSubscriptionOverview extends VerticalPanel {
 		});
 		
 		final Button btnRefresh = new Button("Refresh");
+		btnRefresh.addStyleName("refresh-usersubs");
 		btnRefresh.addClickHandler(new ClickHandler() {
 
 			@Override
@@ -120,9 +124,10 @@ public class UserSubscriptionOverview extends VerticalPanel {
 		pnlSubscribeAndUnsubscribe.add(btnRefresh);
 		pnlSubscribeAndUnsubscribe.add(btnUnsubscribe);
 		
-		mainGrid.setWidget(0, 0, subscriptionsList);
-		mainGrid.setWidget(0, 1, ftPosts);
-		mainGrid.setWidget(1, 0, pnlSubscribeAndUnsubscribe);
+		mainGrid.setWidget(0, 0, lblTitle);
+		mainGrid.setWidget(1, 0, subscriptionsList);
+		mainGrid.setWidget(1, 1, ftPosts);
+		mainGrid.setWidget(2, 0, pnlSubscribeAndUnsubscribe);
 		
 		this.add(mainGrid);		
 	}

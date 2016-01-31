@@ -37,6 +37,7 @@ public class ChatOverview extends VerticalPanel {
 	private final TextBox tbMessage = new TextBox();
 	private final ListBox chatNames = new ListBox();
 	private final FlexTable ftChatMessages = new FlexTable();
+	private final Label lblParticipants = new Label();
 
 	
 	public ChatOverview(User loggedInUser) {
@@ -49,7 +50,10 @@ public class ChatOverview extends VerticalPanel {
 		this.getAllChatsOfUser();
 		this.getAllContacts(loggedInUser);
 		
-		final Grid mainGrid = new Grid(2,2);
+		final Grid mainGrid = new Grid(3,2);
+		
+		Label lblTitle = new Label("User Uebersicht");
+		lblTitle.addStyleName("navigation-title");
 		
 		chatNames.setStyleName("listbox");
 		chatNames.setVisibleItemCount(11);
@@ -69,7 +73,6 @@ public class ChatOverview extends VerticalPanel {
 		});
 		
 		final Button btnCreateChat = new Button("Neuer Chat");
-		btnCreateChat.setStyleName("new-chat");
 		btnCreateChat.addClickHandler(new ClickHandler() {
 
 			@Override
@@ -81,7 +84,6 @@ public class ChatOverview extends VerticalPanel {
 		});
 		
 		final Button btnRefreshMyChats = new Button("Meine Chats laden");
-		btnRefreshMyChats.addStyleName("refresh-user");
 		btnRefreshMyChats.addClickHandler(new ClickHandler() {
 
 			@Override
@@ -91,7 +93,6 @@ public class ChatOverview extends VerticalPanel {
 		});
 		
 		final Button btnLoadAllChats = new Button("Alle Chats laden");
-		btnRefreshMyChats.addStyleName("refresh-user");
 		btnLoadAllChats.addClickHandler(new ClickHandler() {
 
 			@Override
@@ -118,8 +119,7 @@ public class ChatOverview extends VerticalPanel {
 			
 		});
 		
-		final Button btnDeleteChat = new Button("Entfernen");	
-		btnDeleteChat.setStyleName("delete-chat");
+		final Button btnDeleteChat = new Button("Entfernen");
 		btnDeleteChat.addClickHandler(new ClickHandler() {
 
 			@Override
@@ -137,17 +137,14 @@ public class ChatOverview extends VerticalPanel {
 		});
 		
 		final HorizontalPanel pnlChatControls = new HorizontalPanel();
+		pnlChatControls.setStyleName("panel-chat-controls");
 		pnlChatControls.add(btnCreateChat);
 		pnlChatControls.add(btnRefreshMyChats);
 		pnlChatControls.add(btnLoadAllChats);
 		pnlChatControls.add(btnLeaveChat);
 		pnlChatControls.add(btnDeleteChat);
 		
-		
-		tbMessage.setStyleName("textbox-chat");
-		
 		final Button btnSendMessage = new Button("Senden");
-		btnSendMessage.setStyleName("send-chat");
 		btnSendMessage.addClickHandler(new ClickHandler() {
 
 			@Override
@@ -162,15 +159,23 @@ public class ChatOverview extends VerticalPanel {
 			
 		});
 
+		tbMessage.setWidth("30em");
+		
+		final HorizontalPanel pnlParticipantLabels = new HorizontalPanel();
+		pnlParticipantLabels.add(new Label("Chat-Teilnehmer: "));
+		pnlParticipantLabels.add(lblParticipants);
 		
 		final HorizontalPanel pnlSendMessage = new HorizontalPanel();
+		pnlSendMessage.setStyleName("panel-chat-send");
 		pnlSendMessage.add(tbMessage);
 		pnlSendMessage.add(btnSendMessage);
 		
-		mainGrid.setWidget(0, 0, chatNames);
-		mainGrid.setWidget(1, 0, pnlChatControls);
-		mainGrid.setWidget(0, 1, ftChatMessages);
-		mainGrid.setWidget(1, 1, pnlSendMessage);		
+		mainGrid.setWidget(0, 0, lblTitle);
+		mainGrid.setWidget(0, 1, pnlParticipantLabels);
+		mainGrid.setWidget(1, 0, chatNames);
+		mainGrid.setWidget(2, 0, pnlChatControls);
+		mainGrid.setWidget(1, 1, ftChatMessages);
+		mainGrid.setWidget(2, 1, pnlSendMessage);		
 		
 		this.add(mainGrid);
 	}
@@ -464,7 +469,15 @@ public class ChatOverview extends VerticalPanel {
 			@Override
 			public void onSuccess(ArrayList<User> result) {
 				chatParticipants = result;
+
+				String chatName = "";
 				
+				for(User u : chatParticipants) {
+					chatName += u.getNickname() + "; ";
+				}
+				
+				lblParticipants.setText(chatName);
+
 				ClientsideSettings.getLogger().finest("ChatMessages erfolgreich geladen.");
 			}
 			
